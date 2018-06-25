@@ -6,6 +6,24 @@ const connectionString = `postgres://andyn190:${config.AWSPASSWORD}@trustpooldb.
 
 const sequelize = new Sequelize(connectionString);
 
+const Pools = sequelize.define('Pools', {
+  pool_value: {
+    type: Sequelize.INTEGER
+  },
+  description: {
+    type: Sequelize.STRING
+  },
+  name: {
+    type: Sequelize.STRING
+  },
+  imageURL: {
+    type: Sequelize.STRING
+  }, 
+  public: {
+    type: Sequelize.STRING
+  },
+});
+
 sequelize
 .authenticate()
 .then(() => {
