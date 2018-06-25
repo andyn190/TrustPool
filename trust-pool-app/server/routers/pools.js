@@ -25,7 +25,6 @@ pools.post('/expense', (req, res) => {
 pools.post('/vote', (req, res) => {
   const { poolId, memberId, vote } = req.body;
   res.status(200).send(`recieved request for member ${memberId} to vote ${vote} in pool ${poolId}`);
-  // this will respond with the pool requested
 });
 
 pools.post('/contribute', (req, res) => {
