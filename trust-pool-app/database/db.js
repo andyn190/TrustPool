@@ -6,12 +6,37 @@ const connectionString = `postgres://andyn190:${config.AWSPASSWORD}@trustpooldb.
 
 const sequelize = new Sequelize(connectionString);
 
+const Users = sequelize.define('Users', {
+  id: {
+    type: Sequelize.INTEGER,
+    autoIncrement: true,
+    primaryKey: true
+  },
+  first_name: {
+    type: Sequelize.STRING
+  },
+  last_name: {
+    type: Sequelize.STRING
+  },
+  email: {
+    type: Sequelize.STRING
+  },
+  image_url: {
+    type: Sequelize.STRING
+  }
+});
+
 const Pools = sequelize.define('Pools', {
+  id: {
+    type: Sequelize.INTEGER,
+    autoIncrement: true,
+    primaryKey: true
+  },
   pool_value: {
     type: Sequelize.INTEGER
   },
   description: {
-    type: Sequelize.STRING
+    type: Sequelize.TEXT
   },
   name: {
     type: Sequelize.STRING
@@ -22,7 +47,22 @@ const Pools = sequelize.define('Pools', {
   public: {
     type: Sequelize.STRING
   },
+  created_at: {
+    type: Sequelize.DATE
+  },
+  members_count: {
+    type: Sequelize.INTEGER
+  },
+  creator: {
+    type: Sequelize.INTEGER,
+    references: {
+      model: Users,
+      key: 'id',
+      deferrable: Sequelize.Deferrable.INITIALLY_IMMEDIATE
+    }
+  }
 });
+
 
 sequelize
 .authenticate()
