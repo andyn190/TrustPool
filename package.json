@@ -17,6 +17,9 @@
   },
   "homepage": "https://github.com/15-percent/TrustPool#readme",
   "dependencies": {
-    "express": "^4.16.3"
+    "express": "^4.16.3",
+    "pg": "^7.4.3",
+    "pg-hstore": "^2.3.2",
+    "sequelize": "^4.38.0"
   }
 }
