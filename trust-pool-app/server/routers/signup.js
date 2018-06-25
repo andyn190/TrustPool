@@ -1,6 +1,4 @@
-const express = require('express');
-
-const signup = express.Router();
+const signup = require('express').Router();
 
 signup.get('/', (req, res) => {
   res.status(200).send('recieved get request to signup');
