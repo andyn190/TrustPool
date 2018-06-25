@@ -12,8 +12,29 @@ pools.get('/:poolId', (req, res) => {
   // this will respond with the pool requested
 });
 
-pools.post('/', (req, res) => {
-  res.status(200).send('recieved post request to pools');
+pools.post('/create', (req, res) => {
+  const { name, imgUrl, desc, voteConfig, creatorId, public } = req.body.pool;
+  res.status(200).send(`recieved post request to create new pool named ${name}`);
+});
+
+pools.post('/expense', (req, res) => {
+  const { poolId, creatorId, title, desc, amount, expiration, method } = req.body;
+  res.status(200).send(`recieved request to create new expense request in pool ${poolId}`);
+});
+
+pools.post('/contribute', (req, res) => {
+  const { poolId, memberId, amount } = req.body;
+  res.status(200).send(`recieved request for member ${memberId} to contribute to pool ${poolId}`);
+});
+
+pools.post('/join', (req, res) => {
+  const { poolId, userId } = req.body;
+  res.status(200).send(`recieved request for ${userId} to join pool ${poolId}`);
+});
+
+pools.post('/chat', (req, res) => {
+  const { poolId, userId, message } = req.body;
+  res.status(200).send(`recieved request for ${userId} to chat in pool ${poolId}`);
 });
 
 module.exports = pools;
