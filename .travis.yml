@@ -1,0 +1,7 @@
+language: node_js
+node_js: 
+  - "stable"
+before-script:
+  -npm install
+script:
+  -cd trust-pool-app && npm test
