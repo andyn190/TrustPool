@@ -4,6 +4,6 @@ node_js:
   - "iojs"
   - "7"
 before-script:
-  -npm install
+  -cd trust-pool-app && npm install
 script:
   -npm test
