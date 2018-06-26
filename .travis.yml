@@ -2,6 +2,7 @@ language: node_js
 node_js: 
   - "stable"
 before-script:
-  -cd trust-pool-app && npm install
+  -npm install
 script:
+  -cd trust-pool-app
   -npm test
