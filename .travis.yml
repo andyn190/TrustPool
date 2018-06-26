@@ -3,9 +3,7 @@ node_js:
   - "stable"
   - "iojs"
   - "7"
-
-  before-script:
-  npm install
-
-  script:
+before-script:
+  -npm install
+script:
   -npm test
