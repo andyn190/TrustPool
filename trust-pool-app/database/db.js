@@ -1,8 +1,10 @@
 const pg = require('pg');
 const Sequelize = require('sequelize');
 const config = require('./../../config.json');
+const dotenv = require('dotenv');
+dotenv.config();
 
-const connectionString = `postgres://andyn190:${config.AWSPASSWORD}@trustpooldb.cqz6ljdkuhix.us-east-2.rds.amazonaws.com:5432/trustpooldb`
+const connectionString = `postgres://andyn190:${process.env.AWSPASSWORD}@trustpooldb.cqz6ljdkuhix.us-east-2.rds.amazonaws.com:5432/trustpooldb`
 
 const sequelize = new Sequelize(connectionString);
 
@@ -63,6 +65,47 @@ const Pools = sequelize.define('Pools', {
   }
 });
 
+const Expense_request = sequelize.define('Expenserequest', {
+  id: {
+    type: Sequelize.INTEGER,
+    autoIncrement: true,
+    primaryKey: true
+  },
+  pool_id: {
+    type: Sequelize.INTEGER,
+    references: {
+      model: Pools,
+      key: 'id',
+      deferrable: Sequelize.Deferrable.INITIALLY_IMMEDIATE
+    }
+  },
+  description: {
+    type: Sequelize.TEXT
+  },
+  name: {
+    type: Sequelize.STRING
+  },
+  imageURL: {
+    type: Sequelize.STRING
+  },
+  public: {
+    type: Sequelize.STRING
+  },
+  created_at: {
+    type: Sequelize.DATE
+  },
+  members_count: {
+    type: Sequelize.INTEGER
+  },
+  creator: {
+    type: Sequelize.INTEGER,
+    references: {
+      model: Users,
+      key: 'id',
+      deferrable: Sequelize.Deferrable.INITIALLY_IMMEDIATE
+    }
+  }
+});
 
 sequelize
 .authenticate()
