@@ -1,7 +1,7 @@
 #!/bin/bash
 sudo chmod 777 .
-yum install -y gcc-c++ make
-curl -sL https://rpm.nodesource.com/setup_6.x | sudo -E bash -
-yum install nodejs
+sudo yum install gcc-c++ make
+curl --silent --location https://rpm.nodesource.com/setup_8.x | sudo bash -
+sudo yum -y install nodejs
 npm -v && node -v
 npm install && npm run build
