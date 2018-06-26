@@ -13,9 +13,10 @@ hooks:
     - location: trust-pool-app/install_dependencies.sh
       timeout: 300
       runas: root
+  ApplicationStart:
     - location: trust-pool-app/start_server.sh
       timeout: 300
-      runas: root
+      runas: root    
   ApplicationStop:
     - location: trust-pool-app/stop_server.sh
       timeout: 300
