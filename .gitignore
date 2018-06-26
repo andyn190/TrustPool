@@ -1,4 +1,4 @@
 /node_modules
 package-lock.json
-config.json
 jelani504.pem
+.env
