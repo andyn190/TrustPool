@@ -161,6 +161,126 @@ const Contribution_entry = sequelize.define('contribution_entry', {
   }
 });
 
+const Pool_members = sequelize.define('pool_members', {
+  id: {
+    type: Sequelize.INTEGER,
+    autoIncrement: true,
+    primaryKey: true,
+    unique: true
+  },
+  "pool_id": {
+    type: Sequelize.INTEGER,
+    references: {
+      model: Pools,
+      key: 'id',
+      deferrable: Sequelize.Deferrable.INITIALLY_IMMEDIATE
+    }
+  },
+  "pool_member_id": {
+    type: Sequelize.INTEGER,
+    references: {
+      model: Users,
+      key: 'id',
+      deferrable: Sequelize.Deferrable.INITIALLY_IMMEDIATE
+    }
+  },
+  "contrubution_amount": {
+    type: Sequelize.INTEGER
+  },
+  "withdraw_amount": {
+    type: Sequelize.INTEGER
+  },
+  "join_date": {
+    type: Sequelize.DATE
+  }
+});
+
+const Chat_messages = sequelize.define('chat_messages', {
+  id: {
+    type: Sequelize.INTEGER,
+    autoIncrement: true,
+    primaryKey: true,
+    unique: true
+  },
+  "pool_id": {
+    type: Sequelize.INTEGER,
+    references: {
+      model: Pools,
+      key: 'id',
+      deferrable: Sequelize.Deferrable.INITIALLY_IMMEDIATE
+    }
+  },
+  "user_id": {
+    type: Sequelize.INTEGER,
+    references: {
+      model: Users,
+      key: 'id',
+      deferrable: Sequelize.Deferrable.INITIALLY_IMMEDIATE
+    }
+  },
+  message: {
+    type: Sequelize.TEXT
+  },
+  "time_stamp": {
+    type: Sequelize.DATE
+  }
+});
+
+const Ebay_wishlist_entry = sequelize.define('ebay_wishlist_entry', {
+  id: {
+    type: Sequelize.INTEGER,
+    autoIncrement: true,
+    primaryKey: true,
+    unique: true
+  },
+  "ebay_item_id": {
+    type: Sequelize.INTEGER
+  },
+  "expense_request_type_id": {
+    type: Sequelize.CHAR,
+    references: {
+      model: Expense_request_type,
+      key: 'id',
+      deferrable: Sequelize.Deferrable.INITIALLY_IMMEDIATE
+    }
+  }
+});
+
+const Checks = sequelize.define('checks', {
+  id: {
+    type: Sequelize.INTEGER,
+    autoIncrement: true,
+    primaryKey: true,
+    unique: true
+  },
+  amount: {
+    type: Sequelize.INTEGER
+  },
+  "name": {
+    type: Sequelize.CHAR
+  },
+  email: {
+    type: Sequelize.CHAR
+  },
+  description: {
+    type: Sequelize.TEXT
+  },
+  "is_physical": {
+    type: Sequelize.TEXT
+  },
+  "physical_address": {
+    type: Sequelize.TEXT
+  },
+  "expense_request_type_id": {
+    type: Sequelize.CHAR,
+    references: {
+      model: Expense_request_type,
+      key: 'id',
+      deferrable: Sequelize.Deferrable.INITIALLY_IMMEDIATE
+    }
+  }
+})
+
 sequelize
 .authenticate()
 .then(() => {
