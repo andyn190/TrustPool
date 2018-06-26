@@ -1,9 +1,8 @@
 language: node_js
 node_js: 
   - "stable"
+sudo: required
 addons:
-  chrome: stable
-before_install:
-  - google-chrome-stable --headless --disable-gpu --remote-debugging-port=9222 http://localhost & 
+  chrome: stable  
 script:
   - cd trust-pool-app && npm run travis
