@@ -4,4 +4,4 @@ node_js:
 before-script:
   -npm install
 script:
-  -cd trust-pool-app && npm test
+  -cd trust-pool-app && -npm test
