@@ -6,6 +6,7 @@ const db = require(path.join('${__dirname}', './../../database/db.js'))
 const bodyParser = require('body-parser');
 
 const setupRouters = require('./routers');
+const setupPassport = require('./passport');
 const { PUBLIC_PATH } = require('./config');
 
 const app = express();
@@ -14,6 +15,7 @@ app.use(cors());
 app.use(bodyParser.json());
 
 setupRouters(app);
+setupPassport(app);
 
 app.use(express.static(PUBLIC_PATH));
 module.exports.server = server;

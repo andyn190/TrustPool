@@ -1,6 +1,4 @@
-const express = require('express');
-
-const pools = express.Router();
+const pools = require('express').Router();
 
 pools.get('/', (req, res) => {
   res.status(200).send('recieved get request to pools');
