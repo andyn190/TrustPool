@@ -1,3 +1,3 @@
 #!/bin/bash
-
-cd /home/ec2-user/TrustPool/trust-pool-app && npm install && npm run build
+ls
+cd ../trust-pool-app && npm install && npm run build
