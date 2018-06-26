@@ -1,5 +1,7 @@
 language: node_js
 node_js: 
-  - "stable"    
+  - "stable"
+before-script:
+  - cd trust-pool-app  
 script:
   - npm run travis
