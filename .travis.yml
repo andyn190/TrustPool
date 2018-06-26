@@ -1,5 +1,7 @@
 language: node_js
 node_js: 
-  - "stable"   
+  - "stable"
+addons:
+  chrome: stable  
 script:
   - cd trust-pool-app && npm run travis
