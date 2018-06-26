@@ -12,19 +12,20 @@ const Users = sequelize.define('Users', {
   id: {
     type: Sequelize.INTEGER,
     autoIncrement: true,
-    primaryKey: true
+    primaryKey: true,
+    unique: true
   },
-  first_name: {
-    type: Sequelize.STRING
+  "first_name": {
+    type: Sequelize.CHAR
   },
-  last_name: {
-    type: Sequelize.STRING
+  "last_name": {
+    type: Sequelize.CHAR
   },
   email: {
-    type: Sequelize.STRING
+    type: Sequelize.CHAR
   },
-  image_url: {
-    type: Sequelize.STRING
+  "image_url": {
+    type: Sequelize.CHAR
   }
 });
 
@@ -32,27 +33,28 @@ const Pools = sequelize.define('Pools', {
   id: {
     type: Sequelize.INTEGER,
     autoIncrement: true,
-    primaryKey: true
+    primaryKey: true,
+    unique: true
   },
-  pool_value: {
+  "pool_value": {
     type: Sequelize.INTEGER
   },
   description: {
     type: Sequelize.TEXT
   },
   name: {
-    type: Sequelize.STRING
+    type: Sequelize.CHAR
   },
   imageURL: {
-    type: Sequelize.STRING
+    type: Sequelize.TEXT
   }, 
   public: {
-    type: Sequelize.STRING
+    type: Sequelize.CHAR
   },
   created_at: {
     type: Sequelize.DATE
   },
-  members_count: {
+  "members_count": {
     type: Sequelize.INTEGER
   },
   creator: {
@@ -65,13 +67,23 @@ const Pools = sequelize.define('Pools', {
   }
 });
 
-const Expense_request = sequelize.define('Expenserequest', {
+const Expense_request_type = sequelize.define('expense_request_type', {
+  id: {
+    type: Sequelize.CHAR,
+    primaryKey: true,
+    autoIncrement: true,
+    unique: true
+  }
+});
+
+const Expense_request = sequelize.define('Expense_request', {
   id: {
     type: Sequelize.INTEGER,
     autoIncrement: true,
-    primaryKey: true
+    primaryKey: true,
+    unique: true
   },
-  pool_id: {
+  "pool_id": {
     type: Sequelize.INTEGER,
     references: {
       model: Pools,
@@ -82,20 +94,20 @@ const Expense_request = sequelize.define('Expenserequest', {
   description: {
     type: Sequelize.TEXT
   },
-  name: {
-    type: Sequelize.STRING
+  "active_status": {
+    type: Sequelize.CHAR
   },
-  imageURL: {
-    type: Sequelize.STRING
+  "voter_count": {
+    type: Sequelize.INTEGER
   },
-  public: {
-    type: Sequelize.STRING
+  "expense_amount": {
+    type: Sequelize.INTEGER
   },
-  created_at: {
+  "created_at": {
     type: Sequelize.DATE
   },
-  members_count: {
-    type: Sequelize.INTEGER
+  "expiration_date": {
+    type: Sequelize.DATE
   },
   creator: {
     type: Sequelize.INTEGER,
@@ -104,8 +116,170 @@ const Expense_request = sequelize.define('Expenserequest', {
       key: 'id',
       deferrable: Sequelize.Deferrable.INITIALLY_IMMEDIATE
     }
+  },
+  "request_title": {
+    type: Sequelize.TEXT
+  },
+  method: {
+    type: Sequelize.CHAR,
+    references: {
+      model: Expense_request_type,
+      key: 'id',
+      deferrable: Sequelize.Deferrable.INITIALLY_IMMEDIATE
+    }
   }
 });
+
+const Contribution_entry = sequelize.define('contribution_entry', {
+  id: {
+    type: Sequelize.INTEGER,
+    autoIncrement: true,
+    primaryKey: true,
+    unique: true
+  },
+  "pool_id": {
+    type: Sequelize.INTEGER,
+    references: {
+      model: Pools,
+      key: 'id',
+      deferrable: Sequelize.Deferrable.INITIALLY_IMMEDIATE
+    }
+  },
+  "pool_member_id": {
+    type: Sequelize.INTEGER,
+    references: {
+      model: Users,
+      key: 'id',
+      deferrable: Sequelize.Deferrable.INITIALLY_IMMEDIATE
+    }
+  },
+  "contribution_amount": {
+    type: Sequelize.INTEGER
+  },
+  "time_stamp": {
+    type: Sequelize.DATE
+  }
+});
+
+const Pool_members = sequelize.define('pool_members', {
+  id: {
+    type: Sequelize.INTEGER,
+    autoIncrement: true,
+    primaryKey: true,
+    unique: true
+  },
+  "pool_id": {
+    type: Sequelize.INTEGER,
+    references: {
+      model: Pools,
+      key: 'id',
+      deferrable: Sequelize.Deferrable.INITIALLY_IMMEDIATE
+    }
+  },
+  "pool_member_id": {
+    type: Sequelize.INTEGER,
+    references: {
+      model: Users,
+      key: 'id',
+      deferrable: Sequelize.Deferrable.INITIALLY_IMMEDIATE
+    }
+  },
+  "contrubution_amount": {
+    type: Sequelize.INTEGER
+  },
+  "withdraw_amount": {
+    type: Sequelize.INTEGER
+  },
+  "join_date": {
+    type: Sequelize.DATE
+  }
+});
+
+const Chat_messages = sequelize.define('chat_messages', {
+  id: {
+    type: Sequelize.INTEGER,
+    autoIncrement: true,
+    primaryKey: true,
+    unique: true
+  },
+  "pool_id": {
+    type: Sequelize.INTEGER,
+    references: {
+      model: Pools,
+      key: 'id',
+      deferrable: Sequelize.Deferrable.INITIALLY_IMMEDIATE
+    }
+  },
+  "user_id": {
+    type: Sequelize.INTEGER,
+    references: {
+      model: Users,
+      key: 'id',
+      deferrable: Sequelize.Deferrable.INITIALLY_IMMEDIATE
+    }
+  },
+  message: {
+    type: Sequelize.TEXT
+  },
+  "time_stamp": {
+    type: Sequelize.DATE
+  }
+});
+
+const Ebay_wishlist_entry = sequelize.define('ebay_wishlist_entry', {
+  id: {
+    type: Sequelize.INTEGER,
+    autoIncrement: true,
+    primaryKey: true,
+    unique: true
+  },
+  "ebay_item_id": {
+    type: Sequelize.INTEGER
+  },
+  "expense_request_type_id": {
+    type: Sequelize.CHAR,
+    references: {
+      model: Expense_request_type,
+      key: 'id',
+      deferrable: Sequelize.Deferrable.INITIALLY_IMMEDIATE
+    }
+  }
+});
+
+const Checks = sequelize.define('checks', {
+  id: {
+    type: Sequelize.INTEGER,
+    autoIncrement: true,
+    primaryKey: true,
+    unique: true
+  },
+  amount: {
+    type: Sequelize.INTEGER
+  },
+  "name": {
+    type: Sequelize.CHAR
+  },
+  email: {
+    type: Sequelize.CHAR
+  },
+  description: {
+    type: Sequelize.TEXT
+  },
+  "is_physical": {
+    type: Sequelize.TEXT
+  },
+  "physical_address": {
+    type: Sequelize.TEXT
+  },
+  "expense_request_type_id": {
+    type: Sequelize.CHAR,
+    references: {
+      model: Expense_request_type,
+      key: 'id',
+      deferrable: Sequelize.Deferrable.INITIALLY_IMMEDIATE
+    }
+  }
+})
 
 sequelize
 .authenticate()
