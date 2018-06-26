@@ -1,8 +1,6 @@
 language: node_js
 node_js: 
   - "stable"
-  - "iojs"
-  - "7"
 before-script:
   -cd trust-pool-app && npm install
 script:
