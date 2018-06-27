@@ -4,7 +4,7 @@ const dotenv = require('dotenv');
 dotenv.config();
 const { AWSPASSWORD, AWSUSER } = process.env;
 
-const connectionString = `postgres://${AWSUSER}:${AWSPASSWORD}@trustpooldb.cqz6ljdkuhix.us-east-2.rds.amazonaws.com:5432/trustpooldb`
+const connectionString = `postgres://${AWSUSER}:${AWSPASSWORD}@trustpooldb.cf3jswth6a7j.us-east-2.rds.amazonaws.com:5432/trustpooldb`
 
 const sequelize = new Sequelize(connectionString);
 
