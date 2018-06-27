@@ -290,6 +290,7 @@ const Checks = sequelize.define('Checks', {
   }
 });
 
+<<<<<<< HEAD:trust-pool-app/database/index.js
 
 
 sequelize
@@ -316,3 +317,25 @@ module.exports = {
   Checks
 };
 
+=======
+// Users.sync({ force: true }).then(() => {
+  // Users.create({
+    // first_name: 'Andy',
+    // last_name: 'Nguyen'
+  // })
+// });
+// Users.findAll().then(users => {
+  // console.log(users);
+// }).catch((error) => {
+  // console.log(error);
+// })
+// sequelize
+// .authenticate()
+// .then(() => {
+  // console.log('connection has been established');
+// })
+// .catch(err => {
+  // console.error('unable to connect to the database:');
+// })
+// working
+>>>>>>> f9aeb6f2271cfaa80b58ad4c416f3d0038d0d97c:trust-pool-app/database/db.js
