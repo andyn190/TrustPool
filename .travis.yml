@@ -8,8 +8,6 @@ addons:
     sources:
       - google-chrome
     packages:
-      - google-chrome-stable
-before_install:
-  - google-chrome-stable --disable-gpu --remote-debugging-port=9876 http://0.0.0.0:9876/ &
+      - google-chrome-stable  
 script:
   - cd trust-pool-app && npm run travis
