@@ -2,8 +2,13 @@ language: node_js
 node_js: 
   - "stable"
 sudo: required
+dist: trusty
 addons:
-  chrome: stable
+  apt:
+    sources:
+      - google-chrome
+    packages:
+      - google-chrome-stable
 before_install:
   - google-chrome-stable --disable-gpu --remote-debugging-port=9876 http://0.0.0.0:9876/ &
 script:
