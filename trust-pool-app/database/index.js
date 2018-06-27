@@ -25,9 +25,14 @@ const Users = sequelize.define('Users', {
   },
   email: {
     type: Sequelize.CHAR,
-    allowNull: true
+    allowNull: true,
+    unique: true
   },
   "image_url": {
+    type: Sequelize.CHAR,
+    allowNull: true
+  },
+  password: {
     type: Sequelize.CHAR,
     allowNull: true
   }
@@ -71,7 +76,7 @@ const Pools = sequelize.define('Pools', {
   }
 });
 
-const Expense_request_type = sequelize.define('expense_request_type', {
+const ExpenseRequestType = sequelize.define('Expense_Request_Type', {
   id: {
     type: Sequelize.CHAR,
     primaryKey: true,
@@ -80,7 +85,7 @@ const Expense_request_type = sequelize.define('expense_request_type', {
   }
 });
 
-const Expense_request = sequelize.define('Expense_request', {
+const ExpenseRequest = sequelize.define('Expense_Request', {
   id: {
     type: Sequelize.INTEGER,
     autoIncrement: true,
@@ -127,14 +132,14 @@ const Expense_request = sequelize.define('Expense_request', {
   method: {
     type: Sequelize.CHAR,
     references: {
-      model: Expense_request_type,
+      model: ExpenseRequestType,
       key: 'id',
       deferrable: Sequelize.Deferrable.INITIALLY_IMMEDIATE
     }
   }
 });
 
-const Contribution_entry = sequelize.define('contribution_entry', {
+const ContributionEntry = sequelize.define('Contribution_Entry', {
   id: {
     type: Sequelize.INTEGER,
     autoIncrement: true,
@@ -165,7 +170,7 @@ const Contribution_entry = sequelize.define('contribution_entry', {
   }
 });
 
-const Pool_members = sequelize.define('pool_members', {
+const PoolMembers = sequelize.define('Pool_Members', {
   id: {
     type: Sequelize.INTEGER,
     autoIncrement: true,
@@ -199,7 +204,7 @@ const Pool_members = sequelize.define('pool_members', {
   }
 });
 
-const Chat_messages = sequelize.define('chat_messages', {
+const ChatMessages = sequelize.define('Chat_Messages', {
   id: {
     type: Sequelize.INTEGER,
     autoIncrement: true,
@@ -230,7 +235,7 @@ const Chat_messages = sequelize.define('chat_messages', {
   }
 });
 
-const Ebay_wishlist_entry = sequelize.define('ebay_wishlist_entry', {
+const EbayWishlistEntry = sequelize.define('Ebay_Wishlist_Entry', {
   id: {
     type: Sequelize.INTEGER,
     autoIncrement: true,
@@ -243,14 +248,14 @@ const Ebay_wishlist_entry = sequelize.define('ebay_wishlist_entry', {
   "expense_request_type_id": {
     type: Sequelize.CHAR,
     references: {
-      model: Expense_request_type,
+      model: ExpenseRequestType,
       key: 'id',
       deferrable: Sequelize.Deferrable.INITIALLY_IMMEDIATE
     }
   }
 });
 
-const Checks = sequelize.define('checks', {
+const Checks = sequelize.define('Checks', {
   id: {
     type: Sequelize.INTEGER,
     autoIncrement: true,
@@ -278,30 +283,36 @@ const Checks = sequelize.define('checks', {
   "expense_request_type_id": {
     type: Sequelize.CHAR,
     references: {
-      model: Expense_request_type,
+      model: ExpenseRequestType,
       key: 'id',
       deferrable: Sequelize.Deferrable.INITIALLY_IMMEDIATE
     }
   }
 });
 
-// Users.sync({ force: true }).then(() => {
-  // Users.create({
-    // first_name: 'Andy',
-    // last_name: 'Nguyen'
-  // })
-// });
-// Users.findAll().then(users => {
-  // console.log(users);
-// }).catch((error) => {
-  // console.log(error);
-// })
-// sequelize
-// .authenticate()
-// .then(() => {
-  // console.log('connection has been established');
-// })
-// .catch(err => {
-  // console.error('unable to connect to the database:');
-// })
-// working
+
+
+sequelize
+.authenticate()
+.then(() => {
+  console.log('connection has been established');
+})
+.catch(err => {
+  console.error('unable to connect to the database:');
+})
+
+// Users.sync({force: true}).then((res) => {console.log(res);}).catch((err)=>{console.log(err)});
+
+module.exports = {
+  sequelize,
+  Users,
+  Pools,
+  ExpenseRequestType,
+  ExpenseRequest,
+  ContributionEntry,
+  PoolMembers,
+  ChatMessages,
+  EbayWishlistEntry,
+  Checks
+};
+
