@@ -16,19 +16,23 @@ const Users = sequelize.define('Users', {
     unique: true
   },
   "first_name": {
-    type: Sequelize.CHAR,
+    type: Sequelize.CHAR(15),
     allowNull: true
   },
   "last_name": {
-    type: Sequelize.CHAR,
+    type: Sequelize.CHAR(15),
     allowNull: true
   },
   email: {
-    type: Sequelize.CHAR,
+    type: Sequelize.CHAR(30),
     allowNull: true
   },
   "image_url": {
     type: Sequelize.CHAR,
+    allowNull: true
+  },
+  password: {
+    type: Sequelize.CHAR(50),
     allowNull: true
   }
 });
@@ -286,16 +290,18 @@ const Checks = sequelize.define('checks', {
 });
 
 // Users.sync({ force: true }).then(() => {
-  Users.create({
-    first_name: 'Andy',
-    last_name: 'Nguyen'
-  })
+//   Users.create({
+//     first_name: 'Andy',
+//     last_name: 'Nguyen',
+//     password: 'funkybunch'
+//   })
 // });
-Users.findAll().then(users => {
-  console.log(users);
-}).catch((error) => {
-  console.log(error);
-})
+
+// Users.findAll().then(users => {
+//   console.log(users);
+// }).catch((error) => {
+//   console.log(error);
+// })
 sequelize
 .authenticate()
 .then(() => {
