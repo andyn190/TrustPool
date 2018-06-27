@@ -5,7 +5,7 @@ const { SESSION_OPTS, GOOGLE_KEYS } = require('../config');
 const {
   findOrCreate,
   findOrCreateUser,
-} = require(path.join('${__dirname}', './../../database/helpers.js'));
+} = require('./../../database/helpers.js');
 
 module.exports = (app) => {
   app.use(session(SESSION_OPTS));
@@ -25,6 +25,14 @@ module.exports = (app) => {
     console.log(accessToken, 'Access Token');
     console.log(refreshToken, 'Refresh Token');
     console.log(profile, 'Profile');
+    const { name, _json, id} = profile; 
+    const last_name = name.familyName;
+    const first_name = name.givenName;
+    const image_url = _json.image.url;
+    console.log(image_url);
+    findOrCreateUser(null, first_name, last_name, image_url, null, id)
+      .then((succ) => {console.log(succ);})
+      .catch((err) => {console.log(err);});
     done();
   }));
 };
