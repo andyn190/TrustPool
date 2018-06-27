@@ -7,7 +7,8 @@
     "build": "ng build",
     "test": "ng test",
     "lint": "ng lint",
-    "travis":"npm install && test:once: ng test --watch=false",
+    "test:once": "ng test --watch=false",
+    "travis":"npm install && npm run test:once",
     "e2e": "ng e2e"
   },
   "private": true,
