@@ -7,5 +7,5 @@ import { ReactiveFormsModule } from '@angular/forms';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent {
-  title = 'Trust Pool App';
+  
 }
