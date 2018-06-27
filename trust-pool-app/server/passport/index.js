@@ -5,6 +5,7 @@ const { SESSION_OPTS, GOOGLE_KEYS } = require('../config');
 const {
   findOrCreate,
   findOrCreateUser,
+  findUserById,
 } = require('./../../database/helpers.js');
 
 module.exports = (app) => {
@@ -14,7 +15,9 @@ module.exports = (app) => {
 
   passport.serializeUser((user, done) => done(null, user.id));
   passport.deserializeUser((id, done) => {
-    
+    findUserById(id)
+      .then(user=>done(null, user))
+      .catch(err=>console.log(err));
   });
 
   passport.use(new GoogleStrategy({
