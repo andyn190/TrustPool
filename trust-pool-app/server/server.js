@@ -5,10 +5,6 @@ const path = require('path');
 const bodyParser = require('body-parser');
 
 const db = require(path.join('${__dirname}', './../../database'));
-const {
-  findOrCreate,
-  findOrCreateUser,
-} = require(path.join('${__dirname}', './../../database/helpers.js'));
 
 const setupRouters = require('./routers');
 const setupPassport = require('./passport');
