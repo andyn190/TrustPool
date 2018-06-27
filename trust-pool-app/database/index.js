@@ -31,9 +31,10 @@ const Users = sequelize.define('Users', {
   "image_url": {
     type: Sequelize.CHAR,
     allowNull: true
-  }
+  },
   password: {
-    type: Sequelize.CHAR
+    type: Sequelize.CHAR,
+    allowNull: true
   }
 });
 
@@ -292,7 +293,8 @@ const Checks = sequelize.define('Checks', {
 // Users.sync({ force: true }).then(() => {
   Users.create({
     first_name: 'Andy',
-    last_name: 'Nguyen'
+    last_name: 'Nguyen',
+    password: 'password'
   })
 // });
 Users.findAll().then(users => {
