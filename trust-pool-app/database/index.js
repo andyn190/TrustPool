@@ -303,13 +303,16 @@ sequelize
 
 // Users.sync({force: true}).then((res) => {console.log(res);}).catch((err)=>{console.log(err)});
 
-module.exports.sequelize = sequelize;
-module.exports.Users = Users;
-module.exports.Pools = Pools;
-module.exports.ExpenseRequestType = ExpenseRequestType;
-module.exports.ExpenseRequest = ExpenseRequest;
-module.exports.ContributionEntry = ContributionEntry;
-module.exports.PoolMembers = PoolMembers;
-module.exports.ChatMessages = ChatMessages;
-module.exports.EbayWishlistEntry = EbayWishlistEntry
-module.exports.Checks = Checks
+module.exports = {
+  sequelize,
+  Users,
+  Pools,
+  ExpenseRequestType,
+  ExpenseRequest,
+  ContributionEntry,
+  PoolMembers,
+  ChatMessages,
+  EbayWishlistEntry,
+  Checks
+};
+
