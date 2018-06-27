@@ -27,6 +27,9 @@ const Users = sequelize.define('Users', {
   "image_url": {
     type: Sequelize.CHAR
   }
+  password: {
+    type: Sequelize.CHAR
+  }
 });
 
 const Pools = sequelize.define('Pools', {
