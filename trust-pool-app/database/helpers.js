@@ -38,7 +38,12 @@ const findOrCreate = ( model, where ) => {
   });
 }
 
-findOrCreate('Users', { where: {email: 'jhankins02@gmail.com'}, defaults: {'first_name': 'jelani', 'last_name': 'hankins', 'image_url': 'https://lh6.googleusercontent.com/-xVfxeB5daxA/AAAAAAAAAAI/AAAAAAAAAkc/sHx0_aCUNnU/photo.jpg?sz=50', password: 'password' } })
-.then((user) => {console.log(user)})
-.catch((err) => { console.log(err);});
+const findOrCreateUser = (email, first_name, last_name, image_url, password) => {
+  return findOrCreate('Users', { where: {email}, defaults: {first_name, last_name, image_url, password } });
+};
+
+
+
+
+
 
