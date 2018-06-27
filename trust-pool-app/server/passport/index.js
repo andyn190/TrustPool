@@ -12,10 +12,10 @@ module.exports = (app) => {
   app.use(passport.initialize());
   app.use(passport.session());
 
-  // passport.serializeUser((user, done) => done(null, user.id));
-  // passport.deserializeUser((id, done) => {
-  //   
-  // });
+  passport.serializeUser((user, done) => done(null, user.id));
+  passport.deserializeUser((id, done) => {
+    
+  });
 
   passport.use(new GoogleStrategy({
     callbackURL: '/login/google/redirect',
@@ -31,8 +31,8 @@ module.exports = (app) => {
     const image_url = _json.image.url;
     console.log(image_url);
     findOrCreateUser(null, first_name, last_name, image_url, null, id)
-      .then((succ) => {console.log(succ);})
-      .catch((err) => {console.log(err);});
-    done();
+      .then((user) => {done(null, user);})
+      .catch((err) => { done(err, null);});
+    
   }));
 };
