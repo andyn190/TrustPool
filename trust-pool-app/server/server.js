@@ -2,9 +2,13 @@ const express = require('express');
 const http = require('http');
 const cors = require('cors');
 const path = require('path');
-const db = require(path.join('${__dirname}', './../../database'));
-const helpers = require(path.join('${__dirname}', './../../database/helpers.js'));
 const bodyParser = require('body-parser');
+
+const db = require(path.join('${__dirname}', './../../database'));
+const {
+  findOrCreate,
+  findOrCreateUser,
+} = require(path.join('${__dirname}', './../../database/helpers.js'));
 
 const setupRouters = require('./routers');
 const setupPassport = require('./passport');
