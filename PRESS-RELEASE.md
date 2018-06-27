@@ -1,5 +1,5 @@
 Name
-GoCryptMe
+TrustPool
 
 Heading
 Donate to a fundraiser and receive a reward like a digital badge or a T-shirt with your own personal QR code that will display your donation accolades when scanned. Also schedule meetups and charity awareness events with like minded individuals with our meetups chat.

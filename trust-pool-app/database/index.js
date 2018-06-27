@@ -2,9 +2,9 @@ const pg = require('pg');
 const Sequelize = require('sequelize');
 const dotenv = require('dotenv');
 dotenv.config();
-const { AWSPASSWORD } = process.env;
+const { AWSPASSWORD, AWSUSER } = process.env;
 
-const connectionString = `postgres://andyn190:${AWSPASSWORD}@trustpooldb.cqz6ljdkuhix.us-east-2.rds.amazonaws.com:5432/trustpooldb`
+const connectionString = `postgres://${AWSUSER}:${AWSPASSWORD}@trustpooldb.cf3jswth6a7j.us-east-2.rds.amazonaws.com:5432/trustpooldb`
 
 const sequelize = new Sequelize(connectionString);
 
@@ -16,17 +16,22 @@ const Users = sequelize.define('Users', {
     unique: true
   },
   "first_name": {
-    type: Sequelize.CHAR
+    type: Sequelize.CHAR,
+    allowNull: true
   },
   "last_name": {
-    type: Sequelize.CHAR
+    type: Sequelize.CHAR,
+    allowNull: true
   },
   email: {
-    type: Sequelize.CHAR
+    type: Sequelize.CHAR,
+    allowNull: true,
+    unique: true
   },
   "image_url": {
-    type: Sequelize.CHAR
-  },
+    type: Sequelize.CHAR,
+    allowNull: true
+  }
   password: {
     type: Sequelize.CHAR
   }
@@ -282,8 +287,19 @@ const Checks = sequelize.define('Checks', {
       deferrable: Sequelize.Deferrable.INITIALLY_IMMEDIATE
     }
   }
-})
+});
 
+// Users.sync({ force: true }).then(() => {
+  Users.create({
+    first_name: 'Andy',
+    last_name: 'Nguyen'
+  })
+// });
+Users.findAll().then(users => {
+  console.log(users);
+}).catch((error) => {
+  console.log(error);
+})
 sequelize
 .authenticate()
 .then(() => {
