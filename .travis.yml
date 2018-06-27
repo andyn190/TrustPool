@@ -1,7 +1,16 @@
 language: node_js
 node_js: 
-  - "stable"  
-before_install:
-  - google-chrome-stable --headless --disable-gpu
+  - "stable"
+sudo: required
+dist: trusty
+addons:
+  apt:
+    sources:
+      - google-chrome
+    packages:
+      - google-chrome-stable
+before_script:
+  - export DISPLAY=:99.0
+  - sh -e /etc/init.d/xvfb start 
 script:
-  -npm run travis
+  - cd trust-pool-app && npm run travis
