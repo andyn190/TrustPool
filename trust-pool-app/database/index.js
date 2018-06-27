@@ -26,7 +26,7 @@ const Users = sequelize.define('Users', {
   },
   "image_url": {
     type: Sequelize.CHAR
-  }
+  },
   password: {
     type: Sequelize.CHAR
   }
@@ -133,7 +133,7 @@ const ExpenseRequest = sequelize.define('Expense_Request', {
   }
 });
 
-const Contribution_Entry = sequelize.define('Contribution_Entry', {
+const ContributionEntry = sequelize.define('Contribution_Entry', {
   id: {
     type: Sequelize.INTEGER,
     autoIncrement: true,
@@ -164,7 +164,7 @@ const Contribution_Entry = sequelize.define('Contribution_Entry', {
   }
 });
 
-const Pool_Members = sequelize.define('Pool_Members', {
+const PoolMembers = sequelize.define('Pool_Members', {
   id: {
     type: Sequelize.INTEGER,
     autoIncrement: true,
@@ -198,7 +198,7 @@ const Pool_Members = sequelize.define('Pool_Members', {
   }
 });
 
-const Chat_Messages = sequelize.define('Chat_Messages', {
+const ChatMessages = sequelize.define('Chat_Messages', {
   id: {
     type: Sequelize.INTEGER,
     autoIncrement: true,
@@ -229,7 +229,7 @@ const Chat_Messages = sequelize.define('Chat_Messages', {
   }
 });
 
-const Ebay_Wishlist_Entry = sequelize.define('Ebay_Wishlist_Entry', {
+const EbayWishlistEntry = sequelize.define('Ebay_Wishlist_Entry', {
   id: {
     type: Sequelize.INTEGER,
     autoIncrement: true,
@@ -293,4 +293,13 @@ sequelize
   console.error('unable to connect to the database:');
 })
 
-exports = sequelize;
+module.exports.sequelize = sequelize;
+module.exports.Users = Users;
+module.exports.Pools = Pools;
+module.exports.ExpenseRequestType = ExpenseRequestType;
+module.exports.ExpenseRequest = ExpenseRequest;
+module.exports.ContributionEntry = ContributionEntry;
+module.exports.PoolMembers = PoolMembers;
+module.exports.ChatMessages = ChatMessages;
+module.exports.EbayWishlistEntry = EbayWishlistEntry
+module.exports.Checks = Checks
