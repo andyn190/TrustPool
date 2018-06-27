@@ -2,6 +2,7 @@
   "git.ignoreLimitWarning": true,
   "cSpell.words": [
     "AWSPASSWORD",
+    "AWSUSER",
     "trustpooldb"
   ]
 }
