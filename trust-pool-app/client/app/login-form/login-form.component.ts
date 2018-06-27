@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'app-login-form',
@@ -7,7 +8,7 @@ import { Component, OnInit } from '@angular/core';
 })
 export class LoginFormComponent implements OnInit {
 
-  constructor() { }
+  constructor(private http: HttpClient) { }
 
   ngOnInit() {
   }
@@ -15,6 +16,8 @@ export class LoginFormComponent implements OnInit {
     e.preventDefault();
     let username = e.target.elements[0].value;
     let password = e.target.elements[1].value;
-    console.log(username, password)
+    this.http.get('/').subscribe(data => {
+      console.log(data);
+    })
   }
 }
