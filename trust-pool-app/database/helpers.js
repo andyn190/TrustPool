@@ -41,9 +41,3 @@ const findOrCreate = ( model, where ) => {
 const findOrCreateUser = (email, first_name, last_name, image_url, password) => {
   return findOrCreate('Users', { where: {email}, defaults: {first_name, last_name, image_url, password } });
 };
-
-
-
-
-
-
