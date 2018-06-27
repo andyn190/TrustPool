@@ -42,5 +42,7 @@ const findOrCreateUser = (email, first_name, last_name, image_url, password) => 
   return findOrCreate('Users', { where: {email}, defaults: {first_name, last_name, image_url, password } });
 };
 
-module.exports.findOrCreate = findOrCreate;
-module.exports.findOrCreateUser = findOrCreateUser;
+module.exports = {
+  findOrCreate,
+  findOrCreateUser
+};
