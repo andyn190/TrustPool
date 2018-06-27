@@ -1,0 +1,52 @@
+Merge branch 'master' of https://github.com/15-percent/TrustPool into login
+
+# Conflicts:
+#	trust-pool-app/database/index.js
+#
+# It looks like you may be committing a merge.
+# If this is not correct, please remove the file
+#	.git/MERGE_HEAD
+# and try again.
+
+
+# Please enter the commit message for your changes. Lines starting
+# with '#' will be ignored, and an empty message aborts the commit.
+#
+# On branch login
+# All conflicts fixed but you are still merging.
+#
+# Changes to be committed:
+#	modified:   client/app/app.component.html
+#	modified:   client/app/app.module.ts
+#	new file:   client/app/creategroup/creategroup.component.css
+#	new file:   client/app/creategroup/creategroup.component.html
+#	new file:   client/app/creategroup/creategroup.component.spec.ts
+#	new file:   client/app/creategroup/creategroup.component.ts
+#	new file:   client/app/createrequest/createrequest.component.css
+#	new file:   client/app/createrequest/createrequest.component.html
+#	new file:   client/app/createrequest/createrequest.component.spec.ts
+#	new file:   client/app/createrequest/createrequest.component.ts
+#	new file:   client/app/ebaypage/ebaypage.component.css
+#	new file:   client/app/ebaypage/ebaypage.component.html
+#	new file:   client/app/ebaypage/ebaypage.component.spec.ts
+#	new file:   client/app/ebaypage/ebaypage.component.ts
+#	new file:   client/app/groups/groups.component.css
+#	new file:   client/app/groups/groups.component.html
+#	new file:   client/app/groups/groups.component.spec.ts
+#	new file:   client/app/groups/groups.component.ts
+#	modified:   client/app/homepage/homepage.component.html
+#	new file:   client/app/userinfo/userinfo.component.css
+#	new file:   client/app/userinfo/userinfo.component.html
+#	new file:   client/app/userinfo/userinfo.component.spec.ts
+#	new file:   client/app/userinfo/userinfo.component.ts
+#	new file:   client/app/usersgroup/usersgroup.component.css
+#	new file:   client/app/usersgroup/usersgroup.component.html
+#	new file:   client/app/usersgroup/usersgroup.component.spec.ts
+#	new file:   client/app/usersgroup/usersgroup.component.ts
+#	new file:   database/helpers.js
+#	renamed:    database/db.js -> database/index.js
+#	modified:   package-lock.json
+#	modified:   package.json
+#	modified:   server/passport/index.js
+#	modified:   server/server.js
+#
