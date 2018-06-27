@@ -290,18 +290,8 @@ const Checks = sequelize.define('Checks', {
   }
 });
 
-// Users.sync({ force: true }).then(() => {
-  Users.create({
-    first_name: 'Andy',
-    last_name: 'Nguyen',
-    password: 'password'
-  })
-// });
-Users.findAll().then(users => {
-  console.log(users);
-}).catch((error) => {
-  console.log(error);
-})
+
+
 sequelize
 .authenticate()
 .then(() => {
@@ -310,6 +300,8 @@ sequelize
 .catch(err => {
   console.error('unable to connect to the database:');
 })
+
+// Users.sync({force: true}).then((res) => {console.log(res);}).catch((err)=>{console.log(err)});
 
 module.exports.sequelize = sequelize;
 module.exports.Users = Users;
