@@ -16,16 +16,20 @@ const Users = sequelize.define('Users', {
     unique: true
   },
   "first_name": {
-    type: Sequelize.CHAR
+    type: Sequelize.CHAR,
+    allowNull: true
   },
   "last_name": {
-    type: Sequelize.CHAR
+    type: Sequelize.CHAR,
+    allowNull: true
   },
   email: {
-    type: Sequelize.CHAR
+    type: Sequelize.CHAR,
+    allowNull: true
   },
   "image_url": {
-    type: Sequelize.CHAR
+    type: Sequelize.CHAR,
+    allowNull: true
   }
 });
 
@@ -279,8 +283,19 @@ const Checks = sequelize.define('checks', {
       deferrable: Sequelize.Deferrable.INITIALLY_IMMEDIATE
     }
   }
-})
+});
 
+// Users.sync({ force: true }).then(() => {
+  Users.create({
+    first_name: 'Andy',
+    last_name: 'Nguyen'
+  })
+// });
+Users.findAll().then(users => {
+  console.log(users);
+}).catch((error) => {
+  console.log(error);
+})
 sequelize
 .authenticate()
 .then(() => {
@@ -289,3 +304,4 @@ sequelize
 .catch(err => {
   console.error('unable to connect to the database:');
 })
+// working
