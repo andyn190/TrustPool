@@ -64,9 +64,6 @@ const Pools = sequelize.define('Pools', {
   voteConfig: {
     type: Sequelize.INTEGER,
   },
-  created_at: {
-    type: Sequelize.DATE,
-  },
   members_count: {
     type: Sequelize.INTEGER,
   },
