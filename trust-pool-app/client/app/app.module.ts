@@ -13,7 +13,8 @@ import { GroupsComponent } from './groups/groups.component';
 import { CreategroupComponent } from './creategroup/creategroup.component';
 import { CreaterequestComponent } from './createrequest/createrequest.component';
 import { EbaypageComponent } from './ebaypage/ebaypage.component'
-import { AuthService } from './service/auth.service';
+import { AuthService } from './services/auth/auth.service';
+import { PoolsService } from './services/pools/pools.service';
 import { ContributeComponent } from './contribute/contribute.component';
 import { AccountpageComponent } from './accountpage/accountpage.component';
 import { GrouppageComponent } from './grouppage/grouppage.component';
@@ -53,7 +54,7 @@ const appRoutes: Routes = [
     ),
     FormsModule
   ],
-  providers: [AuthService],
+  providers: [AuthService, PoolsService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
