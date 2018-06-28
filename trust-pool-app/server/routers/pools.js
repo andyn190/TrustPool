@@ -71,6 +71,15 @@ pools.post('/contribute', (req, res) => {
   // Pay with stripe, 
   // if stripe payment is accepted,
   // create a contributtion entry into db
+  let charge = stripe.charges.create({
+    amount,
+    currency: 'usd',
+    source: stripeToken,
+  }, (err, charge) => {
+    if(err && err.type === 'StripeCardError'){
+      console.log('CARD DECLINED');
+    }
+  });
   res.status(200).send(`recieved request for member ${memberId} to contribute to pool ${poolId}`);
 });
 
