@@ -81,16 +81,12 @@ const findOrCreate = ( model, where ) => {
         reject();
       }
     });
-<<<<<<< HEAD
-=======
     item.isNewRecord = result.isNewRecord;
     if(item){
       resolve(item);
     } else {
       reject();
     }
-  });
->>>>>>> bf413cd53b0c1f152fe37a4137a07d698a41bbd1
   });
 };
 
@@ -119,13 +115,9 @@ module.exports = {
   findOrCreateUser,
   findOne,
   findUserById,
-<<<<<<< HEAD
-};
-=======
   create,
   createPool,
   findPoolByName,
   findAllPools,
   findAll,
 };
->>>>>>> bf413cd53b0c1f152fe37a4137a07d698a41bbd1
