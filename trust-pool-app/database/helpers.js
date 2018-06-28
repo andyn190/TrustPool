@@ -67,16 +67,23 @@ const findOrCreateUser = (email, first_name, last_name, image_url, password, goo
   } 
 };
 
-const findOrCreatePool = (name, imgUrl, desc, voteConfig, creator, public) => {
+const create = (model, item) => {
+  return models[model].create(item);
   console.log(name, imgUrl, desc, voteConfig, creator, public);
+    User.create({ username: 'fnord', job: 'omnomnom' })
     return findOrCreate('Pools', { where: { name }, defaults: { imgUrl, desc, voteConfig, creator, public }});
 };
+
+const createPool = (name, imgUrl, desc, voteConfig, creator, public) => {
+  const pool = { name, imgUrl, desc, voteConfig, creator, public };
+  return create('Pools', pool);
+}
 
 module.exports = {
   findOrCreate,
   findOrCreateUser,
   findOne,
   findUserById,
-  findOrCreatePool,
+  createPool,
   findPoolByName,
 };
