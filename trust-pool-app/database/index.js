@@ -1,12 +1,8 @@
 const Sequelize = require('sequelize');
-const dotenv = require('dotenv');
 
-dotenv.config();
-const { AWSPASSWORD, AWSUSER } = process.env;
-const awpDb = `postgres://${AWSUSER}:${AWSPASSWORD}@trustpooldb.cf3jswth6a7j.us-east-2.rds.amazonaws.com:5432/trustpooldb`;
-const localDb = 'postgres://localhost:5432/db';
+const { AWSDB, LOCALDB } = require('./config');
 
-const sequelize = new Sequelize(localDb);
+const sequelize = new Sequelize(LOCALDB || AWSDB);
 
 const Users = sequelize.define('Users', {
   id: {
@@ -303,7 +299,7 @@ sequelize
     console.error('unable to connect to the database:');
   });
 
-// Users.sync({force: true}).then((res) => {console.log(res);}).catch((err)=>{console.log(err)});
+// sequelize.sync({force: true}).then((res) => {console.log(res);}).catch((err)=>{console.log(err)});
 
 module.exports = {
   sequelize,
