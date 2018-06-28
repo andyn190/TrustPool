@@ -8,6 +8,7 @@ const db = require(path.join('${__dirname}', './../../database'));
 
 const setupRouters = require('./routers');
 const { setupPassport } = require('./passport');
+const authenticated = require('./passport/authenticated');
 const { PUBLIC_PATH } = require('./config');
 
 const app = express();
@@ -19,6 +20,6 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 setupPassport(app);
 setupRouters(app);
-
+app.use(authenticated);
 app.use(express.static(PUBLIC_PATH));
 module.exports.server = server;
