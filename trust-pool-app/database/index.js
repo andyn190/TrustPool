@@ -2,7 +2,6 @@ const Sequelize = require('sequelize');
 
 const { AWSDB, LOCALDB } = require('./config');
 
-
 const sequelize = new Sequelize(LOCALDB || AWSDB);
 
 const Users = sequelize.define('Users', {
