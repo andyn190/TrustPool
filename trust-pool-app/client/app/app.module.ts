@@ -3,6 +3,8 @@ import { FormsModule } from '@angular/forms';
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { HttpClientModule, HttpHeaders } from '@angular/common/http';
+import { MatSidenavModule, } from '@angular/material';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations'
 
 import { AppComponent } from './app.component';
 import { HomepageComponent } from './homepage/homepage.component';
@@ -16,6 +18,8 @@ import { UserinfoComponent } from './userinfo/userinfo.component';
 import { CreaterequestComponent } from './createrequest/createrequest.component';
 import { EbaypageComponent } from './ebaypage/ebaypage.component'
 import { AuthService } from './service/auth.service';
+import { MatButtonModule } from '@angular/material/button';
+
 
 const appRoutes: Routes = [
   { path: 'login', component: LoginFormComponent },
@@ -40,11 +44,14 @@ const appRoutes: Routes = [
     UsersgroupComponent,
     UserinfoComponent,
     CreaterequestComponent,
-    EbaypageComponent
+    EbaypageComponent,
   ],
   imports: [
     BrowserModule,
     HttpClientModule,
+    MatSidenavModule,
+    BrowserAnimationsModule,
+    MatButtonModule,
     RouterModule.forRoot(
       appRoutes,
       { enableTracing: true }
