@@ -1,18 +1,55 @@
 const pools = require('express').Router();
+const { createPool, findPoolByName, findAllPools } = require('./../../database/helpers');
 
 pools.get('/', (req, res) => {
-  res.status(200).send('recieved get request to pools');
+  findAllPools()
+    .then((pools) => {
+      res.status(200).send(pools);
+    })
+    .catch((err) => {
+      res.status(500).send(err);
+    });
   // this will respond with all public pools
 });
 
-pools.get('/:poolId', (req, res) => {
-  res.status(200).send(`recieved request to get pool ${req.params.poolId}`);
+
+
+pools.get('/:poolName', (req, res) => {
+  const { poolName } = req.params;
+  findPoolByName(poolName)
+    .then((pool) => {
+      if(pool){
+        res.status(200).send(pool);
+      } else {
+        res.status(200).send({error: 'Pool Not Found'});
+      }
+    })
+    .catch((err) => {
+      res.status(500).send(err);
+    });
   // this will respond with the pool requested
 });
 
+
+
 pools.post('/create', (req, res) => {
   const { name, imgUrl, desc, voteConfig, creatorId, public } = req.body.pool;
-  res.status(200).send(`recieved post request to create new pool named ${name}`);
+  findPoolByName(name)
+    .then((pool) => {
+      if (pool) {
+        res.status(200).send({ error: 'POOL ALREADY EXISTS' });
+      } else {
+        createPool(name, imgUrl, desc, voteConfig, creatorId, public).then((result) => {
+          res.status(200).send(result);
+        }).catch((err) => {
+          res.status(500).send(err);
+        });
+      }
+    })
+    .catch((err) => {
+      res.status(500).send(err);
+    });
+  // res.status(200).send(`recieved post request to create new pool named ${name}`);
 });
 
 pools.post('/expense', (req, res) => {
