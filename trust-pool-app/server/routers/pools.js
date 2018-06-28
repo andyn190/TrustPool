@@ -1,8 +1,14 @@
 const pools = require('express').Router();
-const { createPool, findPoolByName } = require('./../../database/helpers');
+const { createPool, findPoolByName, findAllPools } = require('./../../database/helpers');
 
 pools.get('/', (req, res) => {
-  res.status(200).send('recieved get request to pools');
+  findAllPools()
+    .then((pools) => {
+      res.status(200).send(pools);
+    })
+    .catch((err) => {
+      res.status(500).send(err);
+    });
   // this will respond with all public pools
 });
 
@@ -21,9 +27,7 @@ pools.get('/:poolName', (req, res) => {
     .catch((err) => {
       res.status(500).send(err);
     });
-  
   // this will respond with the pool requested
-
 });
 
 
