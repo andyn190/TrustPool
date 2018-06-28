@@ -7,13 +7,13 @@ login.post('/', (req, res) => {
 
 login.get('/google/redirect', passport.authenticate('google', {
   successRedirect: '/',
-  failureRedirect: '/login',
+  failureRedirect: '/login'
 }));
 
 login.get('/', (req, res) => res.send({ user: req.user || null }));
 
 login.get('/google', passport.authenticate('google', {
-  scope: ['profile'],
+  scope: ['profile']
 }));
 
 module.exports = login;

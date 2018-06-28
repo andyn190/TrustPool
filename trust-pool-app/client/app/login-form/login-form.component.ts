@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { AuthService } from '../service/auth.service';
 import { Router } from '@angular/router';
+import { User } from '../user';
 
 @Component({
   selector: 'app-login-form',
@@ -27,7 +28,7 @@ export class LoginFormComponent implements OnInit {
     // })
   }
   validateEmail(email) {
-    
+
   }
   emailValidate() {
     if (this.validateEmail(this.userEmail)) {
@@ -38,6 +39,9 @@ export class LoginFormComponent implements OnInit {
     e.preventDefault();
     let email = e.target.elements[0].value;
     let password = e.target.elements[1].value;
-    this.authService.login(email, password);
+    this.authService.login({email, password} as User)
+    .subscribe(user => {
+      console.log(user);
+    })
   }
 }

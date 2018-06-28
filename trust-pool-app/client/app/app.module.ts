@@ -16,6 +16,7 @@ import { UserinfoComponent } from './userinfo/userinfo.component';
 import { CreaterequestComponent } from './createrequest/createrequest.component';
 import { EbaypageComponent } from './ebaypage/ebaypage.component'
 import { AuthService } from './service/auth.service';
+import { GoogleAuthComponent } from './google-auth/google-auth.component';
 
 const appRoutes: Routes = [
   { path: 'login', component: LoginFormComponent },
@@ -40,7 +41,8 @@ const appRoutes: Routes = [
     UsersgroupComponent,
     UserinfoComponent,
     CreaterequestComponent,
-    EbaypageComponent
+    EbaypageComponent,
+    GoogleAuthComponent
   ],
   imports: [
     BrowserModule,

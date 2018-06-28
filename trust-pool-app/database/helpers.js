@@ -1,13 +1,15 @@
-const { sequelize,
-Users,
-Pools,
-ExpenseRequestType,
-ExpenseRequest,
-ContributionEntry,
-PoolMembers,
-ChatMessages,
-EbayWishlistEntry,
-Checks } = require('.');
+const {
+  sequelize,
+  Users,
+  Pools,
+  ExpenseRequestType,
+  ExpenseRequest,
+  ContributionEntry,
+  PoolMembers,
+  ChatMessages,
+  EbayWishlistEntry,
+  Checks
+} = require('.');
 
 const models = {
   Users,
@@ -21,44 +23,54 @@ const models = {
   Checks
 };
 
-const findOne = ( model, where ) => {
+const findOne = (model, where) => {
   return new Promise((resolve, reject) => {
     models[model].find(where)
-    .then((item) => {
-      resolve(item);
-    })
-    .catch((err)=>{
-      reject(err);
-    });
+      .then((item) => {
+        resolve(item);
+      })
+      .catch((err) => {
+        reject(err);
+      });
   });
 };
 
-const findUserById = ( id ) => {
-    return findOne('Users', { where: { id } });
+const findUserById = (id) => {
+  return findOne('Users', { where: { id } });
 };
 
-const findOrCreate = ( model, where ) => {
+const findOrCreate = (model, where) => {
   return new Promise((resolve, reject) => {
     models[model].findOrCreate(where).spread((result, created) => {
-    const item = result.get({
-      plain: true
+      const item = result.get({
+        plain: true
+      });
+      if (item) {
+        resolve(item);
+      } else {
+        reject();
+      }
     });
-    if(item){
-      resolve(item);
-    } else {
-      reject();
-    }
-  });
   });
 };
 
 const findOrCreateUser = (email, first_name, last_name, image_url, password, googleID) => {
-  if(email){
-    return findOrCreate('Users', { where: {email}, defaults: {first_name, last_name, image_url, password } });
-  } 
-  if( googleID ) {
-    return findOrCreate('Users', { where: { googleID }, defaults: {first_name, last_name, image_url, password , googleID} });
-  } 
+  if (email) {
+    return findOrCreate('Users', {
+      where: { email },
+      defaults: {
+        first_name, last_name, image_url, password
+      }
+    });
+  }
+  if (googleID) {
+    return findOrCreate('Users', {
+      where: { googleID },
+      defaults: {
+        first_name, last_name, image_url, password, googleID
+      }
+    });
+  }
 };
 
 module.exports = {
