@@ -1,9 +1,9 @@
 const pools = require('express').Router();
-const { findOrCreatePool } = require('./../../database/helpers');
+const { createPool, findPoolByName } = require('./../../database/helpers');
 
 pools.get('/', (req, res) => {
   // res.status(200).send('recieved get request to pools');
-  findOrCreatePool('testpool992', 'google.com/imgUrl', 'test desc', '50', 1, 'true').then((result) => {
+  createPool('testpool992', 'google.com/imgUrl', 'test desc', '50', 1, 'true').then((result) => {
     res.status(200).send(result);
   }).catch((err) => {
     res.status(500).send(err);
@@ -23,7 +23,7 @@ pools.get('/:poolId', (req, res) => {
 
 pools.post('/create', (req, res) => {
   const { name, imgUrl, desc, voteConfig, creatorId, public } = req.body.pool;
-  findOrCreatePool(name, imgUrl, desc, voteConfig, creatorId, public).then((result) => {
+  createPool(name, imgUrl, desc, voteConfig, creatorId, public).then((result) => {
     res.status(200).send(result);
   }).catch((err) => {
     res.status(500).send(err);
