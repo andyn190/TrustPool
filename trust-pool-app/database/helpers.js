@@ -84,6 +84,7 @@ module.exports = {
   findOrCreateUser,
   findOne,
   findUserById,
+  create,
   createPool,
   findPoolByName,
 };
