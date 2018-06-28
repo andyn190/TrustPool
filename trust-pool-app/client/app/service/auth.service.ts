@@ -20,8 +20,8 @@ export class AuthService {
 
   login(email, password) {
     console.log(email, password);
-    return this.http.get('/google', httpOptions).pipe(
-      map(res => {res}), catchError(err => of('error found'))
+    return this.http.post('/', httpOptions).pipe(
+      map(res => {console.log(res)}), catchError(err => of('error found'))
     );
   }
 }
