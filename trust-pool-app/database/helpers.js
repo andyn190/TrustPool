@@ -41,6 +41,34 @@ const findPoolByName = ( name ) => {
     return findOne('Pools', { where: { name } });
 };
 
+const findAll = ( model, where ) => {
+  if(where) {
+    return new Promise((resolve, reject) => {
+      models[model].findAll(where)
+      .then((item) => {
+        resolve(item);
+      })
+      .catch((err)=>{
+        reject(err);
+      });
+    }); 
+  } else {
+    return new Promise((resolve, reject) => {
+      models[model].findAll()
+      .then((item) => {
+        resolve(item);
+      })
+      .catch((err)=>{
+        reject(err);
+      });
+    }); 
+  }
+};
+
+const findAllPools = () => {
+    return findAll('Pools');
+};
+
 const findOrCreate = ( model, where ) => {
   return new Promise((resolve, reject) => {
     models[model].findOrCreate(where).spread((result, created) => {
@@ -85,4 +113,5 @@ module.exports = {
   create,
   createPool,
   findPoolByName,
+  findAllPools,
 };
