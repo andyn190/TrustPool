@@ -43,13 +43,11 @@ const findOrCreate = ( model, where ) => {
     const item = result.get({
       plain: true
     });
-    console.log(item);
     if(item){
       resolve(item);
     } else {
       reject();
     }
-    console.log(created)
   });
   });
 };
