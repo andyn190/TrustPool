@@ -27,6 +27,7 @@ export class LoginFormComponent implements OnInit {
     // })
   }
   validateEmail(email) {
+    
   }
   emailValidate() {
     if (this.validateEmail(this.userEmail)) {
