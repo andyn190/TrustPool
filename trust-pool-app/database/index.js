@@ -1,5 +1,4 @@
 const Sequelize = require('sequelize');
-
 const { AWSDB, LOCALDB } = require('./config');
 
 const sequelize = new Sequelize(LOCALDB || AWSDB);
@@ -302,7 +301,7 @@ sequelize
     console.error('unable to connect to the database:');
   });
 
-// sequelize.sync({force: true}).then((res) => {console.log(res);}).catch((err)=>{console.log(err)});
+Users.sync({ force: true }).then((res) => { console.log(res); }).catch((err) => { console.log(err); });
 
 module.exports = {
   sequelize,
