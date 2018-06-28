@@ -8,8 +8,20 @@ pools.get('/', (req, res) => {
 
 
 
-pools.get('/:poolId', (req, res) => {
-  res.status(200).send(`recieved request to get pool ${req.params.poolId}`);
+pools.get('/:poolName', (req, res) => {
+  const { poolName } = req.params;
+  findPoolByName(poolName)
+    .then((pool) => {
+      if(pool){
+        res.status(200).send(pool);
+      } else {
+        res.status(200).send({error: 'Pool Not Found'});
+      }
+    })
+    .catch((err) => {
+      res.status(500).send(err);
+    });
+  
   // this will respond with the pool requested
 
 });
