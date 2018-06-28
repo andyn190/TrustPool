@@ -1,5 +1,9 @@
 const pools = require('express').Router();
+const stripe = require('stripe');
 const { createPool, findPoolByName, findAllPools } = require('./../../database/helpers');
+const { STRIPEKEY } = require('../config');
+
+stripe(STRIPEKEY);
 
 pools.get('/', (req, res) => {
   findAllPools()
