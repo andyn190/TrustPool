@@ -10,16 +10,14 @@ import { User } from '../user';
   styleUrls: ['./google-auth.component.css']
 })
 export class GoogleAuthComponent implements OnInit {
-
   constructor(private http: HttpClient, private authService: AuthService, private router: Router) { }
 
   ngOnInit() {
   }  
   handleGoogleSignIn(e) {
-    e.preventDefault();
-    console.log('this worked');
-    this.authService.googleLogin().subscribe((data) => {
-      console.log(data, 'this worked');
-    })
+    this.router.navigate(['/login/google']);
+    // this.authService.googleLogin().subscribe((data) => {
+    //   console.log(data, 'this worked');
+    // })
   }  
 }

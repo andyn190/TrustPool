@@ -7,8 +7,16 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { User } from './../user';
 
 const httpOptions = {
-  headers: new HttpHeaders({ 'Content-Type': 'application/json' })
-}
+  headers: new HttpHeaders({
+    'Content-Type': 'application/json'
+  })
+};
+const googleAuthHeaders = {
+  headers: new HttpHeaders({
+    'Access-Control-Allow-Origin': 'http://localhost:8080',
+    'Vary': 'Origin'
+  })
+};
 
 @Injectable({
   providedIn: 'root'
@@ -22,10 +30,10 @@ export class AuthService {
   constructor(private http: HttpClient) {
   }
   googleLogin() {
-    return this.http.get(this.googleUrl, httpOptions)
+    return this.http.get(this.googleUrl)
     .pipe(
       tap(() => {console.log('this worked')}),
-      catchError(this.handleError<User>('GoogleLogin'))
+      catchError(this.handleError('GoogleLogin'))
     )
   }
   login (user: User): Observable<User> {

@@ -27,14 +27,6 @@ export class LoginFormComponent implements OnInit {
     //   console.log(post);
     // })
   }
-  validateEmail(email) {
-
-  }
-  emailValidate() {
-    if (this.validateEmail(this.userEmail)) {
-      this.googleUrl = 'https://www.google.com/accounts/AccountChooser?Email=' + this.userEmail + '&continue=https%3A%2F%2Fwww.google.com%2Fintl%2Fen%2Fimages%2Flogos%2Faccounts_logo.png&followup=https%3A%2F%2Fwww.google.com%2Fintl%2Fen%2Fimages%2Flogos%2Faccounts_logo.png';
-    } else {}
-  }
   loginUser(e){
     e.preventDefault();
     let email = e.target.elements[0].value;
