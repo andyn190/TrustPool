@@ -28,6 +28,10 @@ const Users = sequelize.define('Users', {
     allowNull: true,
     unique: true
   },
+  googleID: {
+    type: Sequelize.CHAR,
+    unique: true
+  },
   "image_url": {
     type: Sequelize.CHAR,
     allowNull: true
