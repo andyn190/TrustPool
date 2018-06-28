@@ -24,12 +24,12 @@ const models = {
 const findOne = ( model, where ) => {
   return new Promise((resolve, reject) => {
     models[model].find(where)
-    .then((item) => {
-      resolve(item);
-    })
-    .catch((err)=>{
-      reject(err);
-    });
+      .then((item) => {
+        resolve(item);
+      })
+      .catch((err)=>{
+        reject(err);
+      });
   });
 };
 
@@ -40,30 +40,30 @@ const findUserById = ( id ) => {
 const findOrCreate = ( model, where ) => {
   return new Promise((resolve, reject) => {
     models[model].findOrCreate(where).spread((result, created) => {
-    const item = result.get({
-      plain: true
+      const item = result.get({
+        plain: true
+      });
+      if (item) {
+        resolve(item);
+      } else {
+        reject();
+      }
     });
-    if(item){
-      resolve(item);
-    } else {
-      reject();
-    }
-  });
   });
 };
 
 const findOrCreateUser = (email, first_name, last_name, image_url, password, googleID) => {
-  if(email){
+  if (email) {
     return findOrCreate('Users', { where: {email}, defaults: {first_name, last_name, image_url, password } });
   } 
-  if( googleID ) {
+  if (googleID) {
     return findOrCreate('Users', { where: { googleID }, defaults: {first_name, last_name, image_url, password , googleID} });
-  } 
+  }
 };
 
 module.exports = {
   findOrCreate,
   findOrCreateUser,
   findOne,
-  findUserById
+  findUserById,
 };
