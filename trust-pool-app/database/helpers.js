@@ -61,6 +61,10 @@ const findOrCreateUser = (email, first_name, last_name, image_url, password, goo
   } 
 };
 
+const findOrCreatePool = (name, imgUrl, desc, voteConfig, creatorId, public) => {
+    return findOrCreate('Pool', { where: { name }, defaults: { imgUrl, desc, voteConfig, creatorId, public });
+};
+
 module.exports = {
   findOrCreate,
   findOrCreateUser,
