@@ -18,4 +18,5 @@ module.exports = {
       maxAge: 86400000, // 24 hours
     },
   },
+  STRIPEKEY: process.env.STRIPEKEY,
 };

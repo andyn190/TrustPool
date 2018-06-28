@@ -39,6 +39,7 @@
     "pg": "^7.4.3",
     "rxjs": "^6.0.0",
     "sequelize": "^4.38.0",
+    "stripe": "^6.2.0",
     "zone.js": "^0.8.26"
   },
   "devDependencies": {
