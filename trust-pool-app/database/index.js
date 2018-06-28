@@ -53,6 +53,7 @@ const Pools = sequelize.define('Pools', {
   },
   name: {
     type: Sequelize.CHAR,
+    unique: true,
   },
   imageURL: {
     type: Sequelize.TEXT,
@@ -75,6 +76,8 @@ const Pools = sequelize.define('Pools', {
     },
   },
 });
+
+Pools.belongsTo(Users, {foreignKey: 'creator'});
 
 const ExpenseRequestType = sequelize.define('Expense_Request_Type', {
   id: {
