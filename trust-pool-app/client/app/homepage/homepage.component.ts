@@ -13,6 +13,9 @@ export class HomepageComponent implements OnInit {
   ngOnInit() {
   }
   clickAccount = (user: number) => {
-    this._router.navigate(['account/', user])
+    this._router.navigate(['account/', user]);
+  }
+  clickGroups = () => {
+    this._router.navigate(['groups']);
   }
 }
