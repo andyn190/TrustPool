@@ -114,4 +114,5 @@ module.exports = {
   createPool,
   findPoolByName,
   findAllPools,
+  findAll,
 };
