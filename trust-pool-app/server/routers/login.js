@@ -1,5 +1,5 @@
 const login = require('express').Router();
-const passport = require('passport');
+const { passport } = require('../passport');
 
 login.post('/', (req, res) => {
   res.status(200).send('recieved post request to login');

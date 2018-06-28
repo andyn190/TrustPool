@@ -19,7 +19,23 @@ const models = {
   ChatMessages,
   EbayWishlistEntry,
   Checks
-}
+};
+
+const findOne = ( model, where ) => {
+  return new Promise((resolve, reject) => {
+    models[model].find(where)
+    .then((item) => {
+      resolve(item);
+    })
+    .catch((err)=>{
+      reject(err);
+    });
+  });
+};
+
+const findUserById = ( id ) => {
+    return findOne('Users', { where: { id } });
+};
 
 const findOrCreate = ( model, where ) => {
   return new Promise((resolve, reject) => {
@@ -27,22 +43,27 @@ const findOrCreate = ( model, where ) => {
     const item = result.get({
       plain: true
     });
-    console.log(item);
     if(item){
       resolve(item);
     } else {
       reject();
     }
-    console.log(created)
   });
   });
-}
+};
 
-const findOrCreateUser = (email, first_name, last_name, image_url, password) => {
-  return findOrCreate('Users', { where: {email}, defaults: {first_name, last_name, image_url, password } });
+const findOrCreateUser = (email, first_name, last_name, image_url, password, googleID) => {
+  if(email){
+    return findOrCreate('Users', { where: {email}, defaults: {first_name, last_name, image_url, password } });
+  } 
+  if( googleID ) {
+    return findOrCreate('Users', { where: { googleID }, defaults: {first_name, last_name, image_url, password , googleID} });
+  } 
 };
 
 module.exports = {
   findOrCreate,
-  findOrCreateUser
+  findOrCreateUser,
+  findOne,
+  findUserById
 };
