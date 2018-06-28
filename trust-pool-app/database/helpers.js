@@ -37,12 +37,18 @@ const findUserById = ( id ) => {
     return findOne('Users', { where: { id } });
 };
 
+const findPoolByName = ( name ) => {
+    return findOne('Pools', { where: { name } });
+};
+
 const findOrCreate = ( model, where ) => {
   return new Promise((resolve, reject) => {
     models[model].findOrCreate(where).spread((result, created) => {
+    console.log(result.isNewRecord);
     const item = result.get({
       plain: true
     });
+    item.isNewRecord = result.isNewRecord;
     if(item){
       resolve(item);
     } else {
@@ -62,6 +68,7 @@ const findOrCreateUser = (email, first_name, last_name, image_url, password, goo
 };
 
 const findOrCreatePool = (name, imgUrl, desc, voteConfig, creator, public) => {
+  console.log(name, imgUrl, desc, voteConfig, creator, public);
     return findOrCreate('Pools', { where: { name }, defaults: { imgUrl, desc, voteConfig, creator, public }});
 };
 
@@ -71,4 +78,5 @@ module.exports = {
   findOne,
   findUserById,
   findOrCreatePool,
+  findPoolByName,
 };
