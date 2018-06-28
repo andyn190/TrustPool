@@ -61,6 +61,9 @@ const Pools = sequelize.define('Pools', {
   public: {
     type: Sequelize.CHAR,
   },
+  voteConfig: {
+    type: Sequelize.INTEGER,
+  },
   created_at: {
     type: Sequelize.DATE,
   },
