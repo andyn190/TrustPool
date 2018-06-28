@@ -2,12 +2,7 @@ const pools = require('express').Router();
 const { createPool, findPoolByName } = require('./../../database/helpers');
 
 pools.get('/', (req, res) => {
-  // res.status(200).send('recieved get request to pools');
-  createPool('testpool992', 'google.com/imgUrl', 'test desc', '50', 1, 'true').then((result) => {
-    res.status(200).send(result);
-  }).catch((err) => {
-    res.status(500).send(err);
-  });
+  res.status(200).send('recieved get request to pools');
   // this will respond with all public pools
 });
 
@@ -23,12 +18,22 @@ pools.get('/:poolId', (req, res) => {
 
 pools.post('/create', (req, res) => {
   const { name, imgUrl, desc, voteConfig, creatorId, public } = req.body.pool;
-  createPool(name, imgUrl, desc, voteConfig, creatorId, public).then((result) => {
-    res.status(200).send(result);
-  }).catch((err) => {
-    res.status(500).send(err);
-  });
-  res.status(200).send(`recieved post request to create new pool named ${name}`);
+  findPoolByName(name)
+    .then((pool) => {
+      if (pool) {
+        res.status(200).send({ error: 'POOL ALREADY EXISTS' });
+      } else {
+        createPool(name, imgUrl, desc, voteConfig, creatorId, public).then((result) => {
+          res.status(200).send(result);
+        }).catch((err) => {
+          res.status(500).send(err);
+        });
+      }
+    })
+    .catch((err) => {
+      res.status(500).send(err);
+    });
+  // res.status(200).send(`recieved post request to create new pool named ${name}`);
 });
 
 pools.post('/expense', (req, res) => {
