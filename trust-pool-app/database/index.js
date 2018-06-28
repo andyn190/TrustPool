@@ -16,11 +16,11 @@ const Users = sequelize.define('Users', {
     unique: true
   },
   "first_name": {
-    type: Sequelize.CHAR,
+    type: Sequelize.CHAR(15),
     allowNull: true
   },
   "last_name": {
-    type: Sequelize.CHAR,
+    type: Sequelize.CHAR(15),
     allowNull: true
   },
   email: {
@@ -293,8 +293,6 @@ const Checks = sequelize.define('Checks', {
     }
   }
 });
-
-
 
 sequelize
 .authenticate()
