@@ -4,7 +4,7 @@
   "scripts": {
     "ng": "ng",
     "start": "nodemon server",
-    "build": "ng build",
+    "build": "ng build --watch",
     "test": "ng test",
     "lint": "ng lint",
     "test:once": "ng test --watch=false",

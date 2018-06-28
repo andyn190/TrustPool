@@ -1,11 +1,12 @@
 const passport = require('passport');
 const GoogleStrategy = require('passport-google-oauth20');
 const session = require('cookie-session');
+const path = require('path');
 const { SESSION_OPTS, GOOGLE_KEYS } = require('../config');
 const {
   findOrCreate,
   findOrCreateUser,
-} = require(path.join('${__dirname}', './../../database/helpers.js'));
+} = require(path.join('${__dirname}', './../../../database/helpers.js'));
 
 module.exports = (app) => {
   app.use(session(SESSION_OPTS));

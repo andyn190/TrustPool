@@ -2,7 +2,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { FormsModule } from '@angular/forms';
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientModule, HttpHeaders } from '@angular/common/http';
 
 import { AppComponent } from './app.component';
 import { HomepageComponent } from './homepage/homepage.component';
@@ -15,6 +15,7 @@ import { UsersgroupComponent } from './usersgroup/usersgroup.component';
 import { UserinfoComponent } from './userinfo/userinfo.component';
 import { CreaterequestComponent } from './createrequest/createrequest.component';
 import { EbaypageComponent } from './ebaypage/ebaypage.component'
+import { AuthService } from './service/auth.service';
 
 const appRoutes: Routes = [
   { path: 'login', component: LoginFormComponent },
@@ -47,9 +48,10 @@ const appRoutes: Routes = [
     RouterModule.forRoot(
       appRoutes,
       { enableTracing: true }
-    )
+    ),
+    FormsModule
   ],
-  providers: [],
+  providers: [AuthService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
