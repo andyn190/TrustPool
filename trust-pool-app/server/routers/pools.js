@@ -63,7 +63,10 @@ pools.post('/vote', (req, res) => {
 });
 
 pools.post('/contribute', (req, res) => {
-  const { poolId, memberId, amount } = req.body;
+  const { poolId, memberId, amount, stripeToken } = req.body;
+  // Pay with stripe, 
+  // if stripe payment is accepted,
+  // create a contributtion entry into db
   res.status(200).send(`recieved request for member ${memberId} to contribute to pool ${poolId}`);
 });
 
