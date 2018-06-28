@@ -11,19 +11,20 @@ import { HeaderComponent } from './header/header.component';
 import { FooterComponent } from './footer/footer.component';
 import { GroupsComponent } from './groups/groups.component';
 import { CreategroupComponent } from './creategroup/creategroup.component';
-import { UsersgroupComponent } from './usersgroup/usersgroup.component';
-import { UserinfoComponent } from './userinfo/userinfo.component';
 import { CreaterequestComponent } from './createrequest/createrequest.component';
 import { EbaypageComponent } from './ebaypage/ebaypage.component'
 import { AuthService } from './service/auth.service';
+import { ContributeComponent } from './contribute/contribute.component';
+import { AccountpageComponent } from './accountpage/accountpage.component';
+import { GrouppageComponent } from './grouppage/grouppage.component';
 
 const appRoutes: Routes = [
   { path: 'login', component: LoginFormComponent },
   { path: 'home', component: HomepageComponent },
   { path: 'creategroup', component: CreategroupComponent },
   { path: 'groups', component: GroupsComponent },
-  { path: 'usersgroup', component: UsersgroupComponent},
-  { path: 'userinfo', component: UserinfoComponent},
+  { path: 'group', component: GrouppageComponent},
+  { path: 'account/:user', component: AccountpageComponent},
   { path: 'createrequest', component: CreaterequestComponent},
   { path: 'ebay', component: EbaypageComponent}
 ];
@@ -37,10 +38,11 @@ const appRoutes: Routes = [
     FooterComponent,
     GroupsComponent,
     CreategroupComponent,
-    UsersgroupComponent,
-    UserinfoComponent,
     CreaterequestComponent,
-    EbaypageComponent
+    EbaypageComponent,
+    ContributeComponent,
+    AccountpageComponent,
+    GrouppageComponent
   ],
   imports: [
     BrowserModule,
