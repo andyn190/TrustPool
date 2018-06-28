@@ -7,7 +7,7 @@ const {
   findOrCreate,
   findOrCreateUser,
   findUserById,
-} = require('./../../../database/helpers.js');
+} = require('./../../database/helpers.js');
 
 module.exports = { setupPassport: (app) => {
   passport.serializeUser((user, done) => done(null, user.id));
