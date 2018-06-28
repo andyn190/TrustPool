@@ -7,16 +7,18 @@ const bodyParser = require('body-parser');
 const db = require(path.join('${__dirname}', './../../database'));
 
 const setupRouters = require('./routers');
-const setupPassport = require('./passport');
+const { setupPassport } = require('./passport');
 const { PUBLIC_PATH } = require('./config');
 
 const app = express();
 const server = http.Server(app);
 app.use(cors());
+app.use(require('cookie-parser')());
 app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
 
-setupRouters(app);
 setupPassport(app);
+setupRouters(app);
 
 app.use(express.static(PUBLIC_PATH));
 module.exports.server = server;
