@@ -3,7 +3,16 @@ import { FormsModule } from '@angular/forms';
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { HttpClientModule, HttpHeaders } from '@angular/common/http';
-
+import { MatSidenavModule, } from '@angular/material';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations'
+import { MatButtonModule } from '@angular/material/button';
+import {
+  SocialLoginModule,
+  AuthServiceConfig,
+  GoogleLoginProvider,
+  FacebookLoginProvider,
+  LinkedinLoginProvider
+} from "angular-6-social-login";
 import { AppComponent } from './app.component';
 import { HomepageComponent } from './homepage/homepage.component';
 import { LoginFormComponent } from './login-form/login-form.component';
@@ -18,6 +27,7 @@ import { PoolsService } from './services/pools/pools.service';
 import { ContributeComponent } from './contribute/contribute.component';
 import { AccountpageComponent } from './accountpage/accountpage.component';
 import { GrouppageComponent } from './grouppage/grouppage.component';
+import { GoogleAuthComponent } from './google-auth/google-auth.component';
 
 const appRoutes: Routes = [
   { path: 'login', component: LoginFormComponent },
@@ -29,6 +39,26 @@ const appRoutes: Routes = [
   { path: 'createrequest', component: CreaterequestComponent},
   { path: 'ebay', component: EbaypageComponent}
 ];
+
+export function getAuthServiceConfigs() {
+  let config = new AuthServiceConfig(
+    [
+      {
+        id: FacebookLoginProvider.PROVIDER_ID,
+        provider: new FacebookLoginProvider("Your-Facebook-app-id")
+      },
+      {
+        id: GoogleLoginProvider.PROVIDER_ID,
+        provider: new GoogleLoginProvider("87303288866-1a0i47h32fjal3gb8nat484mvegfs0ge.apps.googleusercontent.com")
+      },
+      {
+        id: LinkedinLoginProvider.PROVIDER_ID,
+        provider: new LinkedinLoginProvider("1098828800522-m2ig6bieilc3tpqvmlcpdvrpvn86q4ks.apps.googleusercontent.com")
+      },
+    ]
+  );
+  return config;
+}
 
 @NgModule({
   declarations: [
@@ -43,18 +73,26 @@ const appRoutes: Routes = [
     EbaypageComponent,
     ContributeComponent,
     AccountpageComponent,
-    GrouppageComponent
+    GrouppageComponent,
+    GoogleAuthComponent,
   ],
   imports: [
     BrowserModule,
     HttpClientModule,
+    MatSidenavModule,
+    BrowserAnimationsModule,
+    MatButtonModule,
+    SocialLoginModule,
     RouterModule.forRoot(
       appRoutes,
       { enableTracing: true }
     ),
     FormsModule
   ],
-  providers: [AuthService, PoolsService],
+  providers: [AuthService, PoolsService, {
+    provide: AuthServiceConfig,
+    useFactory: getAuthServiceConfigs
+  }],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

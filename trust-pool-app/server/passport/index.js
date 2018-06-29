@@ -1,11 +1,10 @@
 const passport = require('passport');
 const GoogleStrategy = require('passport-google-oauth20');
 const session = require('cookie-session');
-const path = require('path');
 const { SESSION_OPTS, GOOGLE_KEYS } = require('../config');
 const {
   findOrCreateUser,
-  findUserById,
+  findUserById
 } = require('./../../database/helpers.js');
 
 module.exports = {
@@ -20,7 +19,7 @@ module.exports = {
     passport.use(new GoogleStrategy({
       callbackURL: '/login/google/redirect',
       clientID: GOOGLE_KEYS.CLIENT_ID,
-      clientSecret: GOOGLE_KEYS.CLIENT_SECRET,
+      clientSecret: GOOGLE_KEYS.CLIENT_SECRET
     }, (accessToken, refreshToken, profile, done) => {
       const { name, _json, id } = profile;
       const last_name = name.familyName;
@@ -35,5 +34,5 @@ module.exports = {
     app.use(passport.initialize());
     app.use(passport.session());
   },
-  passport,
+  passport
 };
