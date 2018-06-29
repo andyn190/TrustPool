@@ -1,8 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { AuthService } from '../service/auth.service';
+// import { AuthService } from '../service/auth.service';
 import { Router } from '@angular/router';
-import { User } from '../user';
+import {
+  AuthService,
+  FacebookLoginProvider,
+  GoogleLoginProvider,
+  LinkedinLoginProvider
+} from 'angular-6-social-login';
 
 @Component({
   selector: 'app-google-auth',
@@ -10,14 +15,34 @@ import { User } from '../user';
   styleUrls: ['./google-auth.component.css']
 })
 export class GoogleAuthComponent implements OnInit {
-  constructor(private http: HttpClient, private authService: AuthService, private router: Router) { }
+
+  constructor(private http: HttpClient, private router: Router, private socialAuthService: AuthService) { }
 
   ngOnInit() {
-  }  
-  handleGoogleSignIn(e) {
-    this.router.navigate(['/login/google']);
-    // this.authService.googleLogin().subscribe((data) => {
-    //   console.log(data, 'this worked');
-    // })
-  }  
+  }
+  public socialSignIn(socialPlatform: string) {
+    let socialPlatformProvider;
+    if (socialPlatform == "facebook") {
+      socialPlatformProvider = FacebookLoginProvider.PROVIDER_ID;
+    } else if (socialPlatform == "google") {
+      socialPlatformProvider = GoogleLoginProvider.PROVIDER_ID;
+    } else if (socialPlatform == "linkedin") {
+      socialPlatformProvider = LinkedinLoginProvider.PROVIDER_ID;
+    }
+
+    this.socialAuthService.signIn(socialPlatformProvider).then(
+      (userData) => {
+        console.log(socialPlatform + " sign in data : ", userData);
+        // Now sign-in with userData
+        // ...
+
+      }
+    );
+  }
+  // handleGoogleSignIn(e) {
+  //   this.authService.googleLogin().subscribe((data) => {
+  //     console.log(data, 'this worked');
+  //     this.router.navigate(['home']);
+  //   })
+  // }  
 }

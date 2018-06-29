@@ -1,12 +1,7 @@
 const Sequelize = require('sequelize');
-const dotenv = require('dotenv');
+const { AWSDB, LOCALDB } = require('./config');
 
-dotenv.config();
-const { AWSPASSWORD, AWSUSER } = process.env;
-const awpDb = `postgres://${AWSUSER}:${AWSPASSWORD}@trustpooldb.cf3jswth6a7j.us-east-2.rds.amazonaws.com:5432/trustpooldb`;
-const localDb = 'postgres://localhost:5432/db';
-
-const sequelize = new Sequelize(localDb);
+const sequelize = new Sequelize(LOCALDB || AWSDB);
 
 const Users = sequelize.define('Users', {
   id: {
@@ -56,7 +51,8 @@ const Pools = sequelize.define('Pools', {
     type: Sequelize.TEXT
   },
   name: {
-    type: Sequelize.CHAR
+    type: Sequelize.CHAR,
+    unique: true,
   },
   imageURL: {
     type: Sequelize.TEXT
@@ -64,8 +60,8 @@ const Pools = sequelize.define('Pools', {
   public: {
     type: Sequelize.CHAR
   },
-  created_at: {
-    type: Sequelize.DATE
+  voteConfig: {
+    type: Sequelize.INTEGER,
   },
   members_count: {
     type: Sequelize.INTEGER
@@ -79,6 +75,8 @@ const Pools = sequelize.define('Pools', {
     }
   }
 });
+
+Pools.belongsTo(Users, {foreignKey: 'creator'});
 
 const ExpenseRequestType = sequelize.define('Expense_Request_Type', {
   id: {
@@ -303,9 +301,7 @@ sequelize
     console.log(`unable to connect to the database: ${err}`);
   });
 
-// Users.sync({ force: true }).then((res) => {
-//   console.log(res);
-// }).catch((err) => { console.log(err); });
+Users.sync({ force: true }).then((res) => { console.log(res); }).catch((err) => { console.log(err); });
 
 module.exports = {
   sequelize,
