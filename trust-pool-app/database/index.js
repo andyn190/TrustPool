@@ -302,7 +302,7 @@ sequelize
     console.error('unable to connect to the database:');
   });
 
-// sequelize.sync({force: true}).then((res) => {console.log(res);}).catch((err)=>{console.log(err)});
+// sequelize.sync({ force: true }).then(res => console.log(res)).catch(err => console.log(err));
 
 module.exports = {
   sequelize,
