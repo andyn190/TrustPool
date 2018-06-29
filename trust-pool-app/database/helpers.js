@@ -105,7 +105,8 @@ const { sequelize,
     return create('Pools', pool);
   }
 
-  const createPoolMember = (pool_id, pool_member_id, contrubution_amount, withdraw_amount) => {
+  const createPoolMember = (pool_id, pool_member_id) => {
+    const contrubution_amount = 0, withdraw_amount = 0;
     const poolMember = { pool_id, pool_member_id, contrubution_amount, withdraw_amount  };
     return create('PoolMembers', poolMember);
   }
