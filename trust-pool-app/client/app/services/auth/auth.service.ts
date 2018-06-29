@@ -1,5 +1,4 @@
-import { Injectable } from '@angular/core';
-import { NgModule } from '@angular/core';
+import { Injectable, NgModule } from '@angular/core';
 import { Observable, of } from 'rxjs';
 import { map, filter, catchError, mergeMap, tap } from 'rxjs/operators';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
@@ -29,6 +28,7 @@ export class AuthService {
 
   constructor(private http: HttpClient) {
   }
+
   googleLogin() {
     return this.http.get(this.googleUrl)
     .pipe(
