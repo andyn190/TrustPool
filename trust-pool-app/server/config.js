@@ -10,13 +10,13 @@ module.exports = {
   PUBLIC_PATH: path.resolve(__dirname, '../dist/trust-pool-app'),
   GOOGLE_KEYS: {
     CLIENT_ID: process.env.GOOGLE_CLIENT_ID,
-    CLIENT_SECRET: process.env.GOOGLE_CLIENT_SECRET,
+    CLIENT_SECRET: process.env.GOOGLE_CLIENT_SECRET
   },
   SESSION_OPTS: {
     secret: process.env.SESSION_SECRET || 'trustthepool',
     cookie: {
-      maxAge: 86400000, // 24 hours
+      maxAge: 86400000 // 24 hours
     },
   },
-  STRIPEKEY: process.env.STRIPEKEY,
+  STRIPEKEY: process.env.STRIPEKEY
 };
