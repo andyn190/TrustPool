@@ -22,7 +22,14 @@ export class GroupsComponent implements OnInit {
         .subscribe(
           success => { console.log(success, 'Success!'); },
           err => console.log(err, 'ERROR'),
-          () => console.log('done joining pool')
+          () => {
+            this.pools.forEach((pool) => {
+              if(pool.id === poolid){
+                pool.members_count += 1;
+              }
+            });
+            console.log('done joining pool')
+          }
         );
     } else {
       // send post request with just poolId in body
