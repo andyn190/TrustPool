@@ -85,12 +85,13 @@ pools.post('/contribute', (req, res) => {
 
 pools.post('/join', (req, res) => {
   const { body, user } = req;
-  const { poolId, userId} = body;
-  console.log(user, 'JOIN USER');
-  console.log(poolId, 'POOL ID');
-  console.log(userId, 'USER ID');
+  const { poolid, socialUser} = body;
+  const { googleID } = user;
+  console.log(googleID, 'GOOGLE ID');
+  console.log(poolid, 'POOL ID');
+  console.log(socialUser, 'USER ID');
 
-  res.status(200).send(`recieved request for ${userId || user} to join pool ${poolId}`);
+  res.status(200).send(`recieved request for ${socialUser || googleID} to join pool ${poolid}`);
 });
 
 pools.post('/chat', (req, res) => {
