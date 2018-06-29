@@ -7,6 +7,7 @@ const {
   createPoolMember,
   findUserByGoogle,
   findAllPoolMembers,
+  updateMemberCount
 } = require('./../../database/helpers');
 const { STRIPEKEY } = require('../config');
 
@@ -114,6 +115,7 @@ pools.post('/join', (req, res) => {
             createPoolMember(poolid, id)
               .then((success) => {
                 // console.log(success, 'SUCCESSFULLY ADDED MEMBER TO POOl');
+                updateMemberCount(poolid, 1);
                 res.status(200).send(`${socialUser || googleID} SUCCESSFULLY ADDED MEMBER TO POOl ${poolid}`);
               })
               .catch((err) => {
