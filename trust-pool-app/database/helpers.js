@@ -36,6 +36,10 @@ const { sequelize,
   const findUserById = ( id ) => {
       return findOne('Users', { where: { id } });
   };
+
+const findUserByGoogle = (googleID) => {
+  return findOne('Users', { where: { googleID } });
+};
   
   const findPoolByName = ( name ) => {
       return findOne('Pools', { where: { name } });
@@ -68,6 +72,9 @@ const { sequelize,
   const findAllPools = () => {
       return findAll('Pools');
   };
+const findAllPoolMembers = (pool_id) => {
+  return findAll('PoolMembers', { where: { pool_id } });
+};
   
   const findOrCreate = ( model, where ) => {
     return new Promise((resolve, reject) => {
@@ -121,6 +128,8 @@ const { sequelize,
     findPoolByName,
     findAllPools,
     findAll,
-    createPoolMember
+    createPoolMember,
+    findUserByGoogle,
+    findAllPoolMembers
   };
   
