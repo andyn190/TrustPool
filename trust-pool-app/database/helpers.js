@@ -41,57 +41,50 @@ const findUserByGoogle = googleID => findOne('Users', { where: { googleID } });
 
 const findPoolByName = name => findOne('Pools', { where: { name } });
 
-const findPoolById = (id) => {
-  return findOne('Pools', { where: { id } });
-};
+const findPoolById = id => findOne('Pools', { where: { id } });
 
-const findAll = ( model, where ) => {
-  if(where) {
+const findAll = (model, where) => {
+  if (where) {
     return new Promise((resolve, reject) => {
       models[model].findAll(where)
-      .then((item) => {
-        resolve(item);
-      })
-      .catch((err)=>{
-        reject(err);
-      });
-    }); 
-  } else {
-    return new Promise((resolve, reject) => {
-      models[model].findAll()
-      .then((item) => {
-        resolve(item);
-      })
-      .catch((err)=>{
-        reject(err);
-      });
-    }); 
+        .then((item) => {
+          resolve(item);
+        })
+        .catch((err) => {
+          reject(err);
+        });
+    });
   }
-};
-
-const findAllPools = () => {
-    return findAll('Pools');
-};
-
-const findAllPoolMembers = (pool_id) => {
-  return findAll('PoolMembers', { where: { pool_id } });
-};
-
-const findOrCreate = ( model, where ) => {
   return new Promise((resolve, reject) => {
-    models[model].findOrCreate(where).spread((result, created) => {
+    models[model].findAll()
+      .then((item) => {
+        resolve(item);
+      })
+      .catch((err) => {
+        reject(err);
+      });
+  });
+};
+
+const findAllPools = () => findAll('Pools');
+
+const findAllPoolMembers = pool_id => findAll('PoolMembers', { where: { pool_id } });
+
+
+const findOrCreate = (model, where) => new Promise((resolve, reject) => {
+  models[model].findOrCreate(where).spread((result, created) => {
     const item = result.get({
       plain: true
     });
     item.isNewRecord = result.isNewRecord;
-    if(item){
+    if (item) {
       resolve(item);
     } else {
       reject();
     }
   });
-  });
-};
+});
+
 
 const findOrCreateUser = (email, first_name, last_name, image_url, password, googleID) => {
   if(email){
