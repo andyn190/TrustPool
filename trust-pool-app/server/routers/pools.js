@@ -62,7 +62,6 @@ pools.post('/create', (req, res) => {
     .catch((err) => {
       res.status(500).send(err);
     });
-  // res.status(200).send(`recieved post request to create new pool named ${name}`);
 });
 
 pools.post('/expense', (req, res) => {
@@ -102,14 +101,12 @@ pools.post('/join', (req, res) => {
       const { id } = user;
       findAllPoolMembers(poolid)
         .then((poolMembers) => {
-          // console.log(, `ALL POOL MEMBERS IN ${poolid}`);
           poolMembers.forEach((member) => {
             const { dataValues } = member;
             const { pool_member_id } = dataValues;
             if (pool_member_id === id ) {
               isMember = true;
             }
-            console.log(member.dataValues.pool_member_id, 'POOL MEMBER');
           });
           if(isMember){
             res.status(409).send(`${socialUser || googleID} is already a member of pool ${poolid}`);
@@ -123,7 +120,6 @@ pools.post('/join', (req, res) => {
                 console.log(err);
               });
           }
-
         })
         .catch((err) => {
           console.log(err);
