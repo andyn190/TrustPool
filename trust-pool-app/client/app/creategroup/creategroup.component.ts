@@ -23,7 +23,7 @@ export class CreategroupComponent implements OnInit {
     let name = e.target.elements[0].value;
     let imageUrl = e.target.elements[1].value;
     let description = e.target.elements[2].value
-    const pool = {name: name, imageUrl: imageUrl, desc: description};
+    const pool = {name: name, imgUrl: imageUrl, desc: description};
     this.groupService.createGroup(pool).subscribe(
       success => { console.log(success, 'Success!'); },
       err => console.log(err, 'ERROR'),
