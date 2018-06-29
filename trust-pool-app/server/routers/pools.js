@@ -1,6 +1,13 @@
 const pools = require('express').Router();
 const stripe = require('stripe');
-const { createPool, findPoolByName, findAllPools } = require('./../../database/helpers');
+const {
+  createPool,
+  findPoolByName,
+  findAllPools,
+  createPoolMember,
+  findUserByGoogle,
+  findAllPoolMembers,
+} = require('./../../database/helpers');
 const { STRIPEKEY } = require('../config');
 
 stripe(STRIPEKEY);
@@ -43,17 +50,18 @@ pools.post('/create', (req, res) => {
       if (pool) {
         res.status(200).send({ error: 'POOL ALREADY EXISTS' });
       } else {
-        createPool(name, imgUrl, desc, voteConfig, creatorId, public).then((result) => {
-          res.status(200).send(result);
-        }).catch((err) => {
-          res.status(500).send(err);
-        });
+        createPool(name, imgUrl, desc, voteConfig, creatorId, public)
+          .then((result) => {
+            res.status(200).send(result);
+          })
+          .catch((err) => {
+            res.status(500).send(err);
+          });
       }
     })
     .catch((err) => {
       res.status(500).send(err);
     });
-  // res.status(200).send(`recieved post request to create new pool named ${name}`);
 });
 
 pools.post('/expense', (req, res) => {
@@ -84,8 +92,42 @@ pools.post('/contribute', (req, res) => {
 });
 
 pools.post('/join', (req, res) => {
-  const { poolId, userId } = req.body;
-  res.status(200).send(`recieved request for ${userId} to join pool ${poolId}`);
+  const { body, user } = req;
+  const { poolid, socialUser} = body;
+  const { googleID } = user;
+  let isMember = false;
+  findUserByGoogle(googleID)
+    .then((user) => {
+      const { id } = user;
+      findAllPoolMembers(poolid)
+        .then((poolMembers) => {
+          poolMembers.forEach((member) => {
+            const { dataValues } = member;
+            const { pool_member_id } = dataValues;
+            if (pool_member_id === id ) {
+              isMember = true;
+            }
+          });
+          if(isMember){
+            res.status(409).send(`${socialUser || googleID} is already a member of pool ${poolid}`);
+          } else {
+            createPoolMember(poolid, id)
+              .then((success) => {
+                // console.log(success, 'SUCCESSFULLY ADDED MEMBER TO POOl');
+                res.status(200).send(`${socialUser || googleID} SUCCESSFULLY ADDED MEMBER TO POOl ${poolid}`);
+              })
+              .catch((err) => {
+                console.log(err);
+              });
+          }
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    })
+    .catch((err) => {
+      console.log(err);
+    });
 });
 
 pools.post('/chat', (req, res) => {

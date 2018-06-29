@@ -36,6 +36,10 @@ const { sequelize,
   const findUserById = ( id ) => {
       return findOne('Users', { where: { id } });
   };
+
+const findUserByGoogle = (googleID) => {
+  return findOne('Users', { where: { googleID } });
+};
   
   const findPoolByName = ( name ) => {
       return findOne('Pools', { where: { name } });
@@ -68,6 +72,9 @@ const { sequelize,
   const findAllPools = () => {
       return findAll('Pools');
   };
+const findAllPoolMembers = (pool_id) => {
+  return findAll('PoolMembers', { where: { pool_id } });
+};
   
   const findOrCreate = ( model, where ) => {
     return new Promise((resolve, reject) => {
@@ -104,6 +111,12 @@ const { sequelize,
     const pool = { name, imageURL, description, voteConfig, creator, public, pool_value: 0, members_count: 0 };
     return create('Pools', pool);
   }
+
+  const createPoolMember = (pool_id, pool_member_id) => {
+    const contrubution_amount = 0, withdraw_amount = 0;
+    const poolMember = { pool_id, pool_member_id, contrubution_amount, withdraw_amount  };
+    return create('PoolMembers', poolMember);
+  }
   
   module.exports = {
     findOrCreate,
@@ -115,5 +128,8 @@ const { sequelize,
     findPoolByName,
     findAllPools,
     findAll,
+    createPoolMember,
+    findUserByGoogle,
+    findAllPoolMembers
   };
   
