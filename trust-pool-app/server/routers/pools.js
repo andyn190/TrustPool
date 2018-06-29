@@ -84,8 +84,13 @@ pools.post('/contribute', (req, res) => {
 });
 
 pools.post('/join', (req, res) => {
-  const { poolId, userId } = req.body;
-  res.status(200).send(`recieved request for ${userId} to join pool ${poolId}`);
+  const { body, user } = req;
+  const { poolId, userId} = body;
+  console.log(user, 'JOIN USER');
+  console.log(poolId, 'POOL ID');
+  console.log(userId, 'USER ID');
+
+  res.status(200).send(`recieved request for ${userId || user} to join pool ${poolId}`);
 });
 
 pools.post('/chat', (req, res) => {
