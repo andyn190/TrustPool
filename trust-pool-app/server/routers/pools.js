@@ -7,8 +7,8 @@ stripe(STRIPEKEY);
 
 pools.get('/', (req, res) => {
   findAllPools()
-    .then((pools) => {
-      res.status(200).send(pools);
+    .then((pool) => {
+      res.status(200).send(pool);
     })
     .catch((err) => {
       res.status(500).send(err);
@@ -16,16 +16,14 @@ pools.get('/', (req, res) => {
   // this will respond with all public pools
 });
 
-
-
 pools.get('/:poolName', (req, res) => {
   const { poolName } = req.params;
   findPoolByName(poolName)
     .then((pool) => {
-      if(pool){
+      if (pool) {
         res.status(200).send(pool);
       } else {
-        res.status(200).send({error: 'Pool Not Found'});
+        res.status(200).send({ error: 'Pool Not Found' });
       }
     })
     .catch((err) => {
@@ -34,16 +32,16 @@ pools.get('/:poolName', (req, res) => {
   // this will respond with the pool requested
 });
 
-
-
 pools.post('/create', (req, res) => {
-  const { name, imgUrl, desc, voteConfig, creatorId, public } = req.body.pool;
+  const {
+    name, imgUrl, desc, voteConfig, creatorId, publicPool
+  } = req.body.pool;
   findPoolByName(name)
     .then((pool) => {
       if (pool) {
         res.status(200).send({ error: 'POOL ALREADY EXISTS' });
       } else {
-        createPool(name, imgUrl, desc, voteConfig, creatorId, public).then((result) => {
+        createPool(name, imgUrl, desc, voteConfig, creatorId, publicPool).then((result) => {
           res.status(200).send(result);
         }).catch((err) => {
           res.status(500).send(err);
@@ -76,7 +74,7 @@ pools.post('/contribute', (req, res) => {
     currency: 'usd',
     source: stripeToken,
   }, (err, charge) => {
-    if(err && err.type === 'StripeCardError'){
+    if (err && err.type === 'StripeCardError') {
       console.log('CARD DECLINED');
     }
   });

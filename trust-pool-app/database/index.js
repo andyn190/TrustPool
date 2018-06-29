@@ -52,7 +52,7 @@ const Pools = sequelize.define('Pools', {
   },
   name: {
     type: Sequelize.CHAR,
-    unique: true,
+    unique: true
   },
   imageURL: {
     type: Sequelize.TEXT
@@ -61,7 +61,7 @@ const Pools = sequelize.define('Pools', {
     type: Sequelize.CHAR
   },
   voteConfig: {
-    type: Sequelize.INTEGER,
+    type: Sequelize.INTEGER
   },
   members_count: {
     type: Sequelize.INTEGER
@@ -301,7 +301,7 @@ sequelize
     console.log(`unable to connect to the database: ${err}`);
   });
 
-// sequelize.sync({ force: true }).then(res => console.log(res)).catch(err => console.log(err));
+sequelize.sync({ force: true }).then(res => console.log(res)).catch(err => console.log(err));
 
 module.exports = {
   sequelize,

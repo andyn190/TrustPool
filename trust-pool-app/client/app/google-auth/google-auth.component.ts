@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 // import { AuthService } from '../service/auth.service';
 import { Router } from '@angular/router';
+import { CookieService } from 'angular2-cookie/core';
 import {
   AuthService,
   FacebookLoginProvider,
@@ -17,7 +18,7 @@ import { tap, catchError } from 'rxjs/operators';
 })
 export class GoogleAuthComponent implements OnInit {
 
-  constructor(private http: HttpClient, private router: Router, private socialAuthService: AuthService) { }
+  constructor(private http: HttpClient, private router: Router, private socialAuthService: AuthService, private _cookieService: CookieService) { }
 
   ngOnInit() {
   }
@@ -36,6 +37,9 @@ export class GoogleAuthComponent implements OnInit {
         console.log(socialPlatform + " sign in data : ", userData);
         // Now sign-in with userData
         
+        this._cookieService.put('socialId', userData.id);
+        console.log(this._cookieService.getAll(), 'COOKIES');
+        this.router.navigate(['home'])
       }
     );
   }
