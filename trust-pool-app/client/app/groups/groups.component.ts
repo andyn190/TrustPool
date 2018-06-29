@@ -15,6 +15,8 @@ export class GroupsComponent implements OnInit {
     this.getPools();
   }
   getCookie() {
+    this._cookieService.put('name', 'testcookie');
+    console.log(this._cookieService.getAll(), 'COOKIES');
 
   }
   getPools() {
