@@ -24,9 +24,6 @@ export class PoolsService {
     return this.http.post('/pools/join', { poolid, socialUser }, httpOptions);
     }
     return this.http.post('/pools/join', {poolid}, httpOptions);
-    // .pipe(
-    //   tap((pool) => console.log(`user added to pool w/ id=${poolid}, ${pool}`)),
-    // );
   }
 }
 
