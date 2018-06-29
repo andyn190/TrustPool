@@ -105,8 +105,9 @@ const { sequelize,
     return create('Pools', pool);
   }
 
-const createPoolMember = (pool_id, pool_member_id, contrubution_amount, withdraw_amount) => {
-  const poolMember = { pool_id, pool_member_id, contrubution_amount, withdraw_amount  };
+  const createPoolMember = (pool_id, pool_member_id, contrubution_amount, withdraw_amount) => {
+    const poolMember = { pool_id, pool_member_id, contrubution_amount, withdraw_amount  };
+    return create('PoolMembers', poolMember);
   }
   
   module.exports = {
@@ -119,5 +120,6 @@ const createPoolMember = (pool_id, pool_member_id, contrubution_amount, withdraw
     findPoolByName,
     findAllPools,
     findAll,
+    createPoolMember
   };
   
