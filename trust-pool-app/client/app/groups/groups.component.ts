@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { CookieService } from 'angular2-cookie/core';
 import { PoolsService } from '../services/pools/pools.service';
 
 @Component({
@@ -8,12 +9,14 @@ import { PoolsService } from '../services/pools/pools.service';
 })
 export class GroupsComponent implements OnInit {
   public pools;
-  constructor(private _poolsService: PoolsService) { }
+  constructor(private _poolsService: PoolsService, private _cookieService: CookieService) { }
 
   ngOnInit() {
     this.getPools();
   }
+  getCookie() {
 
+  }
   getPools() {
     this._poolsService.getPools().subscribe(
       pools => {this.pools = pools},
