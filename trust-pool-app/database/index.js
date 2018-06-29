@@ -76,7 +76,7 @@ const Pools = sequelize.define('Pools', {
   }
 });
 
-Pools.belongsTo(Users, {foreignKey: 'creator'});
+Pools.belongsTo(Users, { foreignKey: 'creator' });
 
 const ExpenseRequestType = sequelize.define('Expense_Request_Type', {
   id: {
@@ -301,7 +301,7 @@ sequelize
     console.log(`unable to connect to the database: ${err}`);
   });
 
-Users.sync({ force: true }).then((res) => { console.log(res); }).catch((err) => { console.log(err); });
+// sequelize.sync({ force: true }).then(res => console.log(res)).catch(err => console.log(err));
 
 module.exports = {
   sequelize,
