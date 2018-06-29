@@ -25,7 +25,7 @@ const googleAuthHeaders = {
 })
 export class AuthService {
   private loginUrl = '/login/';
-  private googleUrl = '/login/google'
+  private googleUrl = '/login/google/redirect'
 
   constructor(private http: HttpClient) {
   }

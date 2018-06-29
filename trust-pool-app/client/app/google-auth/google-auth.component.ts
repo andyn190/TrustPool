@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 // import { AuthService } from '../service/auth.service';
 import { Router } from '@angular/router';
 import {
@@ -8,6 +8,7 @@ import {
   GoogleLoginProvider,
   LinkedinLoginProvider
 } from 'angular-6-social-login';
+import { tap, catchError } from 'rxjs/operators';
 
 @Component({
   selector: 'app-google-auth',
@@ -34,8 +35,7 @@ export class GoogleAuthComponent implements OnInit {
       (userData) => {
         console.log(socialPlatform + " sign in data : ", userData);
         // Now sign-in with userData
-        // ...
-
+        
       }
     );
   }
