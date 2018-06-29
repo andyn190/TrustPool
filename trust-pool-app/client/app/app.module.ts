@@ -6,6 +6,7 @@ import { HttpClientModule, HttpHeaders } from '@angular/common/http';
 import { MatSidenavModule, } from '@angular/material';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations'
 import { MatButtonModule } from '@angular/material/button';
+import { CookieService } from 'angular2-cookie/services/cookies.service';
 import {
   SocialLoginModule,
   AuthServiceConfig,
@@ -13,7 +14,6 @@ import {
   FacebookLoginProvider,
   LinkedinLoginProvider
 } from "angular-6-social-login";
-
 import { AppComponent } from './app.component';
 import { HomepageComponent } from './homepage/homepage.component';
 import { LoginFormComponent } from './login-form/login-form.component';
@@ -21,11 +21,13 @@ import { HeaderComponent } from './header/header.component';
 import { FooterComponent } from './footer/footer.component';
 import { GroupsComponent } from './groups/groups.component';
 import { CreategroupComponent } from './creategroup/creategroup.component';
-import { UsersgroupComponent } from './usersgroup/usersgroup.component';
-import { UserinfoComponent } from './userinfo/userinfo.component';
 import { CreaterequestComponent } from './createrequest/createrequest.component';
 import { EbaypageComponent } from './ebaypage/ebaypage.component'
-import { AuthService } from './service/auth.service';
+import { AuthService } from './services/auth/auth.service';
+import { PoolsService } from './services/pools/pools.service';
+import { ContributeComponent } from './contribute/contribute.component';
+import { AccountpageComponent } from './accountpage/accountpage.component';
+import { GrouppageComponent } from './grouppage/grouppage.component';
 import { GoogleAuthComponent } from './google-auth/google-auth.component';
 
 const appRoutes: Routes = [
@@ -33,8 +35,8 @@ const appRoutes: Routes = [
   { path: 'home', component: HomepageComponent },
   { path: 'creategroup', component: CreategroupComponent },
   { path: 'groups', component: GroupsComponent },
-  { path: 'usersgroup', component: UsersgroupComponent},
-  { path: 'userinfo', component: UserinfoComponent},
+  { path: 'group', component: GrouppageComponent},
+  { path: 'account/:user', component: AccountpageComponent},
   { path: 'createrequest', component: CreaterequestComponent},
   { path: 'ebay', component: EbaypageComponent}
 ];
@@ -68,10 +70,11 @@ export function getAuthServiceConfigs() {
     FooterComponent,
     GroupsComponent,
     CreategroupComponent,
-    UsersgroupComponent,
-    UserinfoComponent,
     CreaterequestComponent,
     EbaypageComponent,
+    ContributeComponent,
+    AccountpageComponent,
+    GrouppageComponent,
     GoogleAuthComponent,
   ],
   imports: [
@@ -87,7 +90,7 @@ export function getAuthServiceConfigs() {
     ),
     FormsModule
   ],
-  providers: [AuthService, {
+  providers: [AuthService, PoolsService, CookieService, {
     provide: AuthServiceConfig,
     useFactory: getAuthServiceConfigs
   }],

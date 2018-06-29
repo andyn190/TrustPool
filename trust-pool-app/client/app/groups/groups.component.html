@@ -1,3 +1,19 @@
-<p>
-  groups works!
-</p>
+<div>
+  <h2>
+    Browse Groups
+  </h2>
+  <ul>
+    <li *ngFor="let pool of pools">
+      <img [src]="pool.imageURL">
+      <h3>{{pool.name}}</h3>
+      <p>{{pool.description}}</p>
+      <h4>Value: </h4>
+      {{pool.pool_value}}
+      <h4>members:</h4>
+      {{pool.members_count}}
+      <br /> 
+      <button> View Group </button>
+      <button (click)='joinGroup(pool.id)'> Join Group </button>
+    </li>
+  </ul>
+</div>

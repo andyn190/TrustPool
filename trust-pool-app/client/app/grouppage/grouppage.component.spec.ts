@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { UserinfoComponent } from './userinfo.component';
+import { GrouppageComponent } from './grouppage.component';
 
-describe('UserinfoComponent', () => {
-  let component: UserinfoComponent;
-  let fixture: ComponentFixture<UserinfoComponent>;
+describe('GrouppageComponent', () => {
+  let component: GrouppageComponent;
+  let fixture: ComponentFixture<GrouppageComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ UserinfoComponent ]
+      declarations: [ GrouppageComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(UserinfoComponent);
+    fixture = TestBed.createComponent(GrouppageComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

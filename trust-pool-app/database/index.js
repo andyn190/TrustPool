@@ -52,7 +52,7 @@ const Pools = sequelize.define('Pools', {
   },
   name: {
     type: Sequelize.CHAR,
-    unique: true,
+    unique: true
   },
   imageURL: {
     type: Sequelize.TEXT
@@ -61,7 +61,7 @@ const Pools = sequelize.define('Pools', {
     type: Sequelize.CHAR
   },
   voteConfig: {
-    type: Sequelize.INTEGER,
+    type: Sequelize.INTEGER
   },
   members_count: {
     type: Sequelize.INTEGER
@@ -76,7 +76,7 @@ const Pools = sequelize.define('Pools', {
   }
 });
 
-Pools.belongsTo(Users, {foreignKey: 'creator'});
+Pools.belongsTo(Users, { foreignKey: 'creator' });
 
 const ExpenseRequestType = sequelize.define('Expense_Request_Type', {
   id: {
@@ -126,7 +126,7 @@ const ExpenseRequest = sequelize.define('Expense_Request', {
       model: Users,
       key: 'id',
       deferrable: Sequelize.Deferrable.INITIALLY_IMMEDIATE
-    },
+    }
   },
   request_title: {
     type: Sequelize.TEXT
@@ -200,9 +200,6 @@ const PoolMembers = sequelize.define('Pool_Members', {
   },
   withdraw_amount: {
     type: Sequelize.INTEGER
-  },
-  join_date: {
-    type: Sequelize.DATE
   }
 });
 
@@ -301,7 +298,7 @@ sequelize
     console.log(`unable to connect to the database: ${err}`);
   });
 
-Users.sync({ force: true }).then((res) => { console.log(res); }).catch((err) => { console.log(err); });
+// PoolMembers.sync({ force: true }).then(res => console.log(res)).catch(err => console.log(err));
 
 module.exports = {
   sequelize,
