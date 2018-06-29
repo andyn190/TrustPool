@@ -15,14 +15,24 @@ export class GroupsComponent implements OnInit {
     this.getPools();
   }
   joinGroup(poolid) {
+    this._cookieService.put('socialID', '10');
     let socialUser = this._cookieService.get('socialID');
     if (socialUser){
       // send post request with social user id
+      this._poolsService.joinPool(poolid, socialUser).subscribe(
+        success => { console.log(success, 'Success!'); },
+        err => console.log(err, 'ERROR'),
+        () => console.log('done joining pool')
+      );
     } else {
       // send post request with just poolId in body
-      console.log(poolid);
+      console.log(poolid, 'POOLID');
+      this._poolsService.joinPool(poolid).subscribe(
+        success => {console.log(success, 'Success!');},
+        err => console.log(err, 'ERROR'),
+        () => console.log('done joining pool')
+      );
     }
-    console.log(poolid);
 
   }
   getPools() {
