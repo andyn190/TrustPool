@@ -1,4 +1,5 @@
-const { sequelize,
+const {
+  sequelize,
   Users,
   Pools,
   ExpenseRequestType,
@@ -7,8 +8,9 @@ const { sequelize,
   PoolMembers,
   ChatMessages,
   EbayWishlistEntry,
-  Checks } = require('.');
-  
+  Checks
+} = require('.');
+
 const models = {
   Users,
   Pools,
@@ -21,29 +23,23 @@ const models = {
   Checks
 };
 
-const findOne = ( model, where ) => {
-  return new Promise((resolve, reject) => {
-    models[model].find(where)
+const findOne = (model, where) => new Promise((resolve, reject) => {
+  models[model].find(where)
     .then((item) => {
       resolve(item);
     })
-    .catch((err)=>{
+    .catch((err) => {
       reject(err);
     });
-  });
-};
+});
 
-const findUserById = ( id ) => {
-    return findOne('Users', { where: { id } });
-};
 
-const findUserByGoogle = (googleID) => {
-return findOne('Users', { where: { googleID } });
-};
+const findUserById = id => findOne('Users', { where: { id } });
 
-const findPoolByName = ( name ) => {
-    return findOne('Pools', { where: { name } });
-};
+const findUserByGoogle = googleID => findOne('Users', { where: { googleID } });
+
+
+const findPoolByName = name => findOne('Pools', { where: { name } });
 
 const findPoolById = (id) => {
   return findOne('Pools', { where: { id } });
@@ -108,12 +104,10 @@ const findOrCreateUser = (email, first_name, last_name, image_url, password, goo
 
 const create = (model, item) => {
   return models[model].create(item);
-    User.create({ username: 'fnord', job: 'omnomnom' })
-    return findOrCreate('Pools', { where: { name }, defaults: { imgUrl, desc, voteConfig, creator, public }});
 };
 
-const createPool = (name, imageURL, description, voteConfig, creator, public) => {
-  const pool = { name, imageURL, description, voteConfig, creator, public, pool_value: 0, members_count: 0 };
+const createPool = (name, imageURL, description, voteConfig, creator, publicOpt) => {
+  const pool = { name, imageURL, description, voteConfig, creator, public: publicOpt, pool_value: 0, members_count: 0 };
   return create('Pools', pool);
 };
 
