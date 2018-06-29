@@ -101,7 +101,7 @@ const create = (model, item) => {
 };
 
 const createPool = (name, imageURL, description, voteConfig, creator, public) => {
-  const pool = { name, imageURL, description, voteConfig, creator, public, pool_value: 0, members_count: 0 };
+  const pool = { name, imageURL, description, voteConfig, creator, public, pool_value: 0, members_count: 1 };
   return create('Pools', pool);
 }
 
