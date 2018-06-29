@@ -14,9 +14,9 @@ export class GroupsComponent implements OnInit {
   ngOnInit() {
     this.getPools();
   }
-  getCookie() {
+  joinGroup(poolid) {
     this._cookieService.put('name', 'testcookie');
-    console.log(this._cookieService.getAll(), 'COOKIES');
+    console.log(poolid);
 
   }
   getPools() {
