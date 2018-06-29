@@ -200,9 +200,6 @@ const PoolMembers = sequelize.define('Pool_Members', {
   },
   withdraw_amount: {
     type: Sequelize.INTEGER
-  },
-  join_date: {
-    type: Sequelize.DATE
   }
 });
 
