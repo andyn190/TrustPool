@@ -15,7 +15,6 @@ export class GroupsComponent implements OnInit {
     this.getPools();
   }
   joinGroup(poolid) {
-    this._cookieService.put('socialID', '10');
     let socialUser = this._cookieService.get('socialID');
     if (socialUser){
       // send post request with social user id
@@ -27,7 +26,7 @@ export class GroupsComponent implements OnInit {
     } else {
       // send post request with just poolId in body
       console.log(poolid, 'POOLID');
-      this._poolsService.joinPool(poolid).subscribe(
+      this._poolsService.joinPool(poolid, null).subscribe(
         success => {console.log(success, 'Success!');},
         err => console.log(err, 'ERROR'),
         () => console.log('done joining pool')
