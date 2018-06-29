@@ -104,6 +104,10 @@ const { sequelize,
     const pool = { name, imageURL, description, voteConfig, creator, public, pool_value: 0, members_count: 0 };
     return create('Pools', pool);
   }
+
+const createPoolMember = (pool_id, pool_member_id, contrubution_amount, withdraw_amount) => {
+  const poolMember = { pool_id, pool_member_id, contrubution_amount, withdraw_amount  };
+  }
   
   module.exports = {
     findOrCreate,
