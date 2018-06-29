@@ -116,7 +116,7 @@ pools.post('/join', (req, res) => {
               .then((success) => {
                 // console.log(success, 'SUCCESSFULLY ADDED MEMBER TO POOl');
                 updateMemberCount(poolid, 1);
-                res.status(200).send(`${socialUser || googleID} SUCCESSFULLY ADDED MEMBER TO POOl ${poolid}`);
+                res.status(200).json({message: `${socialUser || googleID} SUCCESSFULLY ADDED MEMBER TO POOl ${poolid}`});
               })
               .catch((err) => {
                 console.log(err);
