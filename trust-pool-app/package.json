@@ -7,12 +7,8 @@
     "build": "ng build --watch",
     "test": "ng test",
     "lint": "ng lint",
-<<<<<<< HEAD
-    "travis": "cd trust-pool-app && npm install && ng test",
-=======
     "test:once": "ng test --watch=false",
     "travis": "npm install && npm run test:once",
->>>>>>> 5667ca9cf8de8114b47f000855522a27301146bf
     "e2e": "ng e2e"
   },
   "private": true,
