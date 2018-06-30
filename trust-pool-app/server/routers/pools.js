@@ -98,9 +98,9 @@ pools.post('/contribute', (req, res) => {
   let charge = stripe.charges.create({
     amount,
     currency: 'usd',
-    source: stripeToken,
+    source: stripeToken
   }, (err, charge) => {
-    if(err && err.type === 'StripeCardError'){
+    if (err && err.type === 'StripeCardError') {
       console.log('CARD DECLINED');
     }
   });
@@ -109,22 +109,22 @@ pools.post('/contribute', (req, res) => {
 
 pools.post('/join', (req, res) => {
   const { body, user } = req;
-  const { poolid, socialUser} = body;
+  const { poolid, socialUser } = body;
   const { googleID } = user;
   let isMember = false;
   findUserByGoogle(googleID)
-    .then((user) => {
-      const { id } = user;
+    .then((resUser) => {
+      const { id } = resUser;
       findAllPoolMembers(poolid)
         .then((poolMembers) => {
           poolMembers.forEach((member) => {
             const { dataValues } = member;
             const { pool_member_id } = dataValues;
-            if (pool_member_id === id ) {
+            if (pool_member_id === id) {
               isMember = true;
             }
           });
-          if(isMember){
+          if (isMember) {
             res.status(409).send(`${socialUser || googleID} is already a member of pool ${poolid}`);
           } else {
             createPoolMember(poolid, id)
