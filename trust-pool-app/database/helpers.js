@@ -38,6 +38,8 @@ const findUserById = id => findOne('Users', { where: { id } });
 
 const findUserByGoogle = googleID => findOne('Users', { where: { googleID } });
 
+const isMember = (poolid, userid) => {};
+
 
 const findPoolByName = name => findOne('Pools', { where: { name } });
 
@@ -100,13 +102,28 @@ const create = (model, item) => {
 };
 
 const createPool = (name, imageURL, description, voteConfig, creator, publicOpt) => {
-  const pool = { name, imageURL, description, voteConfig, creator, public: publicOpt, pool_value: 0, members_count: 0 };
+  const pool = {
+    name,
+    imageURL,
+    description,
+    voteConfig,
+    creator,
+    public: publicOpt,
+    pool_value: 0,
+    members_count: 0
+  };
   return create('Pools', pool);
 };
 
 const createPoolMember = (pool_id, pool_member_id) => {
-  const contrubution_amount = 0, withdraw_amount = 0;
-  const poolMember = { pool_id, pool_member_id, contrubution_amount, withdraw_amount };
+  const contrubution_amount = 0;
+  const withdraw_amount = 0;
+  const poolMember = {
+    pool_id,
+    pool_member_id,
+    contrubution_amount,
+    withdraw_amount
+  };
   return create('PoolMembers', poolMember);
 };
 
@@ -136,5 +153,6 @@ module.exports = {
   findUserByGoogle,
   findAllPoolMembers,
   updateMemberCount,
-  findPoolById
+  findPoolById,
+  isMember
 };
