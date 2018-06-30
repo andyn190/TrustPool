@@ -9,7 +9,8 @@ const {
   findUserByGoogle,
   findAllPoolMembers,
   updateMemberCount,
-  isMember
+  isMember,
+  createContribution
 } = require('./../../database/helpers');
 const { STRIPEKEY } = require('../config');
 
@@ -119,12 +120,6 @@ pools.post('/contribute', (req, res) => {
   } = body;
   const token = stripeToken;
   const { googleID } = user;
-  // findUserByGoogle(googleID)
-  //   .then((resUser) => {
-  //     const { id } = resUser;
-  //     console.log(id, 'USER ID');
-  //   })
-  //   .catch(err => console.log(err));
 
   // Pay with stripe,
   // if stripe payment is accepted,
@@ -162,6 +157,13 @@ pools.post('/contribute', (req, res) => {
     if (err) {
       res.status(200).json({ err });
     } else {
+      findUserByGoogle(googleID)
+        .then((resUser) => {
+          const { id } = resUser;
+          console.log(id, 'USER ID');
+          return createContribution(poolId, id, amount);
+        })
+        .catch(dberr => console.log(dberr));
       res.status(200).json({ success: charge });
     }
   });
