@@ -32,5 +32,9 @@ export class PoolsService {
     }
     return this.http.post('/pools/join', {poolid}, httpOptions);
   }
+
+  sendContrib(stripeToken, poolId, amount){
+    return this.http.post('/pools/contribute', { stripeToken, poolId, amount }, httpOptions);
+  }
 }
 

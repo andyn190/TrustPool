@@ -1,5 +1,5 @@
 const pools = require('express').Router();
-const stripe = require('stripe');
+let stripe = require('stripe');
 const {
   createPool,
   findPoolById,
@@ -9,11 +9,13 @@ const {
   findUserByGoogle,
   findAllPoolMembers,
   updateMemberCount,
-  isMember
+  isMember,
+  createContribution
 } = require('./../../database/helpers');
 const { STRIPEKEY } = require('../config');
 
-stripe(STRIPEKEY);
+
+stripe = stripe(STRIPEKEY);
 
 pools.get('/', (req, res) => {
   findAllPools()
@@ -110,25 +112,62 @@ pools.post('/vote', (req, res) => {
 });
 
 pools.post('/contribute', (req, res) => {
+  const { body, user } = req;
   const {
     poolId,
-    memberId,
     amount,
     stripeToken
-  } = req.body;
+  } = body;
+  const token = stripeToken;
+  const { googleID } = user;
+
   // Pay with stripe,
   // if stripe payment is accepted,
   // create a contributtion entry into db
-  let charge = stripe.charges.create({
+
+  // Create a new customer and then a new charge for that customer:
+  // stripe.customers.create({
+  //   email: 'foo-customer@example.com'
+  // })
+  //   .then(customer => stripe.customers.createSource(customer.id, {
+  //     source: stripeToken
+  //   }))
+  //   .then(source => stripe.charges.create({
+  //     amount: 1600,
+  //     currency: 'usd',
+  //     customer: source.customer
+  //   }))
+  //   .then((charge) => {
+  //     console.log(charge, 'CHARGE');
+  //     // New charge created on a new customer
+  //   })
+  //   .catch((err) => {
+  //     console.log(err, 'ERROR');
+  //     // Deal with an error
+  //   });
+
+  stripe.charges.create({
     amount,
     currency: 'usd',
-    source: stripeToken
+    source: 'tok_visa' || token
   }, (err, charge) => {
     if (err && err.type === 'StripeCardError') {
-      console.log('CARD DECLINED');
+      res.status(200).json({ error: 'CARD DECLINED' });
+    }
+    if (err) {
+      res.status(200).json({ err });
+    } else {
+      findUserByGoogle(googleID)
+        .then((resUser) => {
+          const { id } = resUser;
+          return createContribution(poolId, id, amount);
+        })
+        .then((contribution) => {
+          res.status(200).json({ success: { charge, contribution } });
+        })
+        .catch(dberr => res.status(200).json({ dberr }));
     }
   });
-  res.status(200).send(`recieved request for member ${memberId} to contribute to pool ${poolId}`);
 });
 
 pools.post('/join', (req, res) => {

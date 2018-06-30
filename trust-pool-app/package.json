@@ -41,6 +41,7 @@
     "http": "0.0.0",
     "jsonwebtoken": "^8.3.0",
     "morgan": "^1.9.0",
+    "ngx-stripe": "^6.0.0-rc.0",
     "nodemon": "^1.17.5",
     "passport": "^0.4.0",
     "passport-google-oauth20": "^1.0.0",

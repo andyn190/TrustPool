@@ -93,7 +93,10 @@ const findOrCreateUser = (email, first_name, last_name, image_url, password, goo
     return findOrCreate('Users', {
       where: { email },
       defaults: {
-        first_name, last_name, image_url, password
+        first_name,
+        last_name,
+        image_url,
+        password
       }
     });
   }
@@ -101,13 +104,24 @@ const findOrCreateUser = (email, first_name, last_name, image_url, password, goo
     return findOrCreate('Users', {
       where: { googleID },
       defaults: {
-        first_name, last_name, image_url, password, googleID
+        first_name,
+        last_name,
+        image_url,
+        password,
+        googleID
       }
     });
-  } return null;
+  }
+  return 'NO EMAIL OR GOOGLE ID';
 };
 
 const create = (model, item) => models[model].create(item);
+
+
+const createContribution = (pool_id, pool_member_id, contribution_amount) => {
+  const contribution = { pool_id, pool_member_id, contribution_amount };
+  return create('ContributionEntry', contribution);
+};
 
 const createPool = (name, imageURL, description, voteConfig, creator, publicOpt) => {
   const pool = {
@@ -141,23 +155,17 @@ const updateMemberCount = (id, amount) => {
       let { members_count } = pool;
       pool.members_count = members_count + amount;
       pool.save()
-        .then((update) => {
-          console.log('POOL MEMBERS COUNT UPDATED');
-        })
-        .catch((err) => {
-          console.log('POOL MEMBERS COUNT NOT UPDATED', err);
-        });
+        .then(update => console.log('POOL MEMBERS COUNT UPDATED'))
+        .catch(err => console.log('POOL MEMBERS COUNT NOT UPDATED', err));
     })
-    .catch((err) => {
-      console.log('FAILED TO FIND POOL BY ID', err);
-    });
+    .catch(err => console.log('FAILED TO FIND POOL BY ID', err));
 };
 
 const findUserByName = (username, password) => {
   Users.findOne({ where: { username, password } }).then(user => user).catch((err) => {
     console.log(err);
   });
-}
+};
 
 module.exports = {
   findOrCreate,
@@ -174,5 +182,6 @@ module.exports = {
   findAllPoolMembers,
   updateMemberCount,
   findPoolById,
-  isMember
+  isMember,
+  createContribution
 };
