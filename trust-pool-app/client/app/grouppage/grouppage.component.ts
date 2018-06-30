@@ -1,27 +1,62 @@
-import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
+import {
+  Component,
+  AfterViewInit,
+  OnDestroy,
+  OnInit,
+  ViewChild,
+  ElementRef,
+  Directive,
+  ChangeDetectorRef } from '@angular/core';
 import { CookieService } from 'angular2-cookie/core';
 import { PoolsService } from '../services/pools/pools.service';
 import { Router, ActivatedRoute } from '@angular/router';
-import { FormGroup, FormBuilder, Validators } from "@angular/forms";
+import { FormGroup, FormBuilder, Validators, NgForm } from "@angular/forms";
+
+@Directive({ selector: 'contrib-form' })
+export class ContribForm {
+}
 
 @Component({
   selector: 'app-grouppage',
   templateUrl: './grouppage.component.html',
   styleUrls: ['./grouppage.component.css']
 })
-export class GrouppageComponent implements OnInit {
+export class GrouppageComponent implements OnInit, AfterViewInit, OnDestroy {
+  public cardInfo: ElementRef;
+   
+  @ViewChild('cardInfo') set content(cardInfo: ElementRef) {
+    this.cardInfo = cardInfo;
+  }
+
+  card: any;
+  cardHandler = this.onChange.bind(this);
+  error: string;
+
   poolid: number;
   isMember: boolean;
   pool: object;
   private sub: any;
 
-  contribute: FormGroup;
   constructor(
+    private cd: ChangeDetectorRef,
     private _poolsService: PoolsService,
     private _cookieService: CookieService,
     private _router: Router,
     private route: ActivatedRoute,
   ) { }
+
+  ngAfterViewInit(){
+    console.log(this.cardInfo,'CARD INFO');
+    this.card = elements.create('card');
+    this.card.mount(this.cardInfo.nativeElement);
+
+    this.card.addEventListener('change', this.cardHandler);
+  }
+
+  ngOnDestroy() {
+    this.card.removeEventListener('change', this.cardHandler);
+    this.card.destroy();
+  }
 
   ngOnInit() {
     this.sub = this.route.params.subscribe(params => {
@@ -45,6 +80,29 @@ export class GrouppageComponent implements OnInit {
       err => console.log(err),
       () => console.log('done loading pool')
     );
+  }
+
+  onChange({ error }) {
+    if (error) {
+      this.error = error.message;
+    } else {
+      this.error = null;
+    }
+    this.cd.detectChanges();
+  }
+
+  async onSubmit(form: NgForm) {
+    const { token, error } = await stripe.createToken(this.card);
+    if (error) {
+      console.log('Something is wrong:', error);
+    } else {
+      console.log('Success!', token);
+      // poolId,
+      //   memberId,
+      //   amount,
+      //   stripeToken
+      // ...send the token to the your backend to process the charge
+    }
   }
 
   joinGroup(poolid) {
