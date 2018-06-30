@@ -50,7 +50,7 @@
       </div>
     </div>
   </div>
-  <form #checkout="ngForm" (ngSubmit)="onSubmit(checkout)" class="checkout">
+  <form #checkout="ngForm" (ngSubmit)="onSubmit(checkout, pool.id, 77700)" class="checkout">
     <div class="form-row">
       <label for="card-info">Card Info</label>
       <div id="card-info" #cardInfo></div>
