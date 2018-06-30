@@ -23,7 +23,7 @@
               "client/assets"
             ],
             "styles": [
-              "client/styles.css"
+              "client/styles.scss"
             ],
             "scripts": []
           },
