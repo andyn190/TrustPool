@@ -29,6 +29,7 @@ import { ContributeComponent } from './contribute/contribute.component';
 import { AccountpageComponent } from './accountpage/accountpage.component';
 import { GrouppageComponent } from './grouppage/grouppage.component';
 import { GoogleAuthComponent } from './google-auth/google-auth.component';
+import { SignupFormComponent } from './signup-form/signup-form.component';
 
 const appRoutes: Routes = [
   { path: 'login', component: LoginFormComponent },
@@ -76,6 +77,7 @@ export function getAuthServiceConfigs() {
     AccountpageComponent,
     GrouppageComponent,
     GoogleAuthComponent,
+    SignupFormComponent,
   ],
   imports: [
     BrowserModule,
