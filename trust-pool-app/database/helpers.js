@@ -117,8 +117,8 @@ const findOrCreateUser = (email, first_name, last_name, image_url, password, goo
 const create = (model, item) => models[model].create(item);
 
 
-const createContribution = (poolId, id, amount) => {
-  const contribution = { poolId, id, amount };
+const createContribution = (pool_id, pool_member_id, contribution_amount) => {
+  const contribution = { pool_id, pool_member_id, contribution_amount };
   return create('ContributionEntry', contribution);
 };
 
