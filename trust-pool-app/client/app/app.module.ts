@@ -29,6 +29,8 @@ import { ContributeComponent } from './contribute/contribute.component';
 import { AccountpageComponent } from './accountpage/accountpage.component';
 import { GrouppageComponent } from './grouppage/grouppage.component';
 import { GoogleAuthComponent } from './google-auth/google-auth.component';
+import { MatToolbarModule } from '@angular/material/toolbar';
+import { MatCardModule } from '@angular/material/card';
 
 const appRoutes: Routes = [
   { path: 'login', component: LoginFormComponent },
@@ -88,7 +90,9 @@ export function getAuthServiceConfigs() {
       appRoutes,
       { enableTracing: true }
     ),
-    FormsModule
+    FormsModule,
+    MatToolbarModule,
+    MatCardModule
   ],
   providers: [AuthService, PoolsService, CookieService, {
     provide: AuthServiceConfig,
