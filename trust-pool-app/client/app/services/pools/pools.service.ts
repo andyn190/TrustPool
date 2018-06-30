@@ -17,6 +17,10 @@ export class PoolsService {
   getPools() {
     return this.http.get('/pools');
   }
+
+  getPool(poolid) {
+    return this.http.get(`/pools/${poolid}`);
+  }
   
   joinPool(poolid, socialUser) {
     if(socialUser){

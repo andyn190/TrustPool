@@ -12,7 +12,7 @@
       <h4>members:</h4>
       {{pool.members_count}}
       <br /> 
-      <button> View Group </button>
+      <button (click)='viewGroup(pool.id)'> View Group </button>
       <button (click)='joinGroup(pool.id)'> Join Group </button>
     </li>
   </ul>

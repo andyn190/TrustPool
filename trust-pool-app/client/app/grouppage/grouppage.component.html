@@ -1,3 +1,37 @@
-<p>
-  grouppage works!
-</p>
+<div *ngIf="pool">
+  <img [src]="pool.imageURL">
+  <h2>{{pool.name}}</h2>
+  <div>
+    <h4>Pool Value:</h4>
+    ${{pool.pool_value}}
+  </div>
+  <div>
+    <p>
+      {{pool.description}}
+    </p>
+  </div>
+  <div>
+    <h5>Established</h5>
+    {{pool.createdAt}}
+  </div>
+  <div>
+    <h5>Members</h5>
+  </div>
+  <div>
+    Current Expense Request
+  </div>
+  <div>
+    Past Expense Requests
+  </div>
+  <div>
+    Chat
+  </div>
+  <div>
+    Creator:
+    {{pool.creator}}
+  </div>
+  <button>Contribute</button>
+  <button>Join Group</button>
+  <button (click)="viewGroups()">Back to Groups</button>
+</div>
+

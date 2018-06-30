@@ -37,8 +37,8 @@ const appRoutes: Routes = [
   { path: 'home', component: HomepageComponent },
   { path: 'creategroup', component: CreategroupComponent },
   { path: 'groups', component: GroupsComponent },
-  { path: 'group', component: GrouppageComponent},
-  { path: 'account/:user', component: AccountpageComponent},
+  { path: 'group/:poolid', component: GrouppageComponent},
+  { path: 'account', component: AccountpageComponent},
   { path: 'createrequest', component: CreaterequestComponent},
   { path: 'ebay', component: EbaypageComponent}
 ];

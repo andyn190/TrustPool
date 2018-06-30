@@ -12,7 +12,7 @@ export class HomepageComponent implements OnInit {
 
   ngOnInit() {
   }
-  clickAccount = (user: number) => {
-    this._router.navigate(['account/', user]);
+  clickAccount = () => {
+    this._router.navigate(['account/']);
   }
 }
