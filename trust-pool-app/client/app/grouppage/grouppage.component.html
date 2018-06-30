@@ -38,7 +38,7 @@
     <button >Contribute</button>
   </div>
   <div *ngIf="!isMember">
-    <button >Join Group</button>
+    <button (click)='joinGroup(pool.id)'> Join Group </button>
   </div>
   <button (click)="viewGroups()">Back to Groups</button>
 </div>
