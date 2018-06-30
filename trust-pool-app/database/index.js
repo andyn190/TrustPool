@@ -166,9 +166,6 @@ const ContributionEntry = sequelize.define('Contribution_Entry', {
   },
   contribution_amount: {
     type: Sequelize.INTEGER
-  },
-  time_stamp: {
-    type: Sequelize.DATE
   }
 });
 
@@ -298,9 +295,9 @@ sequelize
     console.log(`unable to connect to the database: ${err}`);
   });
 
-PoolMembers.sync({ force: true }).then(res => console.log(res)).catch(err => console.log(err));
+// PoolMembers.sync({ force: true }).then(res => console.log(res)).catch(err => console.log(err));
 // Pools.sync({ force: true }).then(res => console.log(res)).catch(err => console.log(err));
-
+// ContributionEntry.sync({ force: true }).then(res => console.log(res)).catch(err => console.log(err));
 module.exports = {
   sequelize,
   Users,
