@@ -1,52 +1,63 @@
-<div *ngIf="pool">
-  <div class='col-md-4'>
-  
-  </div>
-  <div class='col-md-8 container content'>
-    <img [src]="pool.imageURL">
-    <h2>{{pool.name}}</h2>
-    <div>
-      <h4>Pool Value:</h4>
-      ${{pool.pool_value}}
-    </div>
-    <div>
-      <p>
-        {{pool.description}}
-      </p>
-    </div>
-    <div>
-      <h5>Established</h5>
-      {{pool.createdAt}}
-    </div>
-    <div>
-      <h5>Members</h5>
-    </div>
-    <div>
-      Current Expense Request
-    </div>
-    <div>
-      Past Expense Requests
-    </div>
-    <div>
-      Chat
-    </div>
-    <div>
-      Creator:
-      {{pool.creator}}
-    </div>
-    <div class='d-inline'>
-      <div *ngIf="isMember" class='d-inline'>
-        <h4> You are a member of this group!</h4>
-        <h5>Your Contribution</h5>
-        ${{isMember.contrubution_amount}}
-        <br />
-        contribute form
-      </div>
-      <div *ngIf="!isMember" class='d-inline'>
-        <button (click)='joinGroup(pool.id)'> Join Group </button>
-      </div>
-      <button (click)="viewGroups()" class='d-inline'>Back to Groups</button>
-    </div>
-  </div>
-</div>
+<div>
 
+  <div *ngIf="pool">
+    <div class='col-md-4'>
+    
+    </div>
+    <div class='col-md-8 container content'>
+      <img [src]="pool.imageURL">
+      <h2>{{pool.name}}</h2>
+      <div>
+        <h4>Pool Value:</h4>
+        ${{pool.pool_value}}
+      </div>
+      <div>
+        <p>
+          {{pool.description}}
+        </p>
+      </div>
+      <div>
+        <h5>Established</h5>
+        {{pool.createdAt}}
+      </div>
+      <div>
+        <h5>Members</h5>
+      </div>
+      <div>
+        Current Expense Request
+      </div>
+      <div>
+        Past Expense Requests
+      </div>
+      <div>
+        Chat
+      </div>
+      <div>
+        Creator:
+        {{pool.creator}}
+      </div>
+      <div class='d-inline'>
+        <div *ngIf="isMember" class='d-inline'>
+          <h4> You are a member of this group!</h4>
+          <h5>Your Contribution</h5>
+          ${{isMember.contrubution_amount}}
+          <br />
+        </div>
+        <div *ngIf="!isMember" class='d-inline'>
+          <button (click)='joinGroup(pool.id)'> Join Group </button>
+        </div>
+        <button (click)="viewGroups()" class='d-inline'>Back to Groups</button>
+      </div>
+    </div>
+  </div>
+  <form #checkout="ngForm" (ngSubmit)="onSubmit(checkout)" class="checkout">
+    <div class="form-row">
+      <label for="card-info">Card Info</label>
+      <div id="card-info" #cardInfo></div>
+  
+      <div id="card-errors" role="alert" *ngIf="error">{{ error }}</div>
+    </div>
+  
+    <button type="submit">Contribute $777</button>
+  </form>
+</div>  
