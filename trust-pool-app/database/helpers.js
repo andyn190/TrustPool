@@ -89,20 +89,37 @@ const findOrCreate = (model, where) => new Promise((resolve, reject) => {
 
 
 const findOrCreateUser = (email, first_name, last_name, image_url, password, googleID) => {
-  if(email){
-    return findOrCreate('Users', { where: {email}, defaults: {first_name, last_name, image_url, password } });
-  } 
-  if( googleID ) {
-    return findOrCreate('Users', { where: { googleID }, defaults: {first_name, last_name, image_url, password , googleID} });
-  } 
+  if (email) {
+    return findOrCreate('Users', {
+      where: { email },
+      defaults: {
+        first_name,
+        last_name,
+        image_url,
+        password
+      }
+    });
+  }
+  if (googleID) {
+    return findOrCreate('Users', {
+      where: { googleID },
+      defaults: {
+        first_name,
+        last_name,
+        image_url,
+        password,
+        googleID
+      }
+    });
+  }
 };
 
-const create = (model, item) => {
-  return models[model].create(item);
-};
+const create = (model, item) => models[model].create(item);
 
-const createContribution = () => {
 
+const createContribution = (poolId, id, amount) => {
+  const contribution = { poolId, id, amount };
+  return create('ContributionEntry', contribution);
 };
 
 const createPool = (name, imageURL, description, voteConfig, creator, publicOpt) => {
