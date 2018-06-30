@@ -50,14 +50,18 @@
       </div>
     </div>
   </div>
-  <form #checkout="ngForm" (ngSubmit)="onSubmit(checkout, pool.id, 77700)" class="checkout">
+  <form #checkout="ngForm" (ngSubmit)="onSubmit(checkout, pool.id)" class="checkout">
     <div class="form-row">
+      <label> Contribution Amount</label>
+      <br />
+      <input type="number" name="amount" ngModel required #amount="ngModel">
+      <br />
       <label for="card-info">Card Info</label>
       <div id="card-info" #cardInfo></div>
   
       <div id="card-errors" role="alert" *ngIf="error">{{ error }}</div>
     </div>
   
-    <button type="submit">Contribute $777</button>
+    <button type="submit">Contribute ${{ amount.value }}</button>
   </form>
 </div>  
