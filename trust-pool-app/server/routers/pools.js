@@ -152,7 +152,7 @@ pools.post('/contribute', (req, res) => {
     source: 'tok_visa' || token
   }, (err, charge) => {
     if (err && err.type === 'StripeCardError') {
-      console.log('CARD DECLINED');
+      res.status(200).json({ error: 'CARD DECLINED' });
     }
     if (err) {
       res.status(200).json({ err });
@@ -160,11 +160,12 @@ pools.post('/contribute', (req, res) => {
       findUserByGoogle(googleID)
         .then((resUser) => {
           const { id } = resUser;
-          console.log(id, 'USER ID');
           return createContribution(poolId, id, amount);
         })
-        .catch(dberr => console.log(dberr));
-      res.status(200).json({ success: charge });
+        .then((contribution) => {
+          res.status(200).json({ success: { charge, contribution } });
+        })
+        .catch(dberr => res.status(200).json({ dberr }));
     }
   });
 });
