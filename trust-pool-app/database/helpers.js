@@ -112,6 +112,7 @@ const findOrCreateUser = (email, first_name, last_name, image_url, password, goo
       }
     });
   }
+  return 'NO EMAIL OR GOOGLE ID';
 };
 
 const create = (model, item) => models[model].create(item);
@@ -154,10 +155,10 @@ const updateMemberCount = (id, amount) => {
       let { members_count } = pool;
       pool.members_count = members_count + amount;
       pool.save()
-        .then((update) => { console.log('POOL MEMBERS COUNT UPDATED')})
-        .catch((err) => { console.log('POOL MEMBERS COUNT NOT UPDATED', err)});
+        .then(update => console.log('POOL MEMBERS COUNT UPDATED'))
+        .catch(err => console.log('POOL MEMBERS COUNT NOT UPDATED', err));
     })
-    .catch((err) => { console.log('FAILED TO FIND POOL BY ID', err)});
+    .catch(err => console.log('FAILED TO FIND POOL BY ID', err));
 };
 
 module.exports = {
