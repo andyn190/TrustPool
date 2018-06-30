@@ -31,6 +31,8 @@ import { GrouppageComponent } from './grouppage/grouppage.component';
 import { GoogleAuthComponent } from './google-auth/google-auth.component';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatCardModule } from '@angular/material/card';
+import { NgxStripeModule } from 'ngx-stripe';
+
 
 const appRoutes: Routes = [
   { path: 'login', component: LoginFormComponent },
@@ -82,6 +84,7 @@ export function getAuthServiceConfigs() {
   imports: [
     BrowserModule,
     HttpClientModule,
+    NgxStripeModule.forRoot('pk_live_jfN68PFcAv5VNL39v43TWOPV'),
     MatSidenavModule,
     BrowserAnimationsModule,
     MatButtonModule,
