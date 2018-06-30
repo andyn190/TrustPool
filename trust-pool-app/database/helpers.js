@@ -153,6 +153,12 @@ const updateMemberCount = (id, amount) => {
     });
 };
 
+const findUserByName = (username, password) => {
+  Users.findOne({ where: { username, password } }).then(user => user).catch((err) => {
+    console.log(err);
+  });
+}
+
 module.exports = {
   findOrCreate,
   findOrCreateUser,
