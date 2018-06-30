@@ -8,7 +8,8 @@ const {
   createPoolMember,
   findUserByGoogle,
   findAllPoolMembers,
-  updateMemberCount
+  updateMemberCount,
+  isMember
 } = require('./../../database/helpers');
 const { STRIPEKEY } = require('../config');
 
@@ -23,6 +24,14 @@ pools.get('/', (req, res) => {
       res.status(500).send(err);
     });
   // this will respond with all public pools
+});
+
+pools.get('/:poolid/ismember', (req, res) => {
+  const { body, user, params } = req;
+  const { poolid } = params;
+  console.log(user, 'USER', poolid, 'Poolid');
+  // find poolmembers where poolid and userid
+  res.status(200).json({ success: 'RECIEVED REQUEST TO CHECK IS MEMBER' });
 });
 
 pools.get('/:poolId', (req, res) => {
