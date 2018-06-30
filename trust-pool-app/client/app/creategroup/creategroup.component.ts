@@ -18,17 +18,18 @@ export class CreategroupComponent implements OnInit {
   ngOnInit() {
   }
   
-  createGroup(e){
-    e.preventDefault();
-    let name = e.target.elements[0].value;
-    let imageUrl = e.target.elements[1].value;
-    let description = e.target.elements[2].value
+  createGroup(form){
+    console.log(form.value['group-name']);
+    let name = form.value['group-name'];
+    let imageUrl = form.value['group-url'];
+    let description = form.value['group-description']
     const pool = {name: name, imgUrl: imageUrl, desc: description};
     this.groupService.createGroup(pool).subscribe(
       success => { console.log(success, 'Success!'); },
       err => console.log(err, 'ERROR'),
       () => console.log('done creating pool')
     );
+    form.reset();
   }
 
 }
