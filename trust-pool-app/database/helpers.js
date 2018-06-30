@@ -101,6 +101,10 @@ const create = (model, item) => {
   return models[model].create(item);
 };
 
+const createContribution = () => {
+
+};
+
 const createPool = (name, imageURL, description, voteConfig, creator, publicOpt) => {
   const pool = {
     name,
@@ -154,5 +158,6 @@ module.exports = {
   findAllPoolMembers,
   updateMemberCount,
   findPoolById,
-  isMember
+  isMember,
+  createContribution
 };
