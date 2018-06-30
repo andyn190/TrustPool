@@ -46,7 +46,6 @@ export class GrouppageComponent implements OnInit, AfterViewInit, OnDestroy {
   ) { }
 
   ngAfterViewInit(){
-    console.log(this.cardInfo,'CARD INFO');
     this.card = elements.create('card');
     this.card.mount(this.cardInfo.nativeElement);
 
@@ -62,7 +61,6 @@ export class GrouppageComponent implements OnInit, AfterViewInit, OnDestroy {
     this.sub = this.route.params.subscribe(params => {
       let { poolid, isMember, getPool, checkIsMember  } = this;
       poolid = +params['poolid']; // (+) converts string 'id' to a number
-      console.log(poolid, 'POOL ID');
       getPool.call(this, poolid);
       checkIsMember.call(this, poolid);
       // In a real app: dispatch action to load the details here.
@@ -91,22 +89,34 @@ export class GrouppageComponent implements OnInit, AfterViewInit, OnDestroy {
     this.cd.detectChanges();
   }
 
-  async onSubmit(form: NgForm, poolId, amount) {
+  async onSubmit(form: NgForm, poolId) {
+    const { amount } = form.value;
     const { token, error } = await stripe.createToken(this.card);
     if (error) {
       console.log('Something is wrong:', error);
     } else {
-      console.log('Success!', token, 'TOKEN', poolId, 'POOLID', amount, 'AMOUNT');
-      // poolId,
-      //   amount,
-      //   stripeToken
-      // ...send the token to the your backend to process the charge
-      this._poolsService.sendContrib(token, poolId, amount)
+      const amountArr = amount.toString().split('.');
+      let decimalStr = amountArr[1];
+      if (decimalStr && decimalStr.length > 2){
+        this.error = 'Too Many Decimals'
+      } else if(!decimalStr) {
+        this._poolsService.sendContrib(token, poolId, amount * 100)
         .subscribe(
           success => { console.log(success, 'SUCCESS')},
           err => console.log(err, 'ERROR'),
           () => console.log('done contributing to pool')
         );
+      } else {
+        if(decimalStr.length === 1){
+          amountArr[1] = decimalStr + '0';
+        }
+        this._poolsService.sendContrib(token, poolId, amountArr.join(''))
+          .subscribe(
+            success => { console.log(success, 'SUCCESS') },
+            err => console.log(err, 'ERROR'),
+            () => console.log('done contributing to pool')
+          );
+      }
     }
   }
 
@@ -115,7 +125,6 @@ export class GrouppageComponent implements OnInit, AfterViewInit, OnDestroy {
     let groupPage = this;
     if (socialUser) {
       // send post request with social user id
-      
       this._poolsService.joinPool(poolid, socialUser)
         .subscribe(
           success => {
@@ -146,7 +155,6 @@ export class GrouppageComponent implements OnInit, AfterViewInit, OnDestroy {
       } else {
         this.isMember = false;
       }
-      console.log(result.member, 'MEMBER')
     },
       err => console.log(err),
       () => console.log('done checking is member')
