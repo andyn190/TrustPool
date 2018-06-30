@@ -159,10 +159,12 @@ pools.post('/contribute', (req, res) => {
     if (err && err.type === 'StripeCardError') {
       console.log('CARD DECLINED');
     }
-    console.log(err, 'ERROR');
-    console.log(charge, 'CHARGE');
+    if (err) {
+      res.status(200).json({ err });
+    } else {
+      res.status(200).json({ success: charge });
+    }
   });
-  res.status(200).json({ body: 'END' });
 });
 
 pools.post('/join', (req, res) => {
