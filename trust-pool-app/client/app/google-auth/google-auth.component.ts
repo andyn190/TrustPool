@@ -35,7 +35,14 @@ export class GoogleAuthComponent implements OnInit {
         console.log(socialPlatform + " sign in data : ", userData);
         // Now sign-in with userData
         // ...
-
+        this.http.get('/login/google').subscribe(
+          data => {
+            console.log('this worked', data);
+          },
+          err => {
+            console.log(err, 'this did not work');
+          }
+        )
       }
     );
   }
