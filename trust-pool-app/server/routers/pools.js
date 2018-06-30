@@ -30,8 +30,22 @@ pools.get('/:poolid/ismember', (req, res) => {
   const { body, user, params } = req;
   const { poolid } = params;
   console.log(user, 'USER', poolid, 'Poolid');
+  const { googleID } = user;
+  findUserByGoogle(googleID)
+    .then((resUser) => {
+      const { id } = resUser;
+      isMember(id, poolid)
+        .then((member) => {
+          if (member) {
+            res.status(200).json({ success: member });
+          } else {
+            res.status(200).json({ success: false });
+          }
+        })
+        .catch(err => console.log(err));
+    })
+    .catch((err) => {});
   // find poolmembers where poolid and userid
-  res.status(200).json({ success: 'RECIEVED REQUEST TO CHECK IS MEMBER' });
 });
 
 pools.get('/:poolId', (req, res) => {
@@ -120,8 +134,8 @@ pools.post('/contribute', (req, res) => {
 pools.post('/join', (req, res) => {
   const { body, user } = req;
   const { poolid, socialUser } = body;
-  const { googleID } = user;
   let isMember = false;
+  const { googleID } = user;
   findUserByGoogle(googleID)
     .then((resUser) => {
       const { id } = resUser;
