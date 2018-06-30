@@ -2,6 +2,7 @@ const pools = require('express').Router();
 const stripe = require('stripe');
 const {
   createPool,
+  findPoolById,
   findPoolByName,
   findAllPools,
   createPoolMember,
@@ -24,9 +25,9 @@ pools.get('/', (req, res) => {
   // this will respond with all public pools
 });
 
-pools.get('/:poolName', (req, res) => {
-  const { poolName } = req.params;
-  findPoolByName(poolName)
+pools.get('/:poolId', (req, res) => {
+  const { poolId } = req.params;
+  findPoolById(poolId)
     .then((pool) => {
       if (pool) {
         res.status(200).send(pool);
