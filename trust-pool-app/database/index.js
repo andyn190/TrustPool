@@ -1,12 +1,7 @@
-const pg = require('pg');
 const Sequelize = require('sequelize');
-const dotenv = require('dotenv');
-dotenv.config();
-const { AWSPASSWORD } = process.env;
+const { AWSDB, LOCALDB } = require('./config');
 
-const connectionString = `postgres://andyn190:${AWSPASSWORD}@trustpooldb.cqz6ljdkuhix.us-east-2.rds.amazonaws.com:5432/trustpooldb`
-
-const sequelize = new Sequelize(connectionString);
+const sequelize = new Sequelize(LOCALDB || AWSDB);
 
 const Users = sequelize.define('Users', {
   id: {
@@ -15,17 +10,30 @@ const Users = sequelize.define('Users', {
     primaryKey: true,
     unique: true
   },
-  "first_name": {
-    type: Sequelize.CHAR
+  first_name: {
+    type: Sequelize.CHAR(15),
+    allowNull: true
   },
-  "last_name": {
-    type: Sequelize.CHAR
+  last_name: {
+    type: Sequelize.CHAR(15),
+    allowNull: true
   },
   email: {
-    type: Sequelize.CHAR
+    type: Sequelize.CHAR,
+    allowNull: true,
+    unique: true
   },
-  "image_url": {
-    type: Sequelize.CHAR
+  googleID: {
+    type: Sequelize.CHAR,
+    unique: true
+  },
+  image_url: {
+    type: Sequelize.CHAR,
+    allowNull: true
+  },
+  password: {
+    type: Sequelize.CHAR,
+    allowNull: true
   }
 });
 
@@ -36,25 +44,26 @@ const Pools = sequelize.define('Pools', {
     primaryKey: true,
     unique: true
   },
-  "pool_value": {
+  pool_value: {
     type: Sequelize.INTEGER
   },
   description: {
     type: Sequelize.TEXT
   },
   name: {
-    type: Sequelize.CHAR
+    type: Sequelize.CHAR,
+    unique: true
   },
   imageURL: {
     type: Sequelize.TEXT
-  }, 
+  },
   public: {
     type: Sequelize.CHAR
   },
-  created_at: {
-    type: Sequelize.DATE
+  voteConfig: {
+    type: Sequelize.INTEGER
   },
-  "members_count": {
+  members_count: {
     type: Sequelize.INTEGER
   },
   creator: {
@@ -67,7 +76,9 @@ const Pools = sequelize.define('Pools', {
   }
 });
 
-const Expense_request_type = sequelize.define('expense_request_type', {
+Pools.belongsTo(Users, { foreignKey: 'creator' });
+
+const ExpenseRequestType = sequelize.define('Expense_Request_Type', {
   id: {
     type: Sequelize.CHAR,
     primaryKey: true,
@@ -76,14 +87,14 @@ const Expense_request_type = sequelize.define('expense_request_type', {
   }
 });
 
-const Expense_request = sequelize.define('Expense_request', {
+const ExpenseRequest = sequelize.define('Expense_Request', {
   id: {
     type: Sequelize.INTEGER,
     autoIncrement: true,
     primaryKey: true,
     unique: true
   },
-  "pool_id": {
+  pool_id: {
     type: Sequelize.INTEGER,
     references: {
       model: Pools,
@@ -94,19 +105,19 @@ const Expense_request = sequelize.define('Expense_request', {
   description: {
     type: Sequelize.TEXT
   },
-  "active_status": {
+  active_status: {
     type: Sequelize.CHAR
   },
-  "voter_count": {
+  voter_count: {
     type: Sequelize.INTEGER
   },
-  "expense_amount": {
+  expense_amount: {
     type: Sequelize.INTEGER
   },
-  "created_at": {
+  created_at: {
     type: Sequelize.DATE
   },
-  "expiration_date": {
+  expiration_date: {
     type: Sequelize.DATE
   },
   creator: {
@@ -117,27 +128,27 @@ const Expense_request = sequelize.define('Expense_request', {
       deferrable: Sequelize.Deferrable.INITIALLY_IMMEDIATE
     }
   },
-  "request_title": {
+  request_title: {
     type: Sequelize.TEXT
   },
   method: {
     type: Sequelize.CHAR,
     references: {
-      model: Expense_request_type,
+      model: ExpenseRequestType,
       key: 'id',
       deferrable: Sequelize.Deferrable.INITIALLY_IMMEDIATE
     }
   }
 });
 
-const Contribution_entry = sequelize.define('contribution_entry', {
+const ContributionEntry = sequelize.define('Contribution_Entry', {
   id: {
     type: Sequelize.INTEGER,
     autoIncrement: true,
     primaryKey: true,
     unique: true
   },
-  "pool_id": {
+  pool_id: {
     type: Sequelize.INTEGER,
     references: {
       model: Pools,
@@ -145,7 +156,7 @@ const Contribution_entry = sequelize.define('contribution_entry', {
       deferrable: Sequelize.Deferrable.INITIALLY_IMMEDIATE
     }
   },
-  "pool_member_id": {
+  pool_member_id: {
     type: Sequelize.INTEGER,
     references: {
       model: Users,
@@ -153,22 +164,22 @@ const Contribution_entry = sequelize.define('contribution_entry', {
       deferrable: Sequelize.Deferrable.INITIALLY_IMMEDIATE
     }
   },
-  "contribution_amount": {
+  contribution_amount: {
     type: Sequelize.INTEGER
   },
-  "time_stamp": {
+  time_stamp: {
     type: Sequelize.DATE
   }
 });
 
-const Pool_members = sequelize.define('pool_members', {
+const PoolMembers = sequelize.define('Pool_Members', {
   id: {
     type: Sequelize.INTEGER,
     autoIncrement: true,
     primaryKey: true,
     unique: true
   },
-  "pool_id": {
+  pool_id: {
     type: Sequelize.INTEGER,
     references: {
       model: Pools,
@@ -176,7 +187,7 @@ const Pool_members = sequelize.define('pool_members', {
       deferrable: Sequelize.Deferrable.INITIALLY_IMMEDIATE
     }
   },
-  "pool_member_id": {
+  pool_member_id: {
     type: Sequelize.INTEGER,
     references: {
       model: Users,
@@ -184,25 +195,22 @@ const Pool_members = sequelize.define('pool_members', {
       deferrable: Sequelize.Deferrable.INITIALLY_IMMEDIATE
     }
   },
-  "contrubution_amount": {
+  contrubution_amount: {
     type: Sequelize.INTEGER
   },
-  "withdraw_amount": {
+  withdraw_amount: {
     type: Sequelize.INTEGER
-  },
-  "join_date": {
-    type: Sequelize.DATE
   }
 });
 
-const Chat_messages = sequelize.define('chat_messages', {
+const ChatMessages = sequelize.define('Chat_Messages', {
   id: {
     type: Sequelize.INTEGER,
     autoIncrement: true,
     primaryKey: true,
     unique: true
   },
-  "pool_id": {
+  pool_id: {
     type: Sequelize.INTEGER,
     references: {
       model: Pools,
@@ -210,7 +218,7 @@ const Chat_messages = sequelize.define('chat_messages', {
       deferrable: Sequelize.Deferrable.INITIALLY_IMMEDIATE
     }
   },
-  "user_id": {
+  user_id: {
     type: Sequelize.INTEGER,
     references: {
       model: Users,
@@ -221,32 +229,32 @@ const Chat_messages = sequelize.define('chat_messages', {
   message: {
     type: Sequelize.TEXT
   },
-  "time_stamp": {
+  time_stamp: {
     type: Sequelize.DATE
   }
 });
 
-const Ebay_wishlist_entry = sequelize.define('ebay_wishlist_entry', {
+const EbayWishlistEntry = sequelize.define('Ebay_Wishlist_Entry', {
   id: {
     type: Sequelize.INTEGER,
     autoIncrement: true,
     primaryKey: true,
     unique: true
   },
-  "ebay_item_id": {
+  ebay_item_id: {
     type: Sequelize.INTEGER
   },
-  "expense_request_type_id": {
+  expense_request_type_id: {
     type: Sequelize.CHAR,
     references: {
-      model: Expense_request_type,
+      model: ExpenseRequestType,
       key: 'id',
       deferrable: Sequelize.Deferrable.INITIALLY_IMMEDIATE
     }
   }
 });
 
-const Checks = sequelize.define('checks', {
+const Checks = sequelize.define('Checks', {
   id: {
     type: Sequelize.INTEGER,
     autoIncrement: true,
@@ -256,7 +264,7 @@ const Checks = sequelize.define('checks', {
   amount: {
     type: Sequelize.INTEGER
   },
-  "name": {
+  name: {
     type: Sequelize.CHAR
   },
   email: {
@@ -265,27 +273,43 @@ const Checks = sequelize.define('checks', {
   description: {
     type: Sequelize.TEXT
   },
-  "is_physical": {
+  is_physical: {
     type: Sequelize.TEXT
   },
-  "physical_address": {
+  physical_address: {
     type: Sequelize.TEXT
   },
-  "expense_request_type_id": {
+  expense_request_type_id: {
     type: Sequelize.CHAR,
     references: {
-      model: Expense_request_type,
+      model: ExpenseRequestType,
       key: 'id',
       deferrable: Sequelize.Deferrable.INITIALLY_IMMEDIATE
     }
   }
-})
+});
 
 sequelize
-.authenticate()
-.then(() => {
-  console.log('connection has been established');
-})
-.catch(err => {
-  console.error('unable to connect to the database:');
-})
+  .authenticate()
+  .then(() => {
+    console.log('connection has been established');
+  })
+  .catch((err) => {
+    console.log(`unable to connect to the database: ${err}`);
+  });
+
+PoolMembers.sync({ force: true }).then(res => console.log(res)).catch(err => console.log(err));
+// Pools.sync({ force: true }).then(res => console.log(res)).catch(err => console.log(err));
+
+module.exports = {
+  sequelize,
+  Users,
+  Pools,
+  ExpenseRequestType,
+  ExpenseRequest,
+  ContributionEntry,
+  PoolMembers,
+  ChatMessages,
+  EbayWishlistEntry,
+  Checks
+};

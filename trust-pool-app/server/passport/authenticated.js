@@ -1,1 +1,1 @@
-module.exports = (req, res, next) => (req.user ? next() : res.redirect('/'));
+module.exports = (req, res, next) => (req.user ? next() : res.redirect('/login/google'));
