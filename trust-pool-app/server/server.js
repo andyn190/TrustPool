@@ -15,6 +15,7 @@ const app = express();
 const server = http.Server(app);
 app.use(cors());
 app.use(require('cookie-parser')());
+
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
