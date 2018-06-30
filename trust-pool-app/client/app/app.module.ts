@@ -31,6 +31,7 @@ import { GrouppageComponent } from './grouppage/grouppage.component';
 import { GoogleAuthComponent } from './google-auth/google-auth.component';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatCardModule } from '@angular/material/card';
+import { NgxStripeModule } from 'ngx-stripe';
 
 
 const appRoutes: Routes = [
