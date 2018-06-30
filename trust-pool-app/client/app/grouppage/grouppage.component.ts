@@ -38,14 +38,16 @@ export class GrouppageComponent implements OnInit {
       () => console.log('done loading pool')
     );
   }
+
   checkIsMember(poolid) {
-    this._poolsService.checkIsMember(poolid).subscribe(result => {
-      if(result){
-        this.isMember = true;
+    this._poolsService.checkIsMember(poolid).subscribe((result: { [member: string] : boolean  }) => {
+      const { member } = result;
+      if(member) {
+        this.isMember = member;
       } else {
         this.isMember = false;
       }
-      console.log(result, 'SUCCESS!! IS MEMBER')
+      console.log(result.member, 'MEMBER')
     },
       err => console.log(err),
       () => console.log('done checking is member')
