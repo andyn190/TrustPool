@@ -39,6 +39,34 @@ export class GrouppageComponent implements OnInit {
     );
   }
 
+  joinGroup(poolid) {
+    let socialUser = this._cookieService.get('socialID');
+    let groupPage = this;
+    if (socialUser) {
+      // send post request with social user id
+      
+      this._poolsService.joinPool(poolid, socialUser)
+        .subscribe(
+          success => {
+            groupPage.checkIsMember(poolid);
+            console.log(success, 'Success!!!');
+          },
+          err => console.log(err, 'ERROR'),
+          () => console.log('done joining pool')
+        );
+    } else {
+      // send post request with just poolId in body
+      this._poolsService.joinPool(poolid, null).subscribe(
+        success => {
+          groupPage.checkIsMember(poolid);
+          console.log(success, 'Success!');
+        },
+        err => console.log(err, 'ERROR'),
+        () => console.log('done joining pool')
+      );
+    }
+  }
+
   checkIsMember(poolid) {
     this._poolsService.checkIsMember(poolid).subscribe((result: { [member: string] : boolean  }) => {
       const { member } = result;
