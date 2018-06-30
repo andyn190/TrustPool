@@ -38,7 +38,7 @@ const findUserById = id => findOne('Users', { where: { id } });
 
 const findUserByGoogle = googleID => findOne('Users', { where: { googleID } });
 
-const isMember = (poolid, userid) => {};
+const isMember = (pool_member_id, pool_id) => findOne('PoolMembers', { where: { pool_member_id, pool_id } });
 
 
 const findPoolByName = name => findOne('Pools', { where: { name } });
