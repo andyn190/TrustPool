@@ -10,15 +10,18 @@ import { Router, ActivatedRoute } from '@angular/router';
 })
 export class GrouppageComponent implements OnInit {
   poolid: number;
+  isMember: boolean;
   pool: object;
   private sub: any;
   constructor(private _poolsService: PoolsService, private _cookieService: CookieService, private _router: Router, private route: ActivatedRoute) { }
 
   ngOnInit() {
     this.sub = this.route.params.subscribe(params => {
-      this.poolid = +params['poolid']; // (+) converts string 'id' to a number
-      console.log(this.poolid, 'POOL ID');
-      this.getPool(this.poolid);
+      let { poolid, isMember, getPool, checkIsMember  } = this;
+      poolid = +params['poolid']; // (+) converts string 'id' to a number
+      console.log(poolid, 'POOL ID');
+      getPool.call(this, poolid);
+      checkIsMember.call(this, poolid);
       // In a real app: dispatch action to load the details here.
     });
   }
@@ -29,10 +32,53 @@ export class GrouppageComponent implements OnInit {
     this._poolsService.getPool(poolid).subscribe(
       pool => {
         this.pool = pool;
-        console.log(pool, 'SUCCESS!!')
+        console.log(pool, 'SUCCESS!')
       },
       err => console.log(err),
-      () => console.log('done loading pools')
+      () => console.log('done loading pool')
+    );
+  }
+
+  joinGroup(poolid) {
+    let socialUser = this._cookieService.get('socialID');
+    let groupPage = this;
+    if (socialUser) {
+      // send post request with social user id
+      
+      this._poolsService.joinPool(poolid, socialUser)
+        .subscribe(
+          success => {
+            groupPage.checkIsMember(poolid);
+            console.log(success, 'Success!!!');
+          },
+          err => console.log(err, 'ERROR'),
+          () => console.log('done joining pool')
+        );
+    } else {
+      // send post request with just poolId in body
+      this._poolsService.joinPool(poolid, null).subscribe(
+        success => {
+          groupPage.checkIsMember(poolid);
+          console.log(success, 'Success!');
+        },
+        err => console.log(err, 'ERROR'),
+        () => console.log('done joining pool')
+      );
+    }
+  }
+
+  checkIsMember(poolid) {
+    this._poolsService.checkIsMember(poolid).subscribe((result: { [member: string] : boolean  }) => {
+      const { member } = result;
+      if(member) {
+        this.isMember = member;
+      } else {
+        this.isMember = false;
+      }
+      console.log(result.member, 'MEMBER')
+    },
+      err => console.log(err),
+      () => console.log('done checking is member')
     );
   }
 

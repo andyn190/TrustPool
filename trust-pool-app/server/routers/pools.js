@@ -8,7 +8,8 @@ const {
   createPoolMember,
   findUserByGoogle,
   findAllPoolMembers,
-  updateMemberCount
+  updateMemberCount,
+  isMember
 } = require('./../../database/helpers');
 const { STRIPEKEY } = require('../config');
 
@@ -23,6 +24,27 @@ pools.get('/', (req, res) => {
       res.status(500).send(err);
     });
   // this will respond with all public pools
+});
+
+pools.get('/:poolid/ismember', (req, res) => {
+  const { user, params } = req;
+  const { poolid } = params;
+  const { googleID } = user;
+  findUserByGoogle(googleID)
+    .then((resUser) => {
+      const { id } = resUser;
+      isMember(id, poolid)
+        .then((member) => {
+          if (member) {
+            res.status(200).json({ member });
+          } else {
+            res.status(200).json({ member: false });
+          }
+        })
+        .catch(err => console.log(err));
+    })
+    .catch(err => console.log(err));
+  // find poolmembers where poolid and userid
 });
 
 pools.get('/:poolId', (req, res) => {
@@ -77,7 +99,8 @@ pools.post('/expense', (req, res) => {
     desc,
     amount,
     expiration,
-    method } = req.body;
+    method
+  } = req.body;
   res.status(200).send(`recieved request to create new expense request in pool ${poolId}`);
 });
 
@@ -111,8 +134,8 @@ pools.post('/contribute', (req, res) => {
 pools.post('/join', (req, res) => {
   const { body, user } = req;
   const { poolid, socialUser } = body;
+  let isMemberCheck = false;
   const { googleID } = user;
-  let isMember = false;
   findUserByGoogle(googleID)
     .then((resUser) => {
       const { id } = resUser;
@@ -122,10 +145,10 @@ pools.post('/join', (req, res) => {
             const { dataValues } = member;
             const { pool_member_id } = dataValues;
             if (pool_member_id === id) {
-              isMember = true;
+              isMemberCheck = true;
             }
           });
-          if (isMember) {
+          if (isMemberCheck) {
             res.status(409).send(`${socialUser || googleID} is already a member of pool ${poolid}`);
           } else {
             createPoolMember(poolid, id)
