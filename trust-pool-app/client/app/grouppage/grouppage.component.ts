@@ -1,7 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { CookieService } from 'angular2-cookie/core';
 import { PoolsService } from '../services/pools/pools.service';
 import { Router, ActivatedRoute } from '@angular/router';
+import { FormGroup, FormBuilder, Validators } from "@angular/forms";
+import { StripeService, Elements, Element as StripeElement, ElementsOptions } from "ngx-stripe";
 
 @Component({
   selector: 'app-grouppage',
@@ -9,11 +11,25 @@ import { Router, ActivatedRoute } from '@angular/router';
   styleUrls: ['./grouppage.component.css']
 })
 export class GrouppageComponent implements OnInit {
+  elements: Elements;
+  card: StripeElement;
   poolid: number;
   isMember: boolean;
   pool: object;
   private sub: any;
-  constructor(private _poolsService: PoolsService, private _cookieService: CookieService, private _router: Router, private route: ActivatedRoute) { }
+
+  elementsOptions: ElementsOptions = {
+    locale: 'es'
+  };
+  contribute: FormGroup;
+  constructor(
+    private _poolsService: PoolsService,
+    private _cookieService: CookieService,
+    private _router: Router,
+    private route: ActivatedRoute,
+    private fb: FormBuilder,
+    private stripeService: StripeService
+  ) { }
 
   ngOnInit() {
     this.sub = this.route.params.subscribe(params => {
