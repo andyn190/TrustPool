@@ -91,6 +91,7 @@ export function getAuthServiceConfigs() {
     BrowserAnimationsModule,
     MatButtonModule,
     SocialLoginModule,
+    FormsModule,
     RouterModule.forRoot(
       appRoutes,
       { enableTracing: true }
