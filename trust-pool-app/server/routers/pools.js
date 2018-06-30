@@ -27,7 +27,7 @@ pools.get('/', (req, res) => {
 });
 
 pools.get('/:poolid/ismember', (req, res) => {
-  const { body, user, params } = req;
+  const { user, params } = req;
   const { poolid } = params;
   const { googleID } = user;
   findUserByGoogle(googleID)
