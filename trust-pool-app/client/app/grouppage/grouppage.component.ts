@@ -91,17 +91,22 @@ export class GrouppageComponent implements OnInit, AfterViewInit, OnDestroy {
     this.cd.detectChanges();
   }
 
-  async onSubmit(form: NgForm) {
+  async onSubmit(form: NgForm, poolId, amount) {
     const { token, error } = await stripe.createToken(this.card);
     if (error) {
       console.log('Something is wrong:', error);
     } else {
-      console.log('Success!', token);
+      console.log('Success!', token, 'TOKEN', poolId, 'POOLID', amount, 'AMOUNT');
       // poolId,
-      //   memberId,
       //   amount,
       //   stripeToken
       // ...send the token to the your backend to process the charge
+      this._poolsService.sendContrib(token, poolId, amount)
+        .subscribe(
+          success => { console.log(success, 'SUCCESS')},
+          err => console.log(err, 'ERROR'),
+          () => console.log('done contributing to pool')
+        );
     }
   }
 
