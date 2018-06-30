@@ -15,8 +15,8 @@ stripe(STRIPEKEY);
 
 pools.get('/', (req, res) => {
   findAllPools()
-    .then((pools) => {
-      res.status(200).send(pools);
+    .then((poolsArr) => {
+      res.status(200).send(poolsArr);
     })
     .catch((err) => {
       res.status(500).send(err);
@@ -24,16 +24,14 @@ pools.get('/', (req, res) => {
   // this will respond with all public pools
 });
 
-
-
 pools.get('/:poolName', (req, res) => {
   const { poolName } = req.params;
   findPoolByName(poolName)
     .then((pool) => {
-      if(pool){
+      if (pool) {
         res.status(200).send(pool);
       } else {
-        res.status(200).send({error: 'Pool Not Found'});
+        res.status(200).send({ error: 'Pool Not Found' });
       }
     })
     .catch((err) => {
@@ -42,16 +40,21 @@ pools.get('/:poolName', (req, res) => {
   // this will respond with the pool requested
 });
 
-
-
 pools.post('/create', (req, res) => {
-  const { name, imgUrl, desc, voteConfig, creatorId, public } = req.body.pool;
+  const {
+    name,
+    imgUrl,
+    desc,
+    voteConfig,
+    creatorId,
+    publicOpt
+  } = req.body.pool;
   findPoolByName(name)
     .then((pool) => {
       if (pool) {
         res.status(200).send({ error: 'POOL ALREADY EXISTS' });
       } else {
-        createPool(name, imgUrl, desc, voteConfig, creatorId, public)
+        createPool(name, imgUrl, desc, voteConfig, creatorId, publicOpt)
           .then((result) => {
             res.status(200).send(result);
           })
@@ -66,7 +69,14 @@ pools.post('/create', (req, res) => {
 });
 
 pools.post('/expense', (req, res) => {
-  const { poolId, creatorId, title, desc, amount, expiration, method } = req.body;
+  const {
+    poolId,
+    creatorId,
+    title,
+    desc,
+    amount,
+    expiration,
+    method } = req.body;
   res.status(200).send(`recieved request to create new expense request in pool ${poolId}`);
 });
 
@@ -76,8 +86,13 @@ pools.post('/vote', (req, res) => {
 });
 
 pools.post('/contribute', (req, res) => {
-  const { poolId, memberId, amount, stripeToken } = req.body;
-  // Pay with stripe, 
+  const {
+    poolId,
+    memberId,
+    amount,
+    stripeToken
+  } = req.body;
+  // Pay with stripe,
   // if stripe payment is accepted,
   // create a contributtion entry into db
   let charge = stripe.charges.create({
