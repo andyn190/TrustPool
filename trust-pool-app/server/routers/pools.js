@@ -29,7 +29,6 @@ pools.get('/', (req, res) => {
 pools.get('/:poolid/ismember', (req, res) => {
   const { body, user, params } = req;
   const { poolid } = params;
-  console.log(user, 'USER', poolid, 'Poolid');
   const { googleID } = user;
   findUserByGoogle(googleID)
     .then((resUser) => {
@@ -37,9 +36,9 @@ pools.get('/:poolid/ismember', (req, res) => {
       isMember(id, poolid)
         .then((member) => {
           if (member) {
-            res.status(200).json({ success: member });
+            res.status(200).json({ member });
           } else {
-            res.status(200).json({ success: false });
+            res.status(200).json({ member: false });
           }
         })
         .catch(err => console.log(err));
