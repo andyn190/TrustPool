@@ -166,9 +166,6 @@ const ContributionEntry = sequelize.define('Contribution_Entry', {
   },
   contribution_amount: {
     type: Sequelize.INTEGER
-  },
-  time_stamp: {
-    type: Sequelize.DATE
   }
 });
 
