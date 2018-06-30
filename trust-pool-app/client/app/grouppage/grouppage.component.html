@@ -40,13 +40,7 @@
         <h5>Your Contribution</h5>
         ${{isMember.contrubution_amount}}
         <br />
-        <form novalidate (ngSubmit)="buy($event)" [contribute]="contribute">
-          <input type="text" formControlName="name" placeholder="Jane Doe">
-          <div id="card-element" class="field"></div>
-          <button type="submit">
-            Contribute
-          </button>
-        </form>
+        contribute form
       </div>
       <div *ngIf="!isMember" class='d-inline'>
         <button (click)='joinGroup(pool.id)'> Join Group </button>
