@@ -1,45 +1,52 @@
 <div *ngIf="pool">
-  <img [src]="pool.imageURL">
-  <h2>{{pool.name}}</h2>
-  <div>
-    <h4>Pool Value:</h4>
-    ${{pool.pool_value}}
+  <div class='col-md-4'>
+  
   </div>
-  <div>
-    <p>
-      {{pool.description}}
-    </p>
+  <div class='col-md-8 container content'>
+    <img [src]="pool.imageURL">
+    <h2>{{pool.name}}</h2>
+    <div>
+      <h4>Pool Value:</h4>
+      ${{pool.pool_value}}
+    </div>
+    <div>
+      <p>
+        {{pool.description}}
+      </p>
+    </div>
+    <div>
+      <h5>Established</h5>
+      {{pool.createdAt}}
+    </div>
+    <div>
+      <h5>Members</h5>
+    </div>
+    <div>
+      Current Expense Request
+    </div>
+    <div>
+      Past Expense Requests
+    </div>
+    <div>
+      Chat
+    </div>
+    <div>
+      Creator:
+      {{pool.creator}}
+    </div>
+    <div class='d-inline'>
+      <div *ngIf="isMember" class='d-inline'>
+        <h4> You are a member of this group!</h4>
+        <h5>Your Contribution</h5>
+        ${{isMember.contrubution_amount}}
+        <br />
+        <button>Contribute</button>
+      </div>
+      <div *ngIf="!isMember" class='d-inline'>
+        <button (click)='joinGroup(pool.id)'> Join Group </button>
+      </div>
+      <button (click)="viewGroups()" class='d-inline'>Back to Groups</button>
+    </div>
   </div>
-  <div>
-    <h5>Established</h5>
-    {{pool.createdAt}}
-  </div>
-  <div>
-    <h5>Members</h5>
-  </div>
-  <div>
-    Current Expense Request
-  </div>
-  <div>
-    Past Expense Requests
-  </div>
-  <div>
-    Chat
-  </div>
-  <div>
-    Creator:
-    {{pool.creator}}
-  </div>
-  <div *ngIf="isMember">
-    <h4> You are a member of this group!</h4>
-    <h5>Your Contribution</h5>
-    ${{isMember.contrubution_amount}}
-    <br />
-    <button >Contribute</button>
-  </div>
-  <div *ngIf="!isMember">
-    <button (click)='joinGroup(pool.id)'> Join Group </button>
-  </div>
-  <button (click)="viewGroups()">Back to Groups</button>
 </div>
 
