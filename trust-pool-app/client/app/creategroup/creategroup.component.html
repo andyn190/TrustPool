@@ -1,4 +1,4 @@
-<form (submit)="createGroup($event)">
+<!-- <form (submit)="createGroup($event)">
     <div class="input">
       <label>name</label>
       <input type="text" />
@@ -15,4 +15,42 @@
       <input type="submit" value="createGroup" />
     </div>
   </form>
-
+ -->
+ <form #groupForm="ngForm"
+ (ngSubmit)="createGroup(groupForm.form);">
+ <div *ngIf="nameField.touched && nameField.errors">
+    <div class="alert alert-danger" 
+    *ngIf="nameField.errors.required">
+    The Group name is required!
+</div>
+<div class="alert alert-danger" 
+     *ngIf="nameField.errors.minlength">
+     The Group descriptions should be atleast 10 characters long!
+</div>
+ </div>
+ <h1>Name</h1>
+ <input type="text" 
+  class="form-control" 
+  name="group-name"
+  ngModel
+  required
+  #nameField="ngModel"
+  minlength="5">
+<h2>Image Url</h2>
+ <input type="text" 
+ class="form-control" 
+ name="group-url"
+ ngModel
+ required
+ #nameField="ngModel"
+ minlength="5">
+ 
+ <h3>Group Description</h3>
+ <input type="text" 
+ class="form-control" 
+ name="group-description"
+ ngModel
+ required
+ #nameField="ngModel"
+ minlength="10">
+ <button class="btn btn-primary" [disabled]="!groupForm.valid">Submit</button>
