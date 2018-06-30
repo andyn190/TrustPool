@@ -22,19 +22,22 @@ const googleAuthHeaders = {
 })
 @NgModule({
 })
-export class AuthService {
+export class OwnAuthService {
   private loginUrl = '/login/';
   private googleUrl = '/login/google'
 
   constructor(private http: HttpClient) {
   }
 
-  googleLogin() {
-    return this.http.get(this.googleUrl)
-    .pipe(
-      tap(() => {console.log('this worked')}),
-      catchError(this.handleError('GoogleLogin'))
-    )
+  googleLogin(token: string) {
+    return this.http.post(this.loginUrl, { token })
+    .subscribe(onSuccess => {
+      console.log(onSuccess);
+      console.log('login was successful');
+    }, onFail => {
+      console.log('invalid', onFail);
+      window.alert('email is incorrect');
+    })
   }
   login (user: User): Observable<User> {
     return this.http.post<User>(this.loginUrl, user, httpOptions).pipe(

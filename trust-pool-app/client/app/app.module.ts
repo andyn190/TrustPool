@@ -23,7 +23,7 @@ import { GroupsComponent } from './groups/groups.component';
 import { CreategroupComponent } from './creategroup/creategroup.component';
 import { CreaterequestComponent } from './createrequest/createrequest.component';
 import { EbaypageComponent } from './ebaypage/ebaypage.component'
-import { AuthService } from './services/auth/auth.service';
+import { OwnAuthService } from './services/auth/auth.service';
 import { PoolsService } from './services/pools/pools.service';
 import { ContributeComponent } from './contribute/contribute.component';
 import { AccountpageComponent } from './accountpage/accountpage.component';
@@ -101,7 +101,7 @@ export function getAuthServiceConfigs() {
     MatListModule,
     MatIconModule
   ],
-  providers: [AuthService, PoolsService, CookieService, {
+  providers: [OwnAuthService, PoolsService, CookieService, {
     provide: AuthServiceConfig,
     useFactory: getAuthServiceConfigs
   }],
