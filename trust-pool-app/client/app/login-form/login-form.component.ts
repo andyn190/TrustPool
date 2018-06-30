@@ -36,4 +36,7 @@ export class LoginFormComponent implements OnInit {
       console.log(user);
     })
   }
+  goToSignUpPage() {
+    this.router.navigate(['signup'])
+  }
 }

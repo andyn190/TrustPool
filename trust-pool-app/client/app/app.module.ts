@@ -33,6 +33,7 @@ import { SignupFormComponent } from './signup-form/signup-form.component';
 
 const appRoutes: Routes = [
   { path: 'login', component: LoginFormComponent },
+  { path: 'signup', component: SignupFormComponent },
   { path: 'home', component: HomepageComponent },
   { path: 'creategroup', component: CreategroupComponent },
   { path: 'groups', component: GroupsComponent },
