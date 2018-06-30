@@ -106,7 +106,7 @@ const createPool = (name, imageURL, description, voteConfig, creator, publicOpt)
 
 const createPoolMember = (pool_id, pool_member_id) => {
   const contrubution_amount = 0, withdraw_amount = 0;
-  const poolMember = { pool_id, pool_member_id, contrubution_amount, withdraw_amount  };
+  const poolMember = { pool_id, pool_member_id, contrubution_amount, withdraw_amount };
   return create('PoolMembers', poolMember);
 };
 
@@ -116,7 +116,7 @@ const updateMemberCount = (id, amount) => {
       let { members_count } = pool;
       pool.members_count = members_count + amount;
       pool.save()
-      .then((update) => { console.log('POOL MEMBERS COUNT UPDATED')})
+        .then((update) => { console.log('POOL MEMBERS COUNT UPDATED')})
         .catch((err) => { console.log('POOL MEMBERS COUNT NOT UPDATED', err)});
     })
     .catch((err) => { console.log('FAILED TO FIND POOL BY ID', err)});
@@ -135,6 +135,6 @@ module.exports = {
   createPoolMember,
   findUserByGoogle,
   findAllPoolMembers,
-  updateMemberCount
+  updateMemberCount,
+  findPoolById
 };
-  

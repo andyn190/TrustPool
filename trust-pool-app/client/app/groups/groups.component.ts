@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CookieService } from 'angular2-cookie/core';
 import { PoolsService } from '../services/pools/pools.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-groups',
@@ -9,7 +10,7 @@ import { PoolsService } from '../services/pools/pools.service';
 })
 export class GroupsComponent implements OnInit {
   public pools;
-  constructor(private _poolsService: PoolsService, private _cookieService: CookieService) { }
+  constructor(private _poolsService: PoolsService, private _cookieService: CookieService, private _router: Router) { }
 
   ngOnInit() {
     this.getPools();
@@ -20,26 +21,36 @@ export class GroupsComponent implements OnInit {
       // send post request with social user id
       this._poolsService.joinPool(poolid, socialUser)
         .subscribe(
-          success => { console.log(success, 'Success!'); },
+          success => {
+            this.updateMemberCountView(poolid);
+            console.log(success, 'Success!!!');
+          },
           err => console.log(err, 'ERROR'),
-          () => {
-            this.pools.forEach((pool) => {
-              if(pool.id === poolid){
-                pool.members_count += 1;
-              }
-            });
-            console.log('done joining pool')
-          }
+          () => console.log('done joining pool')
         );
     } else {
       // send post request with just poolId in body
       this._poolsService.joinPool(poolid, null).subscribe(
-        success => {console.log(success, 'Success!');},
+        success => {
+          this.updateMemberCountView(poolid);
+          console.log(success, 'Success!');
+        },
         err => console.log(err, 'ERROR'),
         () => console.log('done joining pool')
       );
     }
 
+  }
+  viewGroup(poolid){
+      this._router.navigate(['group/', poolid]);
+  }
+  updateMemberCountView(poolid){
+    console.log('CALLED');
+    this.pools.forEach((pool) => {
+      if (pool.id === poolid) {
+        pool.members_count += 1;
+      }
+    });
   }
   getPools() {
     this._poolsService.getPools().subscribe(
