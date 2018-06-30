@@ -32,6 +32,8 @@ import { GoogleAuthComponent } from './google-auth/google-auth.component';
 import { SignupFormComponent } from './signup-form/signup-form.component';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatCardModule } from '@angular/material/card';
+import { MatListModule } from '@angular/material/list';
+import { MatIconModule } from '@angular/material/icon';
 
 const appRoutes: Routes = [
   { path: 'login', component: LoginFormComponent },
@@ -95,7 +97,9 @@ export function getAuthServiceConfigs() {
     ),
     FormsModule,
     MatToolbarModule,
-    MatCardModule
+    MatCardModule,
+    MatListModule,
+    MatIconModule
   ],
   providers: [AuthService, PoolsService, CookieService, {
     provide: AuthServiceConfig,
