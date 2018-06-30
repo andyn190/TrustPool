@@ -43,7 +43,7 @@ pools.get('/:poolid/ismember', (req, res) => {
         })
         .catch(err => console.log(err));
     })
-    .catch((err) => {});
+    .catch(err => console.log(err));
   // find poolmembers where poolid and userid
 });
 
@@ -99,7 +99,8 @@ pools.post('/expense', (req, res) => {
     desc,
     amount,
     expiration,
-    method } = req.body;
+    method
+  } = req.body;
   res.status(200).send(`recieved request to create new expense request in pool ${poolId}`);
 });
 
@@ -133,7 +134,7 @@ pools.post('/contribute', (req, res) => {
 pools.post('/join', (req, res) => {
   const { body, user } = req;
   const { poolid, socialUser } = body;
-  let isMember = false;
+  let isMemberCheck = false;
   const { googleID } = user;
   findUserByGoogle(googleID)
     .then((resUser) => {
@@ -144,10 +145,10 @@ pools.post('/join', (req, res) => {
             const { dataValues } = member;
             const { pool_member_id } = dataValues;
             if (pool_member_id === id) {
-              isMember = true;
+              isMemberCheck = true;
             }
           });
-          if (isMember) {
+          if (isMemberCheck) {
             res.status(409).send(`${socialUser || googleID} is already a member of pool ${poolid}`);
           } else {
             createPoolMember(poolid, id)
