@@ -118,16 +118,15 @@ const findOrCreateUser = (email, first_name, last_name, image_url, password, goo
 
 const create = (model, item) => models[model].create(item);
 
-const updatePool = (id, key, value) => {
-  return findPoolById(id)
-    .then((pool) => {
-      if (key === 'pool_value') {
-        pool[key] += value;
-      } else { pool[key] = value; }
-      return pool.save()
-        .then(() => console.log(`POOL ${id} ${key} UPDATED ${value}!!`));
-    });
-};
+const updatePool = (id, key, value) => findPoolById(id)
+  .then((pool) => {
+    if (key === 'pool_value') {
+      pool[key] += value;
+    } else { pool[key] = value; }
+    return pool.save()
+      .then(() => console.log(`POOL ${id} ${key} UPDATED ${value}!!`));
+  });
+
 
 const updatePoolMember = (memberId, poolId, key, value) => {
   return findPoolMember(memberId, poolId)
