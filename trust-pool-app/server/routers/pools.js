@@ -66,31 +66,30 @@ pools.get('/:poolId', (req, res) => {
 });
 
 pools.post('/create', (req, res) => {
+  const { user, body } = req;
   const {
     name,
     imgUrl,
     desc,
     voteConfig,
-    creatorId,
     publicOpt
-  } = req.body.pool;
-  findPoolByName(name)
-    .then((pool) => {
-      if (pool) {
-        res.status(200).send({ error: 'POOL ALREADY EXISTS' });
-      } else {
-        createPool(name, imgUrl, desc, voteConfig, creatorId, publicOpt)
-          .then((result) => {
-            res.status(200).send(result);
-          })
-          .catch((err) => {
-            res.status(500).send(err);
-          });
-      }
+  } = body.pool;
+  const { googleID } = user;
+  findUserByGoogle(googleID)
+    .then((resUser) => {
+      const { id } = resUser;
+      return findPoolByName(name)
+        .then((pool) => {
+          if (pool) {
+            return res.status(200).send({ error: 'POOL ALREADY EXISTS' });
+          }
+          return createPool(name, imgUrl, desc, voteConfig, id, publicOpt)
+            .then((result) => {
+              res.status(200).send(result);
+            });
+        });
     })
-    .catch((err) => {
-      res.status(500).send(err);
-    });
+    .catch(() => {});
 });
 
 pools.post('/expense', (req, res) => {
