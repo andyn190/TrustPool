@@ -160,6 +160,8 @@ pools.post('/contribute', (req, res) => {
       findUserByGoogle(googleID)
         .then((resUser) => {
           const { id } = resUser;
+          // update pool value
+          // create contribution entry
           return createContribution(poolId, id, amount);
         })
         .then((contribution) => {
@@ -180,6 +182,8 @@ pools.post('/join', (req, res) => {
       const { id } = resUser;
       findAllPoolMembers(poolid)
         .then((poolMembers) => {
+          const poolMembersCount = poolMembers.length;
+          console.log(poolMembers, 'POOL MEMBERS');
           poolMembers.forEach((member) => {
             const { dataValues } = member;
             const { pool_member_id } = dataValues;
@@ -187,13 +191,15 @@ pools.post('/join', (req, res) => {
               isMemberCheck = true;
             }
           });
+          console.log(isMemberCheck, id, 'IS Member check');
+
           if (isMemberCheck) {
             res.status(409).send(`${socialUser || googleID} is already a member of pool ${poolid}`);
           } else {
             createPoolMember(poolid, id)
               .then((success) => {
                 // console.log(success, 'SUCCESSFULLY ADDED MEMBER TO POOl');
-                updateMemberCount(poolid, 1);
+                updateMemberCount(poolid, poolMembersCount + 1);
                 res.status(200).json({ message: `${socialUser || googleID} SUCCESSFULLY ADDED MEMBER TO POOl ${poolid}` });
               })
               .catch((err) => {
