@@ -193,7 +193,7 @@ pools.post('/join', (req, res) => {
             res.status(409).send(`${socialUser || googleID} is already a member of pool ${poolid}`);
           } else {
             createPoolMember(poolid, id)
-              .then((success) => {
+              .then(() => {
                 updatePool(poolid, 'members_count', poolMembersCount + 1);
                 res.status(200).json({ message: `${socialUser || googleID} SUCCESSFULLY ADDED MEMBER TO POOl ${poolid}` });
               })
