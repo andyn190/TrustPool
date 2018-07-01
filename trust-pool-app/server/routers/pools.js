@@ -8,8 +8,8 @@ const {
   createPoolMember,
   findUserByGoogle,
   findAllPoolMembers,
-  updateMemberCount,
-  isMember,
+  updatePool,
+  findPoolMember,
   createContribution
 } = require('./../../database/helpers');
 const { STRIPEKEY } = require('../config');
@@ -35,7 +35,7 @@ pools.get('/:poolid/ismember', (req, res) => {
   findUserByGoogle(googleID)
     .then((resUser) => {
       const { id } = resUser;
-      isMember(id, poolid)
+      findPoolMember(id, poolid)
         .then((member) => {
           if (member) {
             res.status(200).json({ member });
@@ -160,6 +160,7 @@ pools.post('/contribute', (req, res) => {
       findUserByGoogle(googleID)
         .then((resUser) => {
           const { id } = resUser;
+          // create contribution entry
           return createContribution(poolId, id, amount);
         })
         .then((contribution) => {
@@ -180,6 +181,7 @@ pools.post('/join', (req, res) => {
       const { id } = resUser;
       findAllPoolMembers(poolid)
         .then((poolMembers) => {
+          const poolMembersCount = poolMembers.length;
           poolMembers.forEach((member) => {
             const { dataValues } = member;
             const { pool_member_id } = dataValues;
@@ -191,9 +193,8 @@ pools.post('/join', (req, res) => {
             res.status(409).send(`${socialUser || googleID} is already a member of pool ${poolid}`);
           } else {
             createPoolMember(poolid, id)
-              .then((success) => {
-                // console.log(success, 'SUCCESSFULLY ADDED MEMBER TO POOl');
-                updateMemberCount(poolid, 1);
+              .then(() => {
+                updatePool(poolid, 'members_count', poolMembersCount + 1);
                 res.status(200).json({ message: `${socialUser || googleID} SUCCESSFULLY ADDED MEMBER TO POOl ${poolid}` });
               })
               .catch((err) => {

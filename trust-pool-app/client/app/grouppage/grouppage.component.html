@@ -9,7 +9,7 @@
       <h2>{{pool.name}}</h2>
       <div>
         <h4>Pool Value:</h4>
-        ${{pool.pool_value}}
+        ${{pool.pool_value / 100}}
       </div>
       <div>
         <p>
@@ -40,7 +40,7 @@
         <div *ngIf="isMember" class='d-inline'>
           <h4> You are a member of this group!</h4>
           <h5>Your Contribution</h5>
-          ${{isMember.contrubution_amount}}
+          ${{isMember.contrubution_amount / 100}}
           <br />
         </div>
         <div *ngIf="!isMember" class='d-inline'>
