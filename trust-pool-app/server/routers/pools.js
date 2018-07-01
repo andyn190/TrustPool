@@ -9,7 +9,7 @@ const {
   findUserByGoogle,
   findAllPoolMembers,
   updatePool,
-  isMember,
+  findPoolMember,
   createContribution
 } = require('./../../database/helpers');
 const { STRIPEKEY } = require('../config');
@@ -35,7 +35,7 @@ pools.get('/:poolid/ismember', (req, res) => {
   findUserByGoogle(googleID)
     .then((resUser) => {
       const { id } = resUser;
-      isMember(id, poolid)
+      findPoolMember(id, poolid)
         .then((member) => {
           if (member) {
             res.status(200).json({ member });
