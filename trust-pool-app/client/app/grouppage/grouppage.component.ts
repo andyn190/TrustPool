@@ -12,8 +12,8 @@ import { PoolsService } from '../services/pools/pools.service';
 import { Router, ActivatedRoute } from '@angular/router';
 import { FormGroup, FormBuilder, Validators, NgForm } from "@angular/forms";
 
-@Directive({ selector: 'contrib-form' })
-export class ContribForm {
+@Directive({ selector: 'cardinfo' })
+export class CardInfo {
 }
 
 @Component({
@@ -22,11 +22,17 @@ export class ContribForm {
   styleUrls: ['./grouppage.component.css']
 })
 export class GrouppageComponent implements OnInit, AfterViewInit, OnDestroy {
-  public cardInfo: ElementRef;
-   
-  @ViewChild('cardInfo') set content(cardInfo: ElementRef) {
-    this.cardInfo = cardInfo;
-  }
+  // public cardInfo: ElementRef;
+  @ViewChild('cardInfo') public cardInfo: ElementRef;
+  // @ViewChild('cardInfo') set content(cardInfo: ElementRef) {
+  //   const groupPage = this;
+  //   this.cardInfo = cardInfo;
+  // }
+  // @ViewChild(CardInfo)
+  // set cardinfo(v: CardInfo) {
+  //   console.log(v, 'VVVV')
+  //   // setTimeout(() => { this.cardInfo = v; }, 0);
+  // }
 
   card: any;
   cardHandler = this.onChange.bind(this);
@@ -92,6 +98,9 @@ export class GrouppageComponent implements OnInit, AfterViewInit, OnDestroy {
   async onSubmit(form: NgForm, poolId) {
     const { amount } = form.value;
     const { token, error } = await stripe.createToken(this.card);
+    if (!this.isMember){
+      console.log('YOU ARE NOT A MEMBER OF THIS GROUP');
+    }
     if (error) {
       console.log('Something is wrong:', error);
     } else {
