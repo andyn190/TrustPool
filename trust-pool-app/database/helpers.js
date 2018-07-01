@@ -123,20 +123,6 @@ const createContribution = (pool_id, pool_member_id, contribution_amount) => {
   return create('ContributionEntry', contribution);
 };
 
-const createPool = (name, imageURL, description, voteConfig, creator, publicOpt) => {
-  const pool = {
-    name,
-    imageURL,
-    description,
-    voteConfig,
-    creator,
-    public: publicOpt,
-    pool_value: 0,
-    members_count: 0
-  };
-  return create('Pools', pool);
-};
-
 const createPoolMember = (pool_id, pool_member_id) => {
   const contrubution_amount = 0;
   const withdraw_amount = 0;
@@ -149,13 +135,33 @@ const createPoolMember = (pool_id, pool_member_id) => {
   return create('PoolMembers', poolMember);
 };
 
+const createPool = (name, imageURL, description, voteConfig, creator, publicOpt) => {
+  const pool = {
+    name,
+    imageURL,
+    description,
+    voteConfig,
+    creator,
+    public: publicOpt,
+    pool_value: 0,
+    members_count: 1
+  };
+
+  return create('Pools', pool)
+    .then((newPool) => {
+      const { id } = newPool;
+      createPoolMember(id, creator)
+        .then(poolmember => console.log('CREATED POOL OWNER MEMBER', poolmember))
+        .catch(err => console.log('FAILED TO CREATE POOL OWNER MEMBER', err));
+    });
+};
+
 const updateMemberCount = (id, amount) => {
   findPoolById(id)
     .then((pool) => {
-      let { members_count } = pool;
-      pool.members_count = members_count + amount;
+      pool.members_count = amount;
       pool.save()
-        .then(update => console.log('POOL MEMBERS COUNT UPDATED'))
+        .then(update => console.log('POOL MEMBERS COUNT UPDATED!!'))
         .catch(err => console.log('POOL MEMBERS COUNT NOT UPDATED', err));
     })
     .catch(err => console.log('FAILED TO FIND POOL BY ID', err));
