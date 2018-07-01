@@ -135,6 +135,18 @@ const createPoolMember = (pool_id, pool_member_id) => {
     contrubution_amount,
     withdraw_amount
   };
+  const memberArchive = {};
+  findAllPoolMembers(pool_id).then((members) => {
+    members.forEach((member) => {
+      if (memberArchive[member.pool_member_id]) {
+        member.destroy()
+          .then(succ => console.log(succ, 'DESTROYED DUPLICATE'))
+          .catch(err => console.log(err, 'ERROR DESTROYING'));
+      } else {
+        memberArchive[member.pool_member_id] = member.pool_member_id;
+      }
+    });
+  }).catch((err) => { console.log(err); });
   return create('PoolMembers', poolMember);
 };
 
@@ -147,7 +159,7 @@ const createPool = (name, imageURL, description, voteConfig, creator, publicOpt)
     creator,
     public: publicOpt,
     pool_value: 0,
-    members_count: 0
+    members_count: 1
   };
 
   return create('Pools', pool)
