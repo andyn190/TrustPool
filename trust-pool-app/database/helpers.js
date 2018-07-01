@@ -70,8 +70,9 @@ const findAll = (model, where) => {
 
 const findAllPools = () => findAll('Pools');
 
-const findAllPoolMembers = pool_id => findAll('PoolMembers', { where: { pool_id } });
+const findAllUsers = () => findAll('Users');
 
+const findAllPoolMembers = pool_id => findAll('PoolMembers', { where: { pool_id } });
 
 const findOrCreate = (model, where) => new Promise((resolve, reject) => {
   models[model].findOrCreate(where).spread((result, created) => {
@@ -120,6 +121,8 @@ const create = (model, item) => models[model].create(item);
 
 const createContribution = (pool_id, pool_member_id, contribution_amount) => {
   const contribution = { pool_id, pool_member_id, contribution_amount };
+  // update pool value
+  // update poolmember contribution amount
   return create('ContributionEntry', contribution);
 };
 
@@ -144,7 +147,7 @@ const createPool = (name, imageURL, description, voteConfig, creator, publicOpt)
     creator,
     public: publicOpt,
     pool_value: 0,
-    members_count: 1
+    members_count: 0
   };
 
   return create('Pools', pool)
@@ -156,12 +159,12 @@ const createPool = (name, imageURL, description, voteConfig, creator, publicOpt)
     });
 };
 
-const updateMemberCount = (id, amount) => {
+const updatePool = (id, key, value) => {
   findPoolById(id)
     .then((pool) => {
-      pool.members_count = amount;
+      pool[key] = value;
       pool.save()
-        .then(update => console.log('POOL MEMBERS COUNT UPDATED!!'))
+        .then(update => console.log(`POOL ${id} ${key} UPDATED ${value}!!`))
         .catch(err => console.log('POOL MEMBERS COUNT NOT UPDATED', err));
     })
     .catch(err => console.log('FAILED TO FIND POOL BY ID', err));
@@ -180,8 +183,9 @@ module.exports = {
   createPoolMember,
   findUserByGoogle,
   findAllPoolMembers,
-  updateMemberCount,
+  updatePool,
   findPoolById,
   isMember,
-  createContribution
+  createContribution,
+  findAllUsers
 };
