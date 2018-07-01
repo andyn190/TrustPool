@@ -15,7 +15,6 @@ export class UserService {
   }
 
   getUser() {
-    console.log('get USer')
     return this.http.get('/user');
   }
 
