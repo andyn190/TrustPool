@@ -8,18 +8,15 @@ import { UserService } from '../services/user/user.service';
   styleUrls: ['./accountpage.component.css']
 })
 export class AccountpageComponent implements OnInit {
-  user:string;
+  user:any;
     
   constructor(private route: ActivatedRoute, private _userService: UserService) {
-
-    // this.user = route.snapshot.params('user');
-
   }
 
   ngOnInit() {
     this._userService.getUser()
       .subscribe(
-        user => { console.log(user, 'user!!'); },
+        (res:any) => { this.user = res.user; },
         err => console.log(err, 'ERROR'),
         () => console.log('done creating pool')
       );
