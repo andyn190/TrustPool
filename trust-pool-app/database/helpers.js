@@ -38,7 +38,7 @@ const findUserById = id => findOne('Users', { where: { id } });
 
 const findUserByGoogle = googleID => findOne('Users', { where: { googleID } });
 
-const isMember = (pool_member_id, pool_id) => findOne('PoolMembers', { where: { pool_member_id, pool_id } });
+const findPoolMember = (pool_member_id, pool_id) => findOne('PoolMembers', { where: { pool_member_id, pool_id } });
 
 
 const findPoolByName = name => findOne('Pools', { where: { name } });
@@ -118,12 +118,33 @@ const findOrCreateUser = (email, first_name, last_name, image_url, password, goo
 
 const create = (model, item) => models[model].create(item);
 
+const updatePool = (id, key, value) => {
+  findPoolById(id)
+    .then((pool) => {
+      if (key === 'pool_value') {
+        pool[key] += value;
+      } else { pool[key] = value; }
+      pool.save()
+        .then(update => console.log(`POOL ${id} ${key} UPDATED ${value}!!`))
+        .catch(err => console.log('POOL MEMBERS COUNT NOT UPDATED', err));
+    })
+    .catch(err => console.log('FAILED TO FIND POOL BY ID', err));
+};
+
+const updatePoolMember = (memberId, poolId, key, value) => {
+  findPoolMember(memberId, poolId)
+    .then((member) => {
+      
+    })
+    .catch(() => { });
+};
 
 const createContribution = (pool_id, pool_member_id, contribution_amount) => {
   const contribution = { pool_id, pool_member_id, contribution_amount };
   // update pool value
+  updatePool(pool_id, 'pool_value', contribution_amount)
+    .then(() => create('ContributionEntry', contribution));
   // update poolmember contribution amount
-  return create('ContributionEntry', contribution);
 };
 
 const createPoolMember = (pool_id, pool_member_id) => {
@@ -170,17 +191,6 @@ const createPool = (name, imageURL, description, voteConfig, creator, publicOpt)
     });
 };
 
-const updatePool = (id, key, value) => {
-  findPoolById(id)
-    .then((pool) => {
-      pool[key] = value;
-      pool.save()
-        .then(update => console.log(`POOL ${id} ${key} UPDATED ${value}!!`))
-        .catch(err => console.log('POOL MEMBERS COUNT NOT UPDATED', err));
-    })
-    .catch(err => console.log('FAILED TO FIND POOL BY ID', err));
-};
-
 module.exports = {
   findOrCreate,
   findOrCreateUser,
@@ -196,7 +206,7 @@ module.exports = {
   findAllPoolMembers,
   updatePool,
   findPoolById,
-  isMember,
+  findPoolMember,
   createContribution,
   findAllUsers
 };
