@@ -5,8 +5,8 @@
       fixedInViewport="true">
       <mat-toolbar color="primary">Menu</mat-toolbar>
       <mat-nav-list>
-        <a mat-list-item routerLink="/home">Home</a>
-        <a mat-list-item routerLink="/login">Login</a>
+        <a mat-list-item routerLink="/home" (click)="drawer.toggle()">Home</a>
+        <a mat-list-item routerLink="/login" (click)="drawer.toggle()">Login</a>
       </mat-nav-list>
     </mat-sidenav>
     <mat-sidenav-content>
