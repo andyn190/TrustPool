@@ -8,7 +8,7 @@ const {
   createPoolMember,
   findUserByGoogle,
   findAllPoolMembers,
-  updateMemberCount,
+  updatePool,
   isMember,
   createContribution
 } = require('./../../database/helpers');
@@ -160,7 +160,6 @@ pools.post('/contribute', (req, res) => {
       findUserByGoogle(googleID)
         .then((resUser) => {
           const { id } = resUser;
-          // update pool value
           // create contribution entry
           return createContribution(poolId, id, amount);
         })
@@ -198,8 +197,7 @@ pools.post('/join', (req, res) => {
           } else {
             createPoolMember(poolid, id)
               .then((success) => {
-                // console.log(success, 'SUCCESSFULLY ADDED MEMBER TO POOl');
-                updateMemberCount(poolid, poolMembersCount + 1);
+                updatePool(poolid, 'members_count', poolMembersCount + 1);
                 res.status(200).json({ message: `${socialUser || googleID} SUCCESSFULLY ADDED MEMBER TO POOl ${poolid}` });
               })
               .catch((err) => {
