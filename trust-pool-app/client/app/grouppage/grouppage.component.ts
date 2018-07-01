@@ -39,8 +39,8 @@ export class GrouppageComponent implements OnInit, AfterViewInit, OnDestroy {
   error: string;
 
   poolid: number;
-  isMember: boolean;
-  pool: object;
+  isMember: any;
+  pool: any;
   private sub: any;
 
   constructor(
@@ -111,7 +111,14 @@ export class GrouppageComponent implements OnInit, AfterViewInit, OnDestroy {
       } else if(!decimalStr) {
         this._poolsService.sendContrib(token, poolId, amount * 100)
         .subscribe(
-          success => { console.log(success, 'SUCCESS')},
+          (result:any) => {
+            const { success } = result;
+            const { contribution } = success;
+            console.log(success, 'SUCCESS');
+            const { contribution_amount } = contribution;
+            this.pool.pool_value += contribution_amount;
+            this.isMember.contrubution_amount += contribution_amount;
+          },
           err => console.log(err, 'ERROR'),
           () => console.log('done contributing to pool')
         );
