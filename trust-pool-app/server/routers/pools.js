@@ -182,7 +182,6 @@ pools.post('/join', (req, res) => {
       findAllPoolMembers(poolid)
         .then((poolMembers) => {
           const poolMembersCount = poolMembers.length;
-          console.log(poolMembers, 'POOL MEMBERS');
           poolMembers.forEach((member) => {
             const { dataValues } = member;
             const { pool_member_id } = dataValues;
@@ -190,8 +189,6 @@ pools.post('/join', (req, res) => {
               isMemberCheck = true;
             }
           });
-          console.log(isMemberCheck, id, 'IS Member check');
-
           if (isMemberCheck) {
             res.status(409).send(`${socialUser || googleID} is already a member of pool ${poolid}`);
           } else {
