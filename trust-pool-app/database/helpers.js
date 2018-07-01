@@ -126,7 +126,7 @@ const updatePool = (id, key, value) => {
       } else { pool[key] = value; }
       pool.save()
         .then(update => console.log(`POOL ${id} ${key} UPDATED ${value}!!`))
-        .catch(err => console.log('POOL MEMBERS COUNT NOT UPDATED', err));
+        .catch(err => console.log(`POOL ${id} ${key} NOT UPDATED ${value} `, err));
     })
     .catch(err => console.log('FAILED TO FIND POOL BY ID', err));
 };
@@ -134,7 +134,16 @@ const updatePool = (id, key, value) => {
 const updatePoolMember = (memberId, poolId, key, value) => {
   findPoolMember(memberId, poolId)
     .then((member) => {
-      
+      if (key === 'contrubution_amount') {
+        member[key] += value;
+      } else if (key === 'withdraw_amount') {
+        member[key] -= value;
+      } else {
+        member[key] = value;
+      }
+      member.save()
+        .then(() => console.log(`POOL MEMBER ${memberId} ${key} UPDATED ${value}!!`))
+        .catch(err => console.log('POOL MEMBER COUNT NOT UPDATED', err));
     })
     .catch(() => { });
 };
@@ -208,5 +217,6 @@ module.exports = {
   findPoolById,
   findPoolMember,
   createContribution,
-  findAllUsers
+  findAllUsers,
+  updatePoolMember
 };
