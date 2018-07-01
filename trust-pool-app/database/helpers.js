@@ -153,9 +153,8 @@ const createPool = (name, imageURL, description, voteConfig, creator, publicOpt)
   return create('Pools', pool)
     .then((newPool) => {
       const { id } = newPool;
-      createPoolMember(id, creator)
-        .then(poolmember => console.log('CREATED POOL OWNER MEMBER', poolmember))
-        .catch(err => console.log('FAILED TO CREATE POOL OWNER MEMBER', err));
+      return createPoolMember(id, creator)
+        .then((poolmember) => { return { poolmember, newPool }; });
     });
 };
 
