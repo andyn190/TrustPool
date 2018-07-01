@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { UserService } from '../services/user/user.service';
 
 @Component({
   selector: 'app-accountpage',
@@ -7,13 +8,18 @@ import { ActivatedRoute } from '@angular/router';
   styleUrls: ['./accountpage.component.css']
 })
 export class AccountpageComponent implements OnInit {
-  user:string;
+  user:any;
     
-  constructor(private route: ActivatedRoute) { 
-    // this.user = route.snapshot.params('user');
+  constructor(private route: ActivatedRoute, private _userService: UserService) {
   }
 
   ngOnInit() {
+    this._userService.getUser()
+      .subscribe(
+        (res:any) => { this.user = res.user; },
+        err => console.log(err, 'ERROR'),
+        () => console.log('done creating pool')
+      );
   }
 
 }

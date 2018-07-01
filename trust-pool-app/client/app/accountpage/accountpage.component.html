@@ -1,3 +1,12 @@
-<p>
-  accountpage works!
-</p>
+<div class='container'>
+  <div class='row justify-content-center'>
+    <img [src]="user.image_url">
+  </div>
+  <div class='row justify-content-center'>
+    <br />
+    {{user.first_name}}
+    {{user.last_name}}
+    {{user.email}}
+    {{user.createdAt}}
+  </div>
+</div>
