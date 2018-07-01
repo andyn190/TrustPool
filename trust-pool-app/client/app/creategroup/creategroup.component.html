@@ -53,4 +53,30 @@
  required
  #nameField="ngModel"
  minlength="10">
+
+ <h3>Voter Config (0-100)</h3>
+ <input type="number" 
+ class="form-control" 
+ name="group-voterConfig"
+ ngModel
+ required
+ min="0"
+ max="100"
+ #nameField="ngModel">
+ 
+ <input 
+ type="radio" 
+ value="true" 
+ name="group-publicOpt" 
+ required
+ ngModel
+ #nameField="ngModel"> Public
+
+ <input
+ type="radio" 
+ value="false" 
+ name="group-publicOpt"
+ required
+ ngModel 
+ #nameField="ngModel"> Private
  <button class="btn btn-primary" [disabled]="!groupForm.valid">Submit</button>
