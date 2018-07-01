@@ -1,14 +1,9 @@
 const signup = require('express').Router();
 const {
-  createPool,
-  findPoolById,
   findPoolByName,
   findAllPools,
-  createPoolMember,
   findUserByGoogle,
-  findAllPoolMembers,
-  updateMemberCount,
-  isMember
+  findOrCreateUser
 } = require('./../../database/helpers');
 
 signup.get('/', (req, res) => {
