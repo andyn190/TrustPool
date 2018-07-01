@@ -119,20 +119,18 @@ const findOrCreateUser = (email, first_name, last_name, image_url, password, goo
 const create = (model, item) => models[model].create(item);
 
 const updatePool = (id, key, value) => {
-  findPoolById(id)
+  return findPoolById(id)
     .then((pool) => {
       if (key === 'pool_value') {
         pool[key] += value;
       } else { pool[key] = value; }
-      pool.save()
-        .then(update => console.log(`POOL ${id} ${key} UPDATED ${value}!!`))
-        .catch(err => console.log(`POOL ${id} ${key} NOT UPDATED ${value} `, err));
-    })
-    .catch(err => console.log('FAILED TO FIND POOL BY ID', err));
+      return pool.save()
+        .then(() => console.log(`POOL ${id} ${key} UPDATED ${value}!!`));
+    });
 };
 
 const updatePoolMember = (memberId, poolId, key, value) => {
-  findPoolMember(memberId, poolId)
+  return findPoolMember(memberId, poolId)
     .then((member) => {
       if (key === 'contrubution_amount') {
         member[key] += value;
@@ -141,17 +139,16 @@ const updatePoolMember = (memberId, poolId, key, value) => {
       } else {
         member[key] = value;
       }
-      member.save()
-        .then(() => console.log(`POOL MEMBER ${memberId} ${key} UPDATED ${value}!!`))
-        .catch(err => console.log('POOL MEMBER COUNT NOT UPDATED', err));
-    })
-    .catch(() => { });
+      return member.save()
+        .then(() => console.log(`POOL MEMBER ${memberId} ${key} UPDATED ${value}!!`));
+    });
 };
 
 const createContribution = (pool_id, pool_member_id, contribution_amount) => {
   const contribution = { pool_id, pool_member_id, contribution_amount };
   // update pool value
-  updatePool(pool_id, 'pool_value', contribution_amount)
+  return updatePool(pool_id, 'pool_value', contribution_amount)
+    .then(() => updatePoolMember(pool_member_id, pool_id, 'contrubution_amount', contribution_amount))
     .then(() => create('ContributionEntry', contribution));
   // update poolmember contribution amount
 };
