@@ -37,13 +37,23 @@ form.checkout button:active {
 }
 
 .StripeElement--focus {
+  padding: 0px 0px;
   box-shadow: 0 1px 3px 0 #cfd7df;
 }
 
 .StripeElement--invalid {
-  border-color: #fa755a;
+  padding: 0px 0px;
 }
 
 .StripeElement--webkit-autofill {
+  padding: 0px 0px;
   background-color: #fefde5 !important;
+}
+
+.StripeElement--empty {
+  padding: 0px 0px;
+}
+
+.StripeElement--complete {
+  padding: 0px 0px;
 }
