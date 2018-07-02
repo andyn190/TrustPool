@@ -196,6 +196,12 @@ const createPool = (name, imageURL, description, voteConfig, creator, publicOpt)
     });
 };
 
+const findUserByName = (username, password) => {
+  Users.findOne({ where: { username, password } }).then(user => user).catch((err) => {
+    console.log(err);
+  });
+};
+
 module.exports = {
   findOrCreate,
   findOrCreateUser,
@@ -214,5 +220,6 @@ module.exports = {
   findPoolMember,
   createContribution,
   findAllUsers,
-  updatePoolMember
+  updatePoolMember,
+  findUserByName
 };
