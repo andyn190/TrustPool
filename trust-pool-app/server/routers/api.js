@@ -14,7 +14,7 @@ api.post('/signup', (req, res) => {
   if (!email || !password) {
     res.status(400).send({ success: false, msg: 'Please pass a username and password' });
   }
-  bcrypt.hash(password, 5, (err, hash) => {
+  bcrypt.hash(password, 10, (err, hash) => {
     if (err) {
       console.log(err);
     } else {
@@ -50,8 +50,22 @@ api.post('/signup', (req, res) => {
 
 api.post('/signin', (req, res) => {
   const { email, password } = req.body;
-  console.log(email, password);
-  res.status(200).send('worked');
+  Users.findOne({ where: { email } })
+    .then((account) => {
+      bcrypt.compare(password, account.password.trim()).then((bRes) => {
+        if (bRes) {
+          res.status(200).send(account);
+          res.end();
+        } else {
+          res.status(404).send('wrong password');
+          res.end();
+        }
+      }).catch((err) => {
+        console.log(err);
+        res.status(400).send(err);
+        res.end();
+      });
+    });
 });
 
 module.exports = api;
