@@ -57,7 +57,7 @@ const Pools = sequelize.define('Pools', {
   imageURL: {
     type: Sequelize.TEXT
   },
-  public: {
+  publicOpt: {
     type: Sequelize.CHAR
   },
   voteConfig: {
