@@ -38,7 +38,6 @@ export class GoogleAuthComponent implements OnInit {
         // Now sign-in with userData
         // ...
         this.auth.googleLogin(userData.idToken);
-        this.userAuthToken = userData
       }
     );
   }

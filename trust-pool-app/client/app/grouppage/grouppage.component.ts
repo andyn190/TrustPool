@@ -7,7 +7,7 @@ import {
   ElementRef,
   Directive,
   ChangeDetectorRef } from '@angular/core';
-import { CookieService } from 'angular2-cookie/core';
+import { CookieService } from 'ngx-cookie-service';
 import { PoolsService } from '../services/pools/pools.service';
 import { Router, ActivatedRoute } from '@angular/router';
 import { FormGroup, FormBuilder, Validators, NgForm } from "@angular/forms";
