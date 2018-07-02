@@ -16,7 +16,10 @@ export class AccountpageComponent implements OnInit {
   ngOnInit() {
     this._userService.getUser()
       .subscribe(
-        (res:any) => { this.user = res.user; },
+        (res:any) => {
+          this.user = res.user;
+          console.log(this.user);
+        },
         err => console.log(err, 'ERROR'),
         () => console.log('done creating pool')
       );

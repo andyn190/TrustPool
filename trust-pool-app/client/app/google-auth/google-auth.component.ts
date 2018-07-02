@@ -15,6 +15,8 @@ import {
   styleUrls: ['./google-auth.component.css']
 })
 export class GoogleAuthComponent implements OnInit {
+  private userAuthToken = null;
+  private userDisplayName = 'empty';
 
   constructor(private http: HttpClient, private router: Router, private socialAuthService: AuthService, private auth: OwnAuthService) { }
 
@@ -36,11 +38,12 @@ export class GoogleAuthComponent implements OnInit {
         // Now sign-in with userData
         // ...
         this.auth.googleLogin(userData.idToken);
+        this.userAuthToken = userData
       }
     );
   }
   // handleGoogleSignIn(e) {
-  //   this.authService.googleLogin().subscribe((data) => {
+  //   this.auth.googleLogin(account).subscribe((data) => {
   //     console.log(data, 'this worked');
   //     this.router.navigate(['home']);
   //   })
