@@ -1,42 +1,38 @@
+const api = require('express').Router();
 const passport = require('passport');
-const express = require('express');
 const jwt = require('jsonwebtoken');
 const config = require('../config');
-const {
-  findOrCreate,
-  findOrCreateUser,
-  findOne,
-  findUserById,
-  create,
-  createPool,
-  findPoolByName,
-  findAllPools,
-  findAll,
-  createPoolMember,
-  findUserByGoogle,
-  findAllPoolMembers,
-  updateMemberCount,
-  findPoolById,
-  isMember
-} = require('../../database/helpers');
-
-const router = express.Router();
+const { Users } = require('../../database/index');
 
 /* GET home page. */
-router.get('/', (req, res, next) => {
-  res.send('Express RESTful API');
-});
 
-router.post('/signup', (req, res) => {
-  if (!req.body.username || !req.body.password) {
-    res.json({ success: false, msg: 'Please pass a username and password' });
-  } else {
-    console.log(req.body.username, req.body.password);
+api.post('/signup', (req, res) => {
+  const {
+    email, password, firstName, lastName
+  } = req.body;
+  if (!email || !password) {
+    res.status(400).send({ success: false, msg: 'Please pass a username and password' });
   }
+  Users.findOrCreate({
+    where: {
+      first_name: firstName, last_name: lastName, email, password
+    }
+  }).spread((user, created) => {
+    console.log(user.get({ plain: true }));
+    if (created) {
+      res.send(user);
+      res.end();
+    } else {
+      res.send('user was already created');
+      res.end();
+    }
+  });
 });
 
-router.post('/signin', function (req, res) {
-  
+api.post('/signin', (req, res) => {
+  const { email, password } = req.body;
+  console.log(email, password);
+  res.status(200).send('worked');
 });
 
-module.exports = router;
+module.exports = api;

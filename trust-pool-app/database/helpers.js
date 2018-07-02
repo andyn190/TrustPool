@@ -220,5 +220,6 @@ module.exports = {
   findPoolMember,
   createContribution,
   findAllUsers,
-  updatePoolMember
+  updatePoolMember,
+  findUserByName
 };

@@ -17,6 +17,15 @@ export class SignupFormComponent implements OnInit {
   ngOnInit() {
   }
 
+  signup() {
+    this.http.post('/api/signup', this.signupData).subscribe(resp => {
+      console.log(resp);
+      this.router.navigate(['login']);
+    }, err => {
+      this.message = err.error.msg;
+    });
+  }
+  
   goToLoginPage() {
     this.router.navigate(['login']);
   }

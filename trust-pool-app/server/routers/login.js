@@ -2,6 +2,9 @@ const login = require('express').Router();
 const dotenv = require('dotenv');
 const { OAuth2Client } = require('google-auth-library');
 const { passport } = require('../passport');
+const {
+  findUserByName
+} = require('../../database/helpers');
 
 login.post('/', (req, res) => {
   const { token } = req.body;
