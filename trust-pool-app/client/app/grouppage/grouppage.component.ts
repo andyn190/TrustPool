@@ -22,12 +22,16 @@ export class CardInfo {
   styleUrls: ['./grouppage.component.css']
 })
 export class GrouppageComponent implements OnInit, AfterViewInit, OnDestroy {
-  // public cardInfo: ElementRef;
-  @ViewChild('cardInfo') public cardInfo: ElementRef;
-  // @ViewChild('cardInfo') set content(cardInfo: ElementRef) {
-  //   const groupPage = this;
-  //   this.cardInfo = cardInfo;
-  // }
+  public cardInfo: ElementRef;
+  // @ViewChild('cardInfo') public cardInfo: ElementRef;
+  @ViewChild('cardInfo') set getCardInfo(cardInfo: ElementRef) {
+    const groupPage = this;
+    setTimeout(() => { 
+      groupPage.cardInfo = cardInfo;
+      groupPage.card.mount(this.cardInfo.nativeElement);
+      console.log(cardInfo, 'CARD INFO', groupPage.cardInfo, 'CARDINGODOS');
+     }, 0);
+  }
   // @ViewChild(CardInfo)
   // set cardinfo(v: CardInfo) {
   //   console.log(v, 'VVVV')
@@ -53,9 +57,9 @@ export class GrouppageComponent implements OnInit, AfterViewInit, OnDestroy {
 
   ngAfterViewInit(){
     this.card = elements.create('card');
-    this.card.mount(this.cardInfo.nativeElement);
-
     this.card.addEventListener('change', this.cardHandler);
+
+   
   }
 
   ngOnDestroy() {
