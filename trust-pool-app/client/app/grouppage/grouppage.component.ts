@@ -28,7 +28,7 @@ export class GrouppageComponent implements OnInit, AfterViewInit, OnDestroy {
     setTimeout(() => { 
       groupPage.cardInfo = cardInfo;
       groupPage.card.mount(this.cardInfo.nativeElement);
-     }, 0);
+    }, 0);
   }
 
   card: any;
