@@ -6,7 +6,11 @@
       <mat-toolbar color="primary">Menu</mat-toolbar>
       <mat-nav-list>
         <a mat-list-item routerLink="/home" (click)="drawer.toggle()">Home</a>
+        <a mat-list-item routerLink="/groups" (click)="drawer.toggle()">Browse Pools</a>
         <a mat-list-item routerLink="/login" (click)="drawer.toggle()">Login</a>
+        <a mat-list-item routerLink="/account" (click)="drawer.toggle()">My Account</a>
+        <a mat-list-item routerLink="/mypools" (click)="drawer.toggle()">My Pools</a>
+        <a mat-list-item routerLink="/creategroup" (click)="drawer.toggle()">Create Pool</a>
       </mat-nav-list>
     </mat-sidenav>
     <mat-sidenav-content>

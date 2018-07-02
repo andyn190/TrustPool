@@ -34,6 +34,7 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatCardModule } from '@angular/material/card';
 import { MatListModule } from '@angular/material/list';
 import { MatIconModule } from '@angular/material/icon';
+import { UserService } from './services/user/user.service';
 
 
 const appRoutes: Routes = [
@@ -103,7 +104,7 @@ export function getAuthServiceConfigs() {
     MatListModule,
     MatIconModule
   ],
-  providers: [OwnAuthService, PoolsService, CookieService, {
+    providers: [OwnAuthService, UserService, PoolsService, CookieService, {
     provide: AuthServiceConfig,
     useFactory: getAuthServiceConfigs
   }],
