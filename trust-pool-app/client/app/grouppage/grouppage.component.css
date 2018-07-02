@@ -47,3 +47,7 @@ form.checkout button:active {
 .StripeElement--webkit-autofill {
   background-color: #fefde5 !important;
 }
+
+.StripeElement--empty {
+  padding: 0px 0px;
+}
