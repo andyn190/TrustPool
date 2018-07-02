@@ -46,22 +46,22 @@
         <div *ngIf="!isMember" class='d-inline'>
           <button (click)='joinGroup(pool.id)'> Join Group </button>
         </div>
+        <form *ngIf="isMember" #checkout="ngForm" (ngSubmit)="onSubmit(checkout, pool.id)" class="checkout">
+          <div class="form-row">
+            <label> Contribution Amount</label>
+            <br />
+            <input type="number" name="amount" ngModel required #amount="ngModel">
+            <br />
+            <label for="card-info">Card Info</label>
+            <cardinfo id="card-info" #cardInfo></cardinfo>
+        
+            <div id="card-errors" role="alert" *ngIf="error">{{ error }}</div>
+          </div>
+        
+          <button type="submit">Contribute ${{ amount.value }}</button>
+        </form>
         <button (click)="viewGroups()" class='d-inline'>Back to Groups</button>
       </div>
     </div>
   </div>
-  <form #checkout="ngForm" (ngSubmit)="onSubmit(checkout, pool.id)" class="checkout">
-    <div class="form-row">
-      <label> Contribution Amount</label>
-      <br />
-      <input type="number" name="amount" ngModel required #amount="ngModel">
-      <br />
-      <label for="card-info">Card Info</label>
-      <div id="card-info" #cardInfo></div>
-  
-      <div id="card-errors" role="alert" *ngIf="error">{{ error }}</div>
-    </div>
-  
-    <button type="submit">Contribute ${{ amount.value }}</button>
-  </form>
 </div>  

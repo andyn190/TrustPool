@@ -27,7 +27,7 @@ import { AuthService } from './services/auth/auth.service';
 import { PoolsService } from './services/pools/pools.service';
 import { ContributeComponent } from './contribute/contribute.component';
 import { AccountpageComponent } from './accountpage/accountpage.component';
-import { GrouppageComponent } from './grouppage/grouppage.component';
+import { GrouppageComponent, CardInfo } from './grouppage/grouppage.component';
 import { GoogleAuthComponent } from './google-auth/google-auth.component';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatCardModule } from '@angular/material/card';
@@ -69,6 +69,7 @@ export function getAuthServiceConfigs() {
 
 @NgModule({
   declarations: [
+    CardInfo,
     AppComponent,
     HomepageComponent,
     LoginFormComponent,

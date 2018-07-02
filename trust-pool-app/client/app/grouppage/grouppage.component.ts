@@ -22,17 +22,14 @@ export class CardInfo {
   styleUrls: ['./grouppage.component.css']
 })
 export class GrouppageComponent implements OnInit, AfterViewInit, OnDestroy {
-  // public cardInfo: ElementRef;
-  @ViewChild('cardInfo') public cardInfo: ElementRef;
-  // @ViewChild('cardInfo') set content(cardInfo: ElementRef) {
-  //   const groupPage = this;
-  //   this.cardInfo = cardInfo;
-  // }
-  // @ViewChild(CardInfo)
-  // set cardinfo(v: CardInfo) {
-  //   console.log(v, 'VVVV')
-  //   // setTimeout(() => { this.cardInfo = v; }, 0);
-  // }
+  public cardInfo: ElementRef;
+  @ViewChild('cardInfo') set getCardInfo(cardInfo: ElementRef) {
+    const groupPage = this;
+    setTimeout(() => { 
+      groupPage.cardInfo = cardInfo;
+      groupPage.card.mount(this.cardInfo.nativeElement);
+     }, 0);
+  }
 
   card: any;
   cardHandler = this.onChange.bind(this);
@@ -53,8 +50,6 @@ export class GrouppageComponent implements OnInit, AfterViewInit, OnDestroy {
 
   ngAfterViewInit(){
     this.card = elements.create('card');
-    this.card.mount(this.cardInfo.nativeElement);
-
     this.card.addEventListener('change', this.cardHandler);
   }
 
@@ -69,7 +64,6 @@ export class GrouppageComponent implements OnInit, AfterViewInit, OnDestroy {
       poolid = +params['poolid']; // (+) converts string 'id' to a number
       getPool.call(this, poolid);
       checkIsMember.call(this, poolid);
-      // In a real app: dispatch action to load the details here.
     });
   }
   viewGroups() {
