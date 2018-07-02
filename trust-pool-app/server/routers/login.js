@@ -19,12 +19,19 @@ login.post('/', (req, res) => {
     } = payload;
     Users.findOrCreate({
       where: {
-        email, first_name: given_name, last_name: family_name, image_url: picture
+        email, first_name: given_name, last_name: family_name, image_url: picture, googleID: userid
       }
-    });
-    console.log('this is payload', payload);
-    console.log('this is userid', userid);
-    res.status(200).send(payload);
+    })
+      .spread((user, created) => {
+        console.log(user.get({
+          plain: true
+        }));
+        if (!created) {
+          res.status(200).send(payload);
+        } else {
+          res.status(200).send(user);
+        }
+      });
   }
   verify().catch((err) => {
     console.log(err);
