@@ -9,7 +9,7 @@ import { Router } from '@angular/router';
   styleUrls: ['./signup-form.component.css']
 })
 export class SignupFormComponent implements OnInit {
-  public signupData = { email: '', password: '' };
+  public signupData = { email: '', password: '', lastName: '', firstName: '' };
   public message = '';
   public data
   constructor(private http: HttpClient, private authService: OwnAuthService, private router: Router) { }
@@ -20,12 +20,12 @@ export class SignupFormComponent implements OnInit {
   signup() {
     this.http.post('/api/signup', this.signupData).subscribe(resp => {
       console.log(resp);
-      this.router.navigate(['login']);
+      this.router.navigate(['home']);
     }, err => {
       this.message = err.error.msg;
     });
   }
-  
+
   goToLoginPage() {
     this.router.navigate(['login']);
   }

@@ -11,11 +11,11 @@ const Users = sequelize.define('Users', {
     unique: true
   },
   first_name: {
-    type: Sequelize.CHAR(15),
+    type: Sequelize.CHAR(30),
     allowNull: true
   },
   last_name: {
-    type: Sequelize.CHAR(15),
+    type: Sequelize.CHAR(30),
     allowNull: true
   },
   email: {
