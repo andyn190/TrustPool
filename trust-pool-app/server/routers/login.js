@@ -17,21 +17,32 @@ login.post('/', (req, res) => {
     const {
       email, given_name, family_name, picture
     } = payload;
-    Users.findOrCreate({
+    Users.findOne({
       where: {
-        email, first_name: given_name, last_name: family_name, image_url: picture, googleID: userid
+        email, googleID: userid
       }
-    })
-      .spread((user, created) => {
-        console.log(user.get({
-          plain: true
-        }));
-        if (!created) {
-          res.status(200).send(payload);
-        } else {
-          res.status(200).send(user);
-        }
-      });
+    }).then((user) => {
+      if (user) {
+        console.log('this was hit');
+        res.status(200).send(user);
+        res.end();
+      } else {
+        console.log(email, given_name, family_name, picture, userid);
+        Users.create({
+          email,
+          googleID: userid,
+          first_name: given_name,
+          last_name: family_name,
+          image_url: picture
+        }).then((createdUser) => {
+          res.status(200).send(createdUser);
+          res.end();
+        }).catch((err) => {
+          console.log(err);
+          res.status(400).send(err);
+        });
+      }
+    });
   }
   verify().catch((err) => {
     console.log(err);

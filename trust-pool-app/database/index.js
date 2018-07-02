@@ -80,7 +80,7 @@ Pools.belongsTo(Users, { foreignKey: 'creator' });
 
 const ExpenseRequestType = sequelize.define('Expense_Request_Type', {
   id: {
-    type: Sequelize.CHAR,
+    type: Sequelize.INTEGER,
     primaryKey: true,
     autoIncrement: true,
     unique: true
@@ -132,7 +132,7 @@ const ExpenseRequest = sequelize.define('Expense_Request', {
     type: Sequelize.TEXT
   },
   method: {
-    type: Sequelize.CHAR,
+    type: Sequelize.INTEGER,
     references: {
       model: ExpenseRequestType,
       key: 'id',
@@ -242,7 +242,7 @@ const EbayWishlistEntry = sequelize.define('Ebay_Wishlist_Entry', {
     type: Sequelize.INTEGER
   },
   expense_request_type_id: {
-    type: Sequelize.CHAR,
+    type: Sequelize.INTEGER,
     references: {
       model: ExpenseRequestType,
       key: 'id',
@@ -277,7 +277,7 @@ const Checks = sequelize.define('Checks', {
     type: Sequelize.TEXT
   },
   expense_request_type_id: {
-    type: Sequelize.CHAR,
+    type: Sequelize.INTEGER,
     references: {
       model: ExpenseRequestType,
       key: 'id',
@@ -297,7 +297,9 @@ sequelize
 
 // PoolMembers.sync({ force: true }).then(res => console.log(res)).catch(err => console.log(err));
 // Pools.sync({ force: true }).then(res => console.log(res)).catch(err => console.log(err));
-// ContributionEntry.sync({ force: true }).then(res => console.log(res)).catch(err => console.log(err));
+// ContributionEntry.sync({ force: true }).then(res => console.log(res)).catch(err =>
+// console.log(err));
+sequelize.sync({ force: true }).then(res => console.log(res)).catch(err => console.log(err));
 
 module.exports = {
   sequelize,
