@@ -42,7 +42,19 @@
           </div>
           <div *ngIf="isMember.is_creator">
             <h4  class='row justify-content-center'> You are the creator of this group!</h4>
-            
+            <div class='row'>
+              <h5>Join Requests</h5>
+              <div class='row justify-content-center'>
+                <ul>
+                  <li *ngFor="let request of joinRequests">
+                    <h3 class='row justify-content-center'>{{request.name}} Wants to join the pool</h3>
+                      <button (click)='acceptRequest("join")'> Accept </button>
+                      <button (click)='declineRequest("join")'> Decline </button>
+                    <br />
+                  </li>
+                </ul>
+              </div>
+            </div>
           </div>
           <h5 class="row justify-content-center">Your Contribution</h5>
           <div class="row justify-content-center">
