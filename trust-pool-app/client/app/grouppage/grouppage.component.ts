@@ -92,6 +92,25 @@ export class GrouppageComponent implements OnInit, AfterViewInit, OnDestroy {
     );
   }
 
+  acceptRequest(request) {
+    request.status = 'accepted';
+    console.log(request);
+    this._poolsService.resJoinRequest(request).subscribe(
+      res => console.log(res),
+      err => console.log(err),
+      () => console.log('done loading pool')
+    );
+  }
+  declineRequest(request) {
+    request.status = 'declined';
+    console.log(request);
+    this._poolsService.resJoinRequest(request).subscribe(
+      res => console.log(res),
+      err => console.log(err),
+      () => console.log('done loading pool')
+    );
+  }
+
   onChange({ error }) {
     if (error) {
       this.error = error.message;
