@@ -16,6 +16,7 @@ const {
   createContribution
 } = require('./../../database/helpers');
 const { STRIPEKEY } = require('../config');
+const authenticated = require('../passport/authenticated');
 
 stripe = stripe(STRIPEKEY);
 
@@ -246,7 +247,7 @@ pools.post('/join', (req, res) => {
     });
 });
 
-pools.get('/:poolid/join', (req, res) => {
+pools.get('/:poolid/join', authenticated, (req, res) => {
   const { poolid } = req.params;
   const { user } = req;
   let isMemberCheck = false;
