@@ -184,6 +184,9 @@ const PoolMembers = sequelize.define('Pool_Members', {
       deferrable: Sequelize.Deferrable.INITIALLY_IMMEDIATE
     }
   },
+  is_owner: {
+    type: Sequelize.CHAR
+  },
   pool_member_id: {
     type: Sequelize.INTEGER,
     references: {
