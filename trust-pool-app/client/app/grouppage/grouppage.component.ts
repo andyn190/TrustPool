@@ -6,7 +6,8 @@ import {
   ViewChild,
   ElementRef,
   Directive,
-  ChangeDetectorRef } from '@angular/core';
+  ChangeDetectorRef
+} from '@angular/core';
 import { CookieService } from 'ngx-cookie-service';
 import { PoolsService } from '../services/pools/pools.service';
 import { Router, ActivatedRoute } from '@angular/router';
@@ -25,10 +26,10 @@ export class GrouppageComponent implements OnInit, AfterViewInit, OnDestroy {
   public cardInfo: ElementRef;
   @ViewChild('cardInfo') set getCardInfo(cardInfo: ElementRef) {
     const groupPage = this;
-    setTimeout(() => { 
+    setTimeout(() => {
       groupPage.cardInfo = cardInfo;
       groupPage.card.mount(this.cardInfo.nativeElement);
-     }, 0);
+    }, 0);
   }
 
   card: any;
@@ -48,7 +49,7 @@ export class GrouppageComponent implements OnInit, AfterViewInit, OnDestroy {
     private route: ActivatedRoute,
   ) { }
 
-  ngAfterViewInit(){
+  ngAfterViewInit() {
     this.card = elements.create('card');
     this.card.addEventListener('change', this.cardHandler);
   }
@@ -60,7 +61,7 @@ export class GrouppageComponent implements OnInit, AfterViewInit, OnDestroy {
 
   ngOnInit() {
     this.sub = this.route.params.subscribe(params => {
-      let { poolid, isMember, getPool, checkIsMember  } = this;
+      let { poolid, isMember, getPool, checkIsMember } = this;
       poolid = +params['poolid']; // (+) converts string 'id' to a number
       getPool.call(this, poolid);
       checkIsMember.call(this, poolid);
@@ -92,7 +93,7 @@ export class GrouppageComponent implements OnInit, AfterViewInit, OnDestroy {
   async onSubmit(form: NgForm, poolId) {
     const { amount } = form.value;
     const { token, error } = await stripe.createToken(this.card);
-    if (!this.isMember){
+    if (!this.isMember) {
       console.log('YOU ARE NOT A MEMBER OF THIS GROUP');
     }
     if (error) {
@@ -100,24 +101,24 @@ export class GrouppageComponent implements OnInit, AfterViewInit, OnDestroy {
     } else {
       const amountArr = amount.toString().split('.');
       let decimalStr = amountArr[1];
-      if (decimalStr && decimalStr.length > 2){
+      if (decimalStr && decimalStr.length > 2) {
         this.error = 'Too Many Decimals'
-      } else if(!decimalStr) {
+      } else if (!decimalStr) {
         this._poolsService.sendContrib(token, poolId, amount * 100)
-        .subscribe(
-          (result:any) => {
-            const { success } = result;
-            const { contribution } = success;
-            console.log(success, 'SUCCESS');
-            const { contribution_amount } = contribution;
-            this.pool.pool_value += contribution_amount;
-            this.isMember.contrubution_amount += contribution_amount;
-          },
-          err => console.log(err, 'ERROR'),
-          () => console.log('done contributing to pool')
-        );
+          .subscribe(
+            (result: any) => {
+              const { success } = result;
+              const { contribution } = success;
+              console.log(success, 'SUCCESS');
+              const { contribution_amount } = contribution;
+              this.pool.pool_value += contribution_amount;
+              this.isMember.contrubution_amount += contribution_amount;
+            },
+            err => console.log(err, 'ERROR'),
+            () => console.log('done contributing to pool')
+          );
       } else {
-        if(decimalStr.length === 1){
+        if (decimalStr.length === 1) {
           amountArr[1] = decimalStr + '0';
         }
         this._poolsService.sendContrib(token, poolId, amountArr.join(''))
@@ -158,9 +159,9 @@ export class GrouppageComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   checkIsMember(poolid) {
-    this._poolsService.checkIsMember(poolid).subscribe((result: { [member: string] : boolean  }) => {
+    this._poolsService.checkIsMember(poolid).subscribe((result: { [member: string]: boolean }) => {
       const { member } = result;
-      if(member) {
+      if (member) {
         this.isMember = member;
       } else {
         this.isMember = false;
