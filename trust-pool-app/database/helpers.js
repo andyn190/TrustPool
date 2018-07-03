@@ -8,7 +8,8 @@ const {
   PoolMembers,
   ChatMessages,
   EbayWishlistEntry,
-  Checks
+  Checks,
+  JoinRequests
 } = require('.');
 
 const models = {
@@ -20,7 +21,8 @@ const models = {
   PoolMembers,
   ChatMessages,
   EbayWishlistEntry,
-  Checks
+  Checks,
+  JoinRequests
 };
 
 const findOne = (model, where) => new Promise((resolve, reject) => {
@@ -69,6 +71,19 @@ const findAll = (model, where) => {
 };
 
 const findAllPools = () => findAll('Pools');
+const findPublicPools = () => findAll('Pools')
+  .then((pools) => {
+    const publicPools = [];
+    pools.forEach((pool) => {
+      const { publicOpt } = pool.dataValues;
+      if (publicOpt) {
+        publicPools.push(pool);
+      }
+      console.log(pool.dataValues.publicOpt, 'PUBLIC OPT', pool, 'POOL');
+    });
+    return publicPools;
+  });
+
 
 const findAllUsers = () => findAll('Users');
 
@@ -183,7 +198,7 @@ const createPool = (name, imageURL, description, voteConfig, creator, publicOpt)
     description,
     voteConfig,
     creator,
-    public: publicOpt,
+    publicOpt,
     pool_value: 0,
     members_count: 1
   };
@@ -196,6 +211,14 @@ const createPool = (name, imageURL, description, voteConfig, creator, publicOpt)
     });
 };
 
+const createJoinRequest = (user_id, pool_id) => {
+  const joinRequest = {
+    user_id,
+    pool_id
+  };
+  return create('JoinRequests', joinRequest);
+};
+
 const findUserByName = (username, password) => {
   Users.findOne({ where: { username, password } }).then(user => user).catch((err) => {
     console.log(err);
@@ -203,6 +226,7 @@ const findUserByName = (username, password) => {
 };
 
 module.exports = {
+  createJoinRequest,
   findOrCreate,
   findOrCreateUser,
   findOne,
@@ -221,5 +245,6 @@ module.exports = {
   createContribution,
   findAllUsers,
   updatePoolMember,
-  findUserByName
+  findUserByName,
+  findPublicPools
 };

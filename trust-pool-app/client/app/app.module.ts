@@ -35,6 +35,7 @@ import { MatCardModule } from '@angular/material/card';
 import { MatListModule } from '@angular/material/list';
 import { MatIconModule } from '@angular/material/icon';
 import { UserService } from './services/user/user.service';
+import { MypoolsComponent} from './mypools/mypools.component';
 
 
 const appRoutes: Routes = [
@@ -46,7 +47,8 @@ const appRoutes: Routes = [
   { path: 'group/:poolid', component: GrouppageComponent},
   { path: 'account', component: AccountpageComponent},
   { path: 'createrequest', component: CreaterequestComponent},
-  { path: 'ebay', component: EbaypageComponent}
+  { path: 'ebay', component: EbaypageComponent},
+  { path: 'mypools', component: MypoolsComponent }
 ];
 
 export function getAuthServiceConfigs() {
@@ -85,7 +87,8 @@ export function getAuthServiceConfigs() {
     AccountpageComponent,
     GrouppageComponent,
     GoogleAuthComponent,
-    SignupFormComponent,
+    MypoolsComponent,
+    SignupFormComponent
   ],
   imports: [
     BrowserModule,
