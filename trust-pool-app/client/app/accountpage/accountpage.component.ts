@@ -38,4 +38,15 @@ export class AccountpageComponent implements OnInit {
       this.clicked = false;
     }
   }
+  updateUserInfo(form) {
+    let nameFirst = form.value['user-name'];
+    let nameLast = form.value['user-lastName'];
+    let newEmail = form.value['user-email'];
+    let body = { name: nameFirst, lastName: nameLast, email: newEmail };
+    this._userService.updateUserInfo(body).subscribe(
+      success => { console.log(success, 'Success!'); },
+      err => console.log(err, 'ERROR'),
+      () => console.log('done updating user info')
+    );
+  }
 }
