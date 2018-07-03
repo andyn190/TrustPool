@@ -20,17 +20,12 @@ export class AccountpageComponent implements OnInit {
     this._userService.getUser()
       .subscribe(
         (res:any) => {
-<<<<<<< HEAD
-          this.user = res.user;
-          console.log(this.user);
-=======
           this.user = res.user
           this.firstName = res.user.first_name.trim();
           this.lastName = res.user.last_name.trim();
           if(res.user.email) {
             this.email = res.user.email.trim();
           }
->>>>>>> faf0bdfe17f34ee7d60ea2f575906a2658718064
         },
         err => console.log(err, 'ERROR'),
         () => console.log('done creating pool')
