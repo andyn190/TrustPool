@@ -89,7 +89,12 @@ const findAllUsers = () => findAll('Users');
 
 const findAllPoolMembers = pool_id => findAll('PoolMembers', { where: { pool_id } });
 
-const getJoinRequests = pool_id => findAll('JoinRequests', { where: { pool_id } });
+const getJoinRequests = (pool_id, user_id) => {
+  if (!user_id) {
+    return findAll('JoinRequests', { where: { pool_id } });
+  }
+  return findAll('JoinRequests', { where: { pool_id, user_id } });
+};
 
 const findOrCreate = (model, where) => new Promise((resolve, reject) => {
   models[model].findOrCreate(where).spread((result, created) => {
@@ -137,7 +142,7 @@ const create = (model, item) => models[model].create(item);
 
 const updatePool = (id, key, value) => findPoolById(id)
   .then((pool) => {
-    if (key === 'pool_value') {
+    if (key === 'pool_value' || key === 'members_count') {
       pool[key] += value;
     } else { pool[key] = value; }
     return pool.save()
