@@ -48,8 +48,8 @@
                 <ul>
                   <li *ngFor="let request of joinRequests">
                     <h3 class='row justify-content-center'>{{request.name}} Wants to join the pool</h3>
-                      <button (click)='acceptRequest("join")'> Accept </button>
-                      <button (click)='declineRequest("join")'> Decline </button>
+                      <button (click)='acceptRequest(request)'> Accept </button>
+                      <button (click)='declineRequest(request)'> Decline </button>
                     <br />
                   </li>
                 </ul>
