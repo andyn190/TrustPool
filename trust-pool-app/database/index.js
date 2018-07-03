@@ -251,6 +251,31 @@ const EbayWishlistEntry = sequelize.define('Ebay_Wishlist_Entry', {
   }
 });
 
+const JoinRequests = sequelize.define('Join_Requests', {
+  id: {
+    type: Sequelize.INTEGER,
+    autoIncrement: true,
+    primaryKey: true,
+    unique: true
+  },
+  user_id: {
+    type: Sequelize.INTEGER,
+    references: {
+      model: Users,
+      key: 'id',
+      deferrable: Sequelize.Deferrable.INITIALLY_IMMEDIATE
+    }
+  },
+  pool_id: {
+    type: Sequelize.INTEGER,
+    references: {
+      model: Pools,
+      key: 'id',
+      deferrable: Sequelize.Deferrable.INITIALLY_IMMEDIATE
+    }
+  }
+});
+
 const Checks = sequelize.define('Checks', {
   id: {
     type: Sequelize.INTEGER,
@@ -298,6 +323,7 @@ sequelize
 // PoolMembers.sync({ force: true }).then(res => console.log(res)).catch(err => console.log(err));
 // Pools.sync({ force: true }).then(res => console.log(res)).catch(err => console.log(err));
 // ContributionEntry.sync({ force: true }).then(res => console.log(res)).catch(err => console.log(err));
+// JoinRequests.sync({ force: true }).then(res => console.log(res)).catch(err => console.log(err));
 
 module.exports = {
   sequelize,
@@ -309,5 +335,6 @@ module.exports = {
   PoolMembers,
   ChatMessages,
   EbayWishlistEntry,
-  Checks
+  Checks,
+  JoinRequests
 };

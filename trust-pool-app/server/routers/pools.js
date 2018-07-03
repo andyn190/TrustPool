@@ -5,7 +5,9 @@ const {
   findPoolById,
   findPoolByName,
   findAllPools,
+  findPublicPools,
   createPoolMember,
+  createJoinRequest,
   findUserByGoogle,
   findAllPoolMembers,
   updatePool,
@@ -18,10 +20,8 @@ const { STRIPEKEY } = require('../config');
 stripe = stripe(STRIPEKEY);
 
 pools.get('/', (req, res) => {
-  findAllPools()
-    .then((poolsArr) => {
-      res.status(200).send(poolsArr);
-    })
+  findPublicPools()
+    .then(poolsArr => res.status(200).json(poolsArr))
     .catch((err) => {
       res.status(500).send(err);
     });
@@ -191,14 +191,16 @@ pools.post('/join', (req, res) => {
           if (isMemberCheck) {
             res.status(409).send(`${socialUser || googleID} is already a member of pool ${poolid}`);
           } else {
-            createPoolMember(poolid, id)
-              .then(() => {
-                updatePool(poolid, 'members_count', poolMembersCount + 1);
-                res.status(200).json({ message: `${socialUser || googleID} SUCCESSFULLY ADDED MEMBER TO POOl ${poolid}` });
-              })
-              .catch((err) => {
-                console.log(err);
-              });
+            // create join pool request
+            createJoinRequest(id, poolid)
+              .then(() => res.status(200).json({ message: 'SUCCESSFULLY CREATED JOIN POOL REQUEST' }))
+              .catch(err => console.log(err));
+            // createPoolMember(poolid, id)
+            //   .then(() => {
+            //     updatePool(poolid, 'members_count', poolMembersCount + 1);
+            //     res.status(200).json({ message: `${socialUser || googleID} SUCCESSFULLY ADDED MEMBER TO POOl ${poolid}` });
+            //   })
+            //   .catch(err => console.log(err));
           }
         })
         .catch((err) => {
