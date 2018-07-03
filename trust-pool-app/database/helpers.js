@@ -198,7 +198,7 @@ const createPool = (name, imageURL, description, voteConfig, creator, publicOpt)
     description,
     voteConfig,
     creator,
-    public: publicOpt,
+    publicOpt,
     pool_value: 0,
     members_count: 1
   };
