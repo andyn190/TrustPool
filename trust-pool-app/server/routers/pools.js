@@ -11,6 +11,7 @@ const {
   findUserByGoogle,
   findAllPoolMembers,
   updatePool,
+  getJoinRequests,
   findPoolMember,
   createContribution,
   findPoolByMember
@@ -47,6 +48,38 @@ pools.get('/:poolid/ismember', (req, res) => {
         .catch(err => console.log(err));
     })
     .catch(err => console.log(err));
+  // find poolmembers where poolid and userid
+});
+
+pools.get('/:poolid/joinrequests', (req, res) => {
+  const { params } = req;
+  const { poolid } = params;
+  getJoinRequests(poolid)
+    .then((requests) => {
+      res.status(200).json({ requests });
+    })
+    .catch(err => console.log(err));
+  // find poolmembers where poolid and userid
+});
+
+pools.post('/joinrequests', (req, res) => {
+  const { body } = req;
+  const { status, pool_id, user_id } = body.joinRequest;
+  if (status === 'accepted') {
+    getJoinRequests(pool_id, user_id)
+      .then(request => request[0].destroy())
+      .then(() => {
+        createPoolMember(pool_id, user_id)
+          .then(() => {
+            updatePool(pool_id, 'members_count', 1);
+            res.status(200).json({ message: `${socialUser || googleID} SUCCESSFULLY ADDED MEMBER TO POOl ${pool_id}` });
+          })
+          .catch(err => console.log(err));
+      })
+      .catch(err => console.log(err));
+  } else {
+    res.status(200).json({ success: 'request declined!' });
+  }
   // find poolmembers where poolid and userid
 });
 
@@ -193,15 +226,18 @@ pools.post('/join', (req, res) => {
             res.status(409).send(`${socialUser || googleID} is already a member of pool ${poolid}`);
           } else {
             // create join pool request
-            createJoinRequest(id, poolid)
-              .then(() => res.status(200).json({ message: 'SUCCESSFULLY CREATED JOIN POOL REQUEST' }))
+            // check if existing join pool request
+            getJoinRequests(poolid, id)
+              .then((requests) => {
+                if (requests[0]) {
+                  res.status(200).json({ error: 'YOU HAVE ALREADY SUBMITTED A JOIN REQUEST' });
+                } else {
+                  createJoinRequest(id, poolid)
+                    .then(() => res.status(200).json({ message: 'SUCCESSFULLY CREATED JOIN POOL REQUEST' }))
+                    .catch(err => console.log(err));
+                }
+              })
               .catch(err => console.log(err));
-            // createPoolMember(poolid, id)
-            //   .then(() => {
-            //     updatePool(poolid, 'members_count', poolMembersCount + 1);
-            //     res.status(200).json({ message: `${socialUser || googleID} SUCCESSFULLY ADDED MEMBER TO POOl ${poolid}` });
-            //   })
-            //   .catch(err => console.log(err));
           }
         })
         .catch((err) => {

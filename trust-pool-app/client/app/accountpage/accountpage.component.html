@@ -12,3 +12,47 @@
     {{user.email}}
   </div>
 </div>
+<button (click)="userUpdateInfoButton()">Update Info</button>
+<div class='container' *ngIf='clicked'>
+    <div class='row justify-content-center'>
+      <form #updateUserInfoForm="ngForm"
+        (ngSubmit)="updateUserInfo(updateUserInfoForm.form);"
+      >
+        <h1>First name</h1>
+        <input type="text" 
+          class="form-control" 
+          name="user-name"
+          ngModel
+          required
+          [(ngModel)]="firstName"
+          #nameField="ngModel"
+          minlength="5"
+        >
+        <br />
+        <h2>Last Name</h2>
+        <input type="text" 
+          class="form-control" 
+          name="user-lastName"
+          ngModel
+          [(ngModel)]="lastName"
+          required
+          #nameField="ngModel"
+          minlength="5"
+        >
+        <br />
+        <h3>Email</h3>
+        <input type="text" 
+        class="form-control" 
+        name="user-email"
+        ngModel
+        required
+        [(ngModel)]='email'
+        #nameField="ngModel"
+        minlength="10"
+        >
+        <button
+          class="btn btn-primary"
+          >Submit</button>
+      </form>
+    </div>
+  </div>

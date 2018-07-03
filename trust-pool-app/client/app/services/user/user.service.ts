@@ -18,4 +18,8 @@ export class UserService {
     return this.http.get('/user');
   }
 
+  updateUserInfo(body) {
+    return this.http.post('/user/update', body, httpOptions);
+  }
+
 }
