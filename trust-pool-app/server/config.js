@@ -20,7 +20,7 @@ module.exports = {
   },
   STRIPEKEY: process.env.STRIPEKEYTEST || process.env.STRIPEKEYLIVE,
   MAILGUN: {
-    domain: 'sandboxa79442dcbad44327aeccdaabfe65e452.mailgun.org',
-    apiKey: '3811e1a959c45546249d7195db05eadc-770f03c4-71135289'
+    domain: process.env.MAILDOMAIN,
+    apiKey: process.env.MAILKEY
   }
 };
