@@ -11,6 +11,7 @@ const {
   findUserByGoogle,
   findAllPoolMembers,
   updatePool,
+  getJoinRequests,
   findPoolMember,
   createContribution
 } = require('./../../database/helpers');
@@ -44,6 +45,18 @@ pools.get('/:poolid/ismember', (req, res) => {
           }
         })
         .catch(err => console.log(err));
+    })
+    .catch(err => console.log(err));
+  // find poolmembers where poolid and userid
+});
+
+pools.get('/:poolid/joinrequests', (req, res) => {
+  const { params } = req;
+  const { poolid } = params;
+  getJoinRequests(poolid)
+    .then((requests) => {
+      console.log(requests, 'REQUESTS');
+      res.status(200).json({ requests });
     })
     .catch(err => console.log(err));
   // find poolmembers where poolid and userid
