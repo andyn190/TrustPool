@@ -23,11 +23,11 @@ export class CreategroupComponent implements OnInit {
   createGroup(form){
     console.log(form.value);
     let name = form.value['group-name'];
-    let imageUrl = form.value['group-url'];
-    let description = form.value['group-description'];
+    let imgUrl = form.value['group-url'];
+    let desc = form.value['group-description'];
     let voteConfig = form.value['group-voterConfig'];
     let publicOpt = form.value['group-publicOpt'];
-    const pool = {name: name, imgUrl: imageUrl, desc: description, voteConfig: voteConfig, publicOpt: publicOpt};
+    const pool = { name, imgUrl, desc, voteConfig, publicOpt};
     this.groupService.createGroup(pool).subscribe(
       success => { console.log(success, 'Success!'); },
       err => console.log(err, 'ERROR'),
