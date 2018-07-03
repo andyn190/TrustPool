@@ -2,29 +2,31 @@ import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { OwnAuthService } from '../services/auth/auth.service';
 import { Router } from '@angular/router';
-import { User } from '../user';
 
 @Component({
-  selector: 'app-login-form',
-  templateUrl: './login-form.component.html',
-  styleUrls: ['./login-form.component.css']
+  selector: 'app-signup-form',
+  templateUrl: './signup-form.component.html',
+  styleUrls: ['./signup-form.component.css']
 })
-export class LoginFormComponent implements OnInit {
-  public loginData = { email: '', password: ''};
+export class SignupFormComponent implements OnInit {
+  public signupData = { email: '', password: '', lastName: '', firstName: '' };
   public message = '';
   public data
   constructor(private http: HttpClient, private authService: OwnAuthService, private router: Router) { }
 
   ngOnInit() {
-
   }
-  login() {
-    this.http.post<any[]>('/api/signin', this.loginData).subscribe(resp => {
-      this.data = resp;
-      localStorage.setItem('jwtToken', this.data.token);
+
+  signup() {
+    this.http.post('/api/signup', this.signupData).subscribe(resp => {
+      console.log(resp);
       this.router.navigate(['home']);
     }, err => {
       this.message = err.error.msg;
     });
+  }
+
+  goToLoginPage() {
+    this.router.navigate(['login']);
   }
 }

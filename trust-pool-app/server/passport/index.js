@@ -1,6 +1,8 @@
 const passport = require('passport');
 const GoogleStrategy = require('passport-google-oauth20');
 const session = require('cookie-session');
+const JwtStrategy = require('passport-jwt').Strategy;
+const { fromAuthHeaderWithScheme } = require('passport-jwt').ExtractJwt;
 const { SESSION_OPTS, GOOGLE_KEYS } = require('../config');
 const {
   findOrCreateUser,
@@ -15,6 +17,20 @@ module.exports = {
         .then(user => done(null, user))
         .catch(err => done(err));
     });
+    const opts = {
+      jwtFromRequest: fromAuthHeaderWithScheme('jwt'),
+      secretOrKey: SESSION_OPTS.secret
+    };
+    passport.use(new JwtStrategy(opts, (jwt_payload, done) => {
+      findUserById({ id: jwt_payload.id }, (err, user) => {
+        if (err) {
+          return done(err, false);
+        }
+        if (user) {
+          return done(null, user);
+        } return done(null, false);
+      });
+    }));
 
     passport.use(new GoogleStrategy({
       callbackURL: '/login/google/redirect',

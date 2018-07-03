@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-// import { AuthService } from '../service/auth.service';
+import { OwnAuthService } from './../services/auth/auth.service';
 import { Router } from '@angular/router';
 import {
   AuthService,
@@ -16,7 +16,7 @@ import {
 })
 export class GoogleAuthComponent implements OnInit {
 
-  constructor(private http: HttpClient, private router: Router, private socialAuthService: AuthService) { }
+  constructor(private http: HttpClient, private router: Router, private socialAuthService: AuthService, private auth: OwnAuthService) { }
 
   ngOnInit() {
   }
@@ -35,7 +35,7 @@ export class GoogleAuthComponent implements OnInit {
         console.log(socialPlatform + " sign in data : ", userData);
         // Now sign-in with userData
         // ...
-
+        this.auth.googleLogin(userData.idToken);
       }
     );
   }

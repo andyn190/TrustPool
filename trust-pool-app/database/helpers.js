@@ -206,6 +206,12 @@ const createJoinRequest = (user_id, pool_id) => {
   return create('JoinRequests', joinRequest);
 };
 
+const findUserByName = (username, password) => {
+  Users.findOne({ where: { username, password } }).then(user => user).catch((err) => {
+    console.log(err);
+  });
+};
+
 module.exports = {
   createJoinRequest,
   findOrCreate,
@@ -225,5 +231,6 @@ module.exports = {
   findPoolMember,
   createContribution,
   findAllUsers,
-  updatePoolMember
+  updatePoolMember,
+  findUserByName
 };

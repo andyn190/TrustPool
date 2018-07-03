@@ -1,4 +1,4 @@
-// this file will define variables for the server to use from the proccess enviroment
+// this file will define variables for the server to use from the process environment
 const dotenv = require('dotenv');
 const path = require('path');
 const fs = require('fs');

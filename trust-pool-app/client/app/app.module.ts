@@ -23,12 +23,13 @@ import { GroupsComponent } from './groups/groups.component';
 import { CreategroupComponent } from './creategroup/creategroup.component';
 import { CreaterequestComponent } from './createrequest/createrequest.component';
 import { EbaypageComponent } from './ebaypage/ebaypage.component'
-import { AuthService } from './services/auth/auth.service';
+import { OwnAuthService } from './services/auth/auth.service';
 import { PoolsService } from './services/pools/pools.service';
 import { ContributeComponent } from './contribute/contribute.component';
 import { AccountpageComponent } from './accountpage/accountpage.component';
 import { GrouppageComponent, CardInfo } from './grouppage/grouppage.component';
 import { GoogleAuthComponent } from './google-auth/google-auth.component';
+import { SignupFormComponent } from './signup-form/signup-form.component';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatCardModule } from '@angular/material/card';
 import { MatListModule } from '@angular/material/list';
@@ -39,6 +40,7 @@ import { MypoolsComponent} from './mypools/mypools.component';
 
 const appRoutes: Routes = [
   { path: 'login', component: LoginFormComponent },
+  { path: 'signup', component: SignupFormComponent },
   { path: 'home', component: HomepageComponent },
   { path: 'creategroup', component: CreategroupComponent },
   { path: 'groups', component: GroupsComponent },
@@ -86,6 +88,7 @@ export function getAuthServiceConfigs() {
     GrouppageComponent,
     GoogleAuthComponent,
     MypoolsComponent,
+    SignupFormComponent
   ],
   imports: [
     BrowserModule,
@@ -94,6 +97,7 @@ export function getAuthServiceConfigs() {
     BrowserAnimationsModule,
     MatButtonModule,
     SocialLoginModule,
+    FormsModule,
     RouterModule.forRoot(
       appRoutes,
       { enableTracing: true }
@@ -104,7 +108,7 @@ export function getAuthServiceConfigs() {
     MatListModule,
     MatIconModule
   ],
-  providers: [AuthService, UserService, PoolsService, CookieService, {
+    providers: [OwnAuthService, UserService, PoolsService, CookieService, {
     provide: AuthServiceConfig,
     useFactory: getAuthServiceConfigs
   }],

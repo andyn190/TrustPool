@@ -1,8 +1,24 @@
 const login = require('express').Router();
+const dotenv = require('dotenv');
+const { OAuth2Client } = require('google-auth-library');
 const { passport } = require('../passport');
+const {
+  findUserByName
+} = require('../../database/helpers');
 
 login.post('/', (req, res) => {
-  res.status(200).send('recieved post request to login');
+  const { token } = req.body;
+  const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
+  async function verify() {
+    const ticket = await client.verifyIdToken({
+      idToken: token,
+      audience: process.env.GOOGLE_CLIENT_ID
+    });
+    const payload = ticket.getPayload();
+    const userid = payload.sub;
+  }
+  verify().catch((err) => { console.log(err) });
+  res.status(200).send(token);
 });
 
 login.get('/google/redirect', passport.authenticate('google', {
