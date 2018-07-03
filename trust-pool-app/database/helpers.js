@@ -256,9 +256,6 @@ module.exports = {
   findAllUsers,
   updatePoolMember,
   findUserByName,
-<<<<<<< HEAD
-  findUserByGoogleAndUpdate
-=======
+  findUserByGoogleAndUpdate,
   findPublicPools
->>>>>>> 81ecbb10d9b4bb4f21cb75329ae869845ab99dc8
 };
