@@ -5,6 +5,7 @@ const {
   findPoolById,
   findPoolByName,
   findAllPools,
+  findPublicPools,
   createPoolMember,
   createJoinRequest,
   findUserByGoogle,
@@ -19,9 +20,10 @@ const { STRIPEKEY } = require('../config');
 stripe = stripe(STRIPEKEY);
 
 pools.get('/', (req, res) => {
-  findAllPools()
+  findPublicPools()
     .then((poolsArr) => {
-      res.status(200).send(poolsArr);
+      console.log(poolsArr);
+      res.status(200).json(poolsArr);
     })
     .catch((err) => {
       res.status(500).send(err);
@@ -76,6 +78,7 @@ pools.post('/create', (req, res) => {
     publicOpt
   } = body.pool;
   const { googleID } = user;
+  console.log(publicOpt, 'PUBLIC OPT');
   findUserByGoogle(googleID)
     .then((resUser) => {
       const { id } = resUser;
@@ -86,6 +89,7 @@ pools.post('/create', (req, res) => {
           }
           return createPool(name, imgUrl, desc, voteConfig, id, publicOpt)
             .then((result) => {
+              console.log(result, 'NEW POOL RESULT');
               res.status(200).send(result);
             });
         });
