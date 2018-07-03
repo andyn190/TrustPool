@@ -71,6 +71,19 @@ const findAll = (model, where) => {
 };
 
 const findAllPools = () => findAll('Pools');
+const findPublicPools = () => findAll('Pools')
+  .then((pools) => {
+    const publicPools = [];
+    pools.forEach((pool) => {
+      const { publicOpt } = pool.dataValues;
+      if (publicOpt) {
+        publicPools.push(pool);
+      }
+      console.log(pool.dataValues.publicOpt, 'PUBLIC OPT', pool, 'POOL');
+    });
+    return publicPools;
+  });
+
 
 const findAllUsers = () => findAll('Users');
 
@@ -232,5 +245,6 @@ module.exports = {
   createContribution,
   findAllUsers,
   updatePoolMember,
-  findUserByName
+  findUserByName,
+  findPublicPools
 };
