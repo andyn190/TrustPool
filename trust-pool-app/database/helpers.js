@@ -235,7 +235,6 @@ const createJoinRequest = (user_id, pool_id) => {
     .then((pool) => {
       const { creator, name } = pool;
       poolName = name;
-      console.log(creator, 'POOL CREATOR');
       return findUserById(creator);
     })
     .then((poolCreator) => {
