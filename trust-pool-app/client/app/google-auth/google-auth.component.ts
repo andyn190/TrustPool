@@ -47,11 +47,11 @@ export class GoogleAuthComponent implements OnInit {
         this.auth.googleLogin(userData.idToken)
           .subscribe(onSuccess => {
             console.log(onSuccess, 'on Success');
-            let { email, googleID, last_name, first_name, id } = onSuccess;
-            this._cookieService.set('socialID', googleID.trim());
-            this._cookieService.set('email', email.trim());
-            this._cookieService.set('lastName', last_name.trim());
-            this._cookieService.set('firstName', first_name.trim());
+            // let { email, googleID, last_name, first_name, id } = onSuccess;
+            // this._cookieService.set('socialID', googleID.trim());
+            // this._cookieService.set('email', email.trim());
+            // this._cookieService.set('lastName', last_name.trim());
+            // this._cookieService.set('firstName', first_name.trim());
             console.log('login was successful');
             // this._cookieService.get('socialID');
             this.router.navigate(['home']);

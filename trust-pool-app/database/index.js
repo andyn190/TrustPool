@@ -311,6 +311,7 @@ const Checks = sequelize.define('Checks', {
   }
 });
 
+
 sequelize
   .authenticate()
   .then(() => {
