@@ -194,10 +194,7 @@ pools.post('/join', (req, res) => {
           } else {
             // create join pool request
             createJoinRequest(id, poolid)
-              .then((request) => {
-                console.log(request);
-                res.status(200).json({ message: `SUCCESSFULLY CREATED JOIN POOL REQUEST` });
-              })
+              .then(() => res.status(200).json({ message: 'SUCCESSFULLY CREATED JOIN POOL REQUEST' }))
               .catch(err => console.log(err));
             // createPoolMember(poolid, id)
             //   .then(() => {
