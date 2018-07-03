@@ -233,6 +233,16 @@ const findUserByName = (username, password) => {
   });
 };
 
+const findUserByGoogleAndUpdate = (googleID, newInfo) => {
+  Users.findOne({ where: { googleID } }).then((user) => {
+    user.first_name = newInfo.name;
+    user.last_name = newInfo.lastName;
+    user.email = newInfo.email;
+    return user.save()
+      .then(() => { console.log('User info updated'); });
+  });
+};
+
 module.exports = {
   createJoinRequest,
   findOrCreate,
@@ -255,5 +265,6 @@ module.exports = {
   updatePoolMember,
   findUserByName,
   findPublicPools,
-  getJoinRequests
+  getJoinRequests,
+  findUserByGoogleAndUpdate
 };
