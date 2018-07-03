@@ -11,6 +11,7 @@ import { CookieService } from 'angular2-cookie/core';
 import { PoolsService } from '../services/pools/pools.service';
 import { Router, ActivatedRoute } from '@angular/router';
 import { FormGroup, FormBuilder, Validators, NgForm } from "@angular/forms";
+import { ArrayType } from '@angular/compiler/src/output/output_ast';
 
 @Directive({ selector: 'cardinfo' })
 export class CardInfo {
@@ -27,14 +28,16 @@ export class GrouppageComponent implements OnInit, AfterViewInit, OnDestroy {
     const groupPage = this;
     setTimeout(() => { 
       groupPage.cardInfo = cardInfo;
-      groupPage.card.mount(this.cardInfo.nativeElement);
+      if(groupPage.cardInfo){
+        groupPage.card.mount(groupPage.cardInfo.nativeElement);
+      }
     }, 0);
   }
 
   card: any;
   cardHandler = this.onChange.bind(this);
   error: string;
-
+  joinRequests: any;
   poolid: number;
   isMember: any;
   pool: any;
@@ -60,10 +63,11 @@ export class GrouppageComponent implements OnInit, AfterViewInit, OnDestroy {
 
   ngOnInit() {
     this.sub = this.route.params.subscribe(params => {
-      let { poolid, isMember, getPool, checkIsMember  } = this;
+      let { poolid, getPool, checkIsMember, getJoinRequests  } = this;
       poolid = +params['poolid']; // (+) converts string 'id' to a number
       getPool.call(this, poolid);
       checkIsMember.call(this, poolid);
+      getJoinRequests.call(this, poolid);
     });
   }
   viewGroups() {
@@ -73,10 +77,18 @@ export class GrouppageComponent implements OnInit, AfterViewInit, OnDestroy {
     this._poolsService.getPool(poolid).subscribe(
       pool => {
         this.pool = pool;
-        console.log(pool, 'SUCCESS!')
       },
       err => console.log(err),
       () => console.log('done loading pool')
+    );
+  }
+
+  getJoinRequests(poolid) {
+    this._poolsService.getJoinRequests(poolid).subscribe(
+      (res: {requests: ArrayType}) => {
+        this.joinRequests = res.requests;
+        console.log( this.joinRequests,'JOIN REQUESTS')
+      }
     );
   }
 
