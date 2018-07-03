@@ -167,14 +167,15 @@ const createContribution = (pool_id, pool_member_id, contribution_amount) => {
   // update poolmember contribution amount
 };
 
-const createPoolMember = (pool_id, pool_member_id) => {
+const createPoolMember = (pool_id, pool_member_id, is_owner) => {
   const contrubution_amount = 0;
   const withdraw_amount = 0;
   const poolMember = {
     pool_id,
     pool_member_id,
     contrubution_amount,
-    withdraw_amount
+    withdraw_amount,
+    is_owner
   };
   const memberArchive = {};
   findAllPoolMembers(pool_id).then((members) => {
@@ -206,7 +207,7 @@ const createPool = (name, imageURL, description, voteConfig, creator, publicOpt)
   return create('Pools', pool)
     .then((newPool) => {
       const { id } = newPool;
-      return createPoolMember(id, creator)
+      return createPoolMember(id, creator, 't')
         .then((poolmember) => { return { poolmember, newPool }; });
     });
 };
