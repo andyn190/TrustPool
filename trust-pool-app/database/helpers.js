@@ -89,6 +89,13 @@ const findAllUsers = () => findAll('Users');
 
 const findAllPoolMembers = pool_id => findAll('PoolMembers', { where: { pool_id } });
 
+const getJoinRequests = (pool_id, user_id) => {
+  if (!user_id) {
+    return findAll('JoinRequests', { where: { pool_id } });
+  }
+  return findAll('JoinRequests', { where: { pool_id, user_id } });
+};
+
 const findOrCreate = (model, where) => new Promise((resolve, reject) => {
   models[model].findOrCreate(where).spread((result, created) => {
     const item = result.get({
@@ -135,7 +142,7 @@ const create = (model, item) => models[model].create(item);
 
 const updatePool = (id, key, value) => findPoolById(id)
   .then((pool) => {
-    if (key === 'pool_value') {
+    if (key === 'pool_value' || key === 'members_count') {
       pool[key] += value;
     } else { pool[key] = value; }
     return pool.save()
@@ -167,14 +174,15 @@ const createContribution = (pool_id, pool_member_id, contribution_amount) => {
   // update poolmember contribution amount
 };
 
-const createPoolMember = (pool_id, pool_member_id) => {
+const createPoolMember = (pool_id, pool_member_id, is_creator) => {
   const contrubution_amount = 0;
   const withdraw_amount = 0;
   const poolMember = {
     pool_id,
     pool_member_id,
     contrubution_amount,
-    withdraw_amount
+    withdraw_amount,
+    is_creator
   };
   const memberArchive = {};
   findAllPoolMembers(pool_id).then((members) => {
@@ -206,7 +214,7 @@ const createPool = (name, imageURL, description, voteConfig, creator, publicOpt)
   return create('Pools', pool)
     .then((newPool) => {
       const { id } = newPool;
-      return createPoolMember(id, creator)
+      return createPoolMember(id, creator, 't')
         .then((poolmember) => { return { poolmember, newPool }; });
     });
 };
@@ -256,6 +264,7 @@ module.exports = {
   findAllUsers,
   updatePoolMember,
   findUserByName,
-  findUserByGoogleAndUpdate,
-  findPublicPools
+  findPublicPools,
+  getJoinRequests,
+  findUserByGoogleAndUpdate
 };
