@@ -6,6 +6,7 @@ const {
   findPoolByName,
   findAllPools,
   createPoolMember,
+  createJoinRequest,
   findUserByGoogle,
   findAllPoolMembers,
   updatePool,
@@ -192,14 +193,18 @@ pools.post('/join', (req, res) => {
             res.status(409).send(`${socialUser || googleID} is already a member of pool ${poolid}`);
           } else {
             // create join pool request
-            createPoolMember(poolid, id)
-              .then(() => {
-                updatePool(poolid, 'members_count', poolMembersCount + 1);
-                res.status(200).json({ message: `${socialUser || googleID} SUCCESSFULLY ADDED MEMBER TO POOl ${poolid}` });
+            createJoinRequest(id, poolid)
+              .then((request) => {
+                console.log(request);
+                res.status(200).json({ message: `SUCCESSFULLY CREATED JOIN POOL REQUEST` });
               })
-              .catch((err) => {
-                console.log(err);
-              });
+              .catch(err => console.log(err));
+            // createPoolMember(poolid, id)
+            //   .then(() => {
+            //     updatePool(poolid, 'members_count', poolMembersCount + 1);
+            //     res.status(200).json({ message: `${socialUser || googleID} SUCCESSFULLY ADDED MEMBER TO POOl ${poolid}` });
+            //   })
+            //   .catch(err => console.log(err));
           }
         })
         .catch((err) => {
