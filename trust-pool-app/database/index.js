@@ -324,7 +324,7 @@ sequelize
 // Pools.sync({ force: true }).then(res => console.log(res)).catch(err => console.log(err));
 // ContributionEntry.sync({ force: true }).then(res => console.log(res)).catch(err =>
 // console.log(err));
-sequelize.sync({ force: true }).then(res => console.log(res)).catch(err => console.log(err));
+// sequelize.sync({ force: true }).then(res => console.log(res)).catch(err => console.log(err));
 // ContributionEntry.sync({ force: true })
 // .then(res => console.log(res)).catch(err => console.log(err));
 // JoinRequests.sync({ force: true }).then(res => console.log(res)).catch(err => console.log(err));

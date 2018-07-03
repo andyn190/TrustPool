@@ -14,7 +14,7 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { FormGroup, FormBuilder, Validators, NgForm } from "@angular/forms";
 
 @Directive({ selector: 'cardinfo' })
-export class CardInfo {
+export class CardInfo { 
 }
 
 @Component({
