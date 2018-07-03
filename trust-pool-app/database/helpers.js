@@ -8,7 +8,8 @@ const {
   PoolMembers,
   ChatMessages,
   EbayWishlistEntry,
-  Checks
+  Checks,
+  JoinRequests
 } = require('.');
 
 const models = {
@@ -20,7 +21,8 @@ const models = {
   PoolMembers,
   ChatMessages,
   EbayWishlistEntry,
-  Checks
+  Checks,
+  JoinRequests
 };
 
 const findOne = (model, where) => new Promise((resolve, reject) => {
@@ -196,7 +198,16 @@ const createPool = (name, imageURL, description, voteConfig, creator, publicOpt)
     });
 };
 
+const createJoinRequest = (user_id, pool_id) => {
+  const joinRequest = {
+    user_id,
+    pool_id
+  };
+  return create('JoinRequests', joinRequest);
+};
+
 module.exports = {
+  createJoinRequest,
   findOrCreate,
   findOrCreateUser,
   findOne,
