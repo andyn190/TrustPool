@@ -31,13 +31,6 @@ export class OwnAuthService {
 
   googleLogin(token: string) {
     return this.http.post(this.loginUrl, { token })
-    .subscribe(onSuccess => {
-      console.log(onSuccess);
-      console.log('login was successful');
-    }, onFail => {
-      console.log('invalid', onFail);
-      window.alert('email is incorrect');
-    })
   }
   login (user: User): Observable<User> {
     return this.http.post<User>(this.loginUrl, user, httpOptions).pipe(

@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { OwnAuthService } from '../services/auth/auth.service';
 import { Router } from '@angular/router';
 
 @Component({
@@ -7,10 +9,22 @@ import { Router } from '@angular/router';
   styleUrls: ['./signup-form.component.css']
 })
 export class SignupFormComponent implements OnInit {
-
-  constructor(private router: Router) { }
+  public signupData = { email: '', password: '', lastName: '', firstName: '' };
+  public message = '';
+  public data
+  constructor(private http: HttpClient, private authService: OwnAuthService, private router: Router) { }
 
   ngOnInit() {
+  }
+
+  signup() {
+    this.http.post('/api/signup', this.signupData).subscribe(resp => {
+      console.log(resp);
+      this.data = resp;
+      this.router.navigate(['home']);
+    }, err => {
+      this.message = err.error.msg;
+    });
   }
 
   goToLoginPage() {

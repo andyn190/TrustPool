@@ -6,7 +6,7 @@ import { HttpClientModule, HttpHeaders } from '@angular/common/http';
 import { MatSidenavModule, } from '@angular/material';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations'
 import { MatButtonModule } from '@angular/material/button';
-import { CookieService } from 'angular2-cookie/services/cookies.service';
+import { CookieService } from 'ngx-cookie-service';
 import {
   SocialLoginModule,
   AuthServiceConfig,
@@ -27,13 +27,16 @@ import { OwnAuthService } from './services/auth/auth.service';
 import { PoolsService } from './services/pools/pools.service';
 import { ContributeComponent } from './contribute/contribute.component';
 import { AccountpageComponent } from './accountpage/accountpage.component';
-import { GrouppageComponent } from './grouppage/grouppage.component';
+import { GrouppageComponent, CardInfo } from './grouppage/grouppage.component';
 import { GoogleAuthComponent } from './google-auth/google-auth.component';
 import { SignupFormComponent } from './signup-form/signup-form.component';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatCardModule } from '@angular/material/card';
 import { MatListModule } from '@angular/material/list';
 import { MatIconModule } from '@angular/material/icon';
+import { UserService } from './services/user/user.service';
+import { MypoolsComponent} from './mypools/mypools.component';
+
 
 const appRoutes: Routes = [
   { path: 'login', component: LoginFormComponent },
@@ -44,7 +47,8 @@ const appRoutes: Routes = [
   { path: 'group/:poolid', component: GrouppageComponent},
   { path: 'account', component: AccountpageComponent},
   { path: 'createrequest', component: CreaterequestComponent},
-  { path: 'ebay', component: EbaypageComponent}
+  { path: 'ebay', component: EbaypageComponent},
+  { path: 'mypools', component: MypoolsComponent }
 ];
 
 export function getAuthServiceConfigs() {
@@ -52,7 +56,7 @@ export function getAuthServiceConfigs() {
     [
       {
         id: FacebookLoginProvider.PROVIDER_ID,
-        provider: new FacebookLoginProvider("Your-Facebook-app-id")
+        provider: new FacebookLoginProvider("463368167455328")
       },
       {
         id: GoogleLoginProvider.PROVIDER_ID,
@@ -69,6 +73,7 @@ export function getAuthServiceConfigs() {
 
 @NgModule({
   declarations: [
+    CardInfo,
     AppComponent,
     HomepageComponent,
     LoginFormComponent,
@@ -82,7 +87,8 @@ export function getAuthServiceConfigs() {
     AccountpageComponent,
     GrouppageComponent,
     GoogleAuthComponent,
-    SignupFormComponent,
+    MypoolsComponent,
+    SignupFormComponent
   ],
   imports: [
     BrowserModule,
@@ -102,7 +108,7 @@ export function getAuthServiceConfigs() {
     MatListModule,
     MatIconModule
   ],
-  providers: [OwnAuthService, PoolsService, CookieService, {
+    providers: [OwnAuthService, UserService, PoolsService, CookieService, {
     provide: AuthServiceConfig,
     useFactory: getAuthServiceConfigs
   }],

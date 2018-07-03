@@ -8,7 +8,8 @@ const {
   PoolMembers,
   ChatMessages,
   EbayWishlistEntry,
-  Checks
+  Checks,
+  JoinRequests
 } = require('.');
 
 const models = {
@@ -20,7 +21,8 @@ const models = {
   PoolMembers,
   ChatMessages,
   EbayWishlistEntry,
-  Checks
+  Checks,
+  JoinRequests
 };
 
 const findOne = (model, where) => new Promise((resolve, reject) => {
@@ -38,7 +40,12 @@ const findUserById = id => findOne('Users', { where: { id } });
 
 const findUserByGoogle = googleID => findOne('Users', { where: { googleID } });
 
-const isMember = (pool_member_id, pool_id) => findOne('PoolMembers', { where: { pool_member_id, pool_id } });
+const findPoolMember = (pool_member_id, pool_id) => {
+  if (!pool_id) {
+    return PoolMembers.findAll({ where: { pool_member_id } });
+  }
+  return findOne('PoolMembers', { where: { pool_member_id, pool_id } });
+};
 
 
 const findPoolByName = name => findOne('Pools', { where: { name } });
@@ -69,9 +76,29 @@ const findAll = (model, where) => {
 };
 
 const findAllPools = () => findAll('Pools');
+const findPublicPools = () => findAll('Pools')
+  .then((pools) => {
+    const publicPools = [];
+    pools.forEach((pool) => {
+      const { publicOpt } = pool.dataValues;
+      if (publicOpt) {
+        publicPools.push(pool);
+      }
+    });
+    return publicPools;
+  });
+
+
+const findAllUsers = () => findAll('Users');
 
 const findAllPoolMembers = pool_id => findAll('PoolMembers', { where: { pool_id } });
 
+const getJoinRequests = (pool_id, user_id) => {
+  if (!user_id) {
+    return findAll('JoinRequests', { where: { pool_id } });
+  }
+  return findAll('JoinRequests', { where: { pool_id, user_id } });
+};
 
 const findOrCreate = (model, where) => new Promise((resolve, reject) => {
   models[model].findOrCreate(where).spread((result, created) => {
@@ -93,7 +120,10 @@ const findOrCreateUser = (email, first_name, last_name, image_url, password, goo
     return findOrCreate('Users', {
       where: { email },
       defaults: {
-        first_name, last_name, image_url, password
+        first_name,
+        last_name,
+        image_url,
+        password
       }
     });
   }
@@ -101,13 +131,77 @@ const findOrCreateUser = (email, first_name, last_name, image_url, password, goo
     return findOrCreate('Users', {
       where: { googleID },
       defaults: {
-        first_name, last_name, image_url, password, googleID
+        first_name,
+        last_name,
+        image_url,
+        password,
+        googleID
       }
     });
-  } return null;
+  }
+  return 'NO EMAIL OR GOOGLE ID';
 };
 
 const create = (model, item) => models[model].create(item);
+
+const updatePool = (id, key, value) => findPoolById(id)
+  .then((pool) => {
+    if (key === 'pool_value' || key === 'members_count') {
+      pool[key] += value;
+    } else { pool[key] = value; }
+    return pool.save()
+      .then(() => console.log(`POOL ${id} ${key} UPDATED ${value}!!`));
+  });
+
+
+const updatePoolMember = (memberId, poolId, key, value) => {
+  return findPoolMember(memberId, poolId)
+    .then((member) => {
+      if (key === 'contrubution_amount') {
+        member[key] += value;
+      } else if (key === 'withdraw_amount') {
+        member[key] -= value;
+      } else {
+        member[key] = value;
+      }
+      return member.save()
+        .then(() => console.log(`POOL MEMBER ${memberId} ${key} UPDATED ${value}!!`));
+    });
+};
+
+const createContribution = (pool_id, pool_member_id, contribution_amount) => {
+  const contribution = { pool_id, pool_member_id, contribution_amount };
+  // update pool value
+  return updatePool(pool_id, 'pool_value', contribution_amount)
+    .then(() => updatePoolMember(pool_member_id, pool_id, 'contrubution_amount', contribution_amount))
+    .then(() => create('ContributionEntry', contribution));
+  // update poolmember contribution amount
+};
+
+const createPoolMember = (pool_id, pool_member_id, is_creator) => {
+  const contrubution_amount = 0;
+  const withdraw_amount = 0;
+  const poolMember = {
+    pool_id,
+    pool_member_id,
+    contrubution_amount,
+    withdraw_amount,
+    is_creator
+  };
+  const memberArchive = {};
+  findAllPoolMembers(pool_id).then((members) => {
+    members.forEach((member) => {
+      if (memberArchive[member.pool_member_id]) {
+        member.destroy()
+          .then(succ => console.log(succ, 'DESTROYED DUPLICATE'))
+          .catch(err => console.log(err, 'ERROR DESTROYING'));
+      } else {
+        memberArchive[member.pool_member_id] = member.pool_member_id;
+      }
+    });
+  }).catch((err) => { console.log(err); });
+  return create('PoolMembers', poolMember);
+};
 
 const createPool = (name, imageURL, description, voteConfig, creator, publicOpt) => {
   const pool = {
@@ -116,44 +210,54 @@ const createPool = (name, imageURL, description, voteConfig, creator, publicOpt)
     description,
     voteConfig,
     creator,
-    public: publicOpt,
+    publicOpt,
     pool_value: 0,
-    members_count: 0
+    members_count: 1
   };
-  return create('Pools', pool);
-};
 
-const createPoolMember = (pool_id, pool_member_id) => {
-  const contrubution_amount = 0;
-  const withdraw_amount = 0;
-  const poolMember = {
-    pool_id,
-    pool_member_id,
-    contrubution_amount,
-    withdraw_amount
-  };
-  return create('PoolMembers', poolMember);
-};
-
-const updateMemberCount = (id, amount) => {
-  findPoolById(id)
-    .then((pool) => {
-      let { members_count } = pool;
-      pool.members_count = members_count + amount;
-      pool.save()
-        .then((update) => {
-          console.log('POOL MEMBERS COUNT UPDATED');
-        })
-        .catch((err) => {
-          console.log('POOL MEMBERS COUNT NOT UPDATED', err);
-        });
-    })
-    .catch((err) => {
-      console.log('FAILED TO FIND POOL BY ID', err);
+  return create('Pools', pool)
+    .then((newPool) => {
+      const { id } = newPool;
+      return createPoolMember(id, creator, 't')
+        .then((poolmember) => { return { poolmember, newPool }; });
     });
 };
 
+const createJoinRequest = (user_id, pool_id) => {
+  const joinRequest = {
+    user_id,
+    pool_id
+  };
+  return create('JoinRequests', joinRequest);
+};
+
+const findUserByName = (username, password) => {
+  Users.findOne({ where: { username, password } }).then(user => user).catch((err) => {
+    console.log(err);
+  });
+};
+
+const findPoolByMember = (googleID) => {
+  return Users.findOne({
+    where: {
+      googleID
+    }
+  }).then(user => findPoolMember(user.id)).then(arr => arr)
+    .catch(error => console.log(error));
+};
+
+const findUserByGoogleAndUpdate = (googleID, newInfo) => {
+  Users.findOne({ where: { googleID } }).then((user) => {
+    user.first_name = newInfo.name;
+    user.last_name = newInfo.lastName;
+    user.email = newInfo.email;
+    return user.save()
+      .then(() => { console.log('User info updated'); });
+  });
+};
+
 module.exports = {
+  createJoinRequest,
   findOrCreate,
   findOrCreateUser,
   findOne,
@@ -166,7 +270,15 @@ module.exports = {
   createPoolMember,
   findUserByGoogle,
   findAllPoolMembers,
-  updateMemberCount,
+  updatePool,
   findPoolById,
-  isMember
+  findPoolMember,
+  createContribution,
+  findAllUsers,
+  updatePoolMember,
+  findUserByName,
+  findPublicPools,
+  findPoolByMember,
+  getJoinRequests,
+  findUserByGoogleAndUpdate
 };

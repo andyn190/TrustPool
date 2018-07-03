@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-import { catchError, map, tap } from 'rxjs/operators';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 
 const httpOptions = {
@@ -22,15 +21,31 @@ export class PoolsService {
     return this.http.get(`/pools/${poolid}`);
   }
 
+  getJoinRequests(poolid) {
+    return this.http.get(`/pools/${poolid}/joinrequests`);
+  }
+
   checkIsMember(poolid){
     return this.http.get(`/pools/${poolid}/ismember`);
   }
   
+  getPoolsOfMember() {
+    return this.http.get('/pools/member/poolsOfMember');
+  }
+
   joinPool(poolid, socialUser) {
     if(socialUser){
     return this.http.post('/pools/join', { poolid, socialUser }, httpOptions);
     }
     return this.http.post('/pools/join', {poolid}, httpOptions);
+  }
+
+  sendContrib(stripeToken, poolId, amount){
+    return this.http.post('/pools/contribute', { stripeToken, poolId, amount }, httpOptions);
+  }
+
+  resJoinRequest(joinRequest){
+    return this.http.post('/pools/joinrequests', { joinRequest }, httpOptions);
   }
 }
 

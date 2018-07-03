@@ -10,33 +10,21 @@ import { User } from '../user';
   styleUrls: ['./login-form.component.css']
 })
 export class LoginFormComponent implements OnInit {
-  public userEmail: string;
-  public googleUrl: any;
-  public errorMsg: string;
-  public responseData: any;
-  public userPostData: {
-    'email': ''
-  };
-
+  public loginData = { email: '', password: ''};
+  public message = '';
+  public data
   constructor(private http: HttpClient, private authService: OwnAuthService, private router: Router) { }
 
   ngOnInit() {
-    this.errorMsg = '';
-    this.googleUrl = '';
-    // this.authService.getData().subscribe((post) => {
-    //   console.log(post);
-    // })
+
   }
-  loginUser(e){
-    e.preventDefault();
-    let email = e.target.elements[0].value;
-    let password = e.target.elements[1].value;
-    this.authService.login({email, password} as User)
-    .subscribe(user => {
-      console.log(user);
-    })
-  }
-  goToSignUpPage() {
-    this.router.navigate(['signup'])
+  login() {
+    this.http.post<any[]>('/api/signin', this.loginData).subscribe(resp => {
+      this.data = resp;
+      localStorage.setItem('jwtToken', this.data.token);
+      this.router.navigate(['home']);
+    }, err => {
+      this.message = err.error.msg;
+    });
   }
 }

@@ -16,41 +16,86 @@
     </div>
   </form>
  -->
- <form #groupForm="ngForm"
- (ngSubmit)="createGroup(groupForm.form);">
- <div *ngIf="nameField.touched && nameField.errors">
-    <div class="alert alert-danger" 
-    *ngIf="nameField.errors.required">
-    The Group name is required!
+<div class='container'>
+  <div class='row justify-content-center'>
+    <form #groupForm="ngForm"
+      (ngSubmit)="createGroup(groupForm.form);"
+    >
+      <div *ngIf="nameField.touched && nameField.errors">
+        <div class="alert alert-danger" 
+          *ngIf="nameField.errors.required"
+        >
+          The Group name is required!
+        </div>
+        <div class="alert alert-danger" 
+            *ngIf="nameField.errors.minlength">
+            The Group descriptions should be atleast 10 characters long!
+        </div>
+      </div>
+      <h1>Name</h1>
+      <input type="text" 
+        class="form-control" 
+        name="group-name"
+        ngModel
+        required
+        #nameField="ngModel"
+        minlength="5"
+      >
+      <br />
+      <h2>Image Url</h2>
+      <input type="text" 
+        class="form-control" 
+        name="group-url"
+        ngModel
+        required
+        #nameField="ngModel"
+        minlength="5"
+      >
+      <br />
+      <h3>Group Description</h3>
+      <input type="text" 
+      class="form-control" 
+      name="group-description"
+      ngModel
+      required
+      #nameField="ngModel"
+      minlength="10"
+      >
+      <br />
+      <h3>Voter Config (0-100)</h3>
+      <input type="number" 
+        class="form-control" 
+        name="group-voterConfig"
+        ngModel
+        required
+        min="0"
+        max="100"
+        #nameField="ngModel"
+      >
+      <br />
+      <input 
+      type="radio" 
+      value="true" 
+      name="group-publicOpt" 
+      required
+      ngModel
+      #nameField="ngModel"
+      >
+      Public
+      <input
+        type="radio"  
+        name="group-publicOpt"
+        required
+        ngModel 
+        #nameField="ngModel"
+      >
+      Private
+      <br />
+      <button
+        class="btn btn-primary"
+        >Submit</button>
+    </form>
+  </div>
 </div>
-<div class="alert alert-danger" 
-     *ngIf="nameField.errors.minlength">
-     The Group descriptions should be atleast 10 characters long!
-</div>
- </div>
- <h1>Name</h1>
- <input type="text" 
-  class="form-control" 
-  name="group-name"
-  ngModel
-  required
-  #nameField="ngModel"
-  minlength="5">
-<h2>Image Url</h2>
- <input type="text" 
- class="form-control" 
- name="group-url"
- ngModel
- required
- #nameField="ngModel"
- minlength="5">
- 
- <h3>Group Description</h3>
- <input type="text" 
- class="form-control" 
- name="group-description"
- ngModel
- required
- #nameField="ngModel"
- minlength="10">
- <button class="btn btn-primary" [disabled]="!groupForm.valid">Submit</button>
+
+<!-- [disabled]="!groupForm.valid" SUBMIT BUTTON -->
