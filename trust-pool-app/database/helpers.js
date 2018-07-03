@@ -89,6 +89,8 @@ const findAllUsers = () => findAll('Users');
 
 const findAllPoolMembers = pool_id => findAll('PoolMembers', { where: { pool_id } });
 
+const getJoinRequests = pool_id => findAll('JoinRequests', { where: { pool_id } });
+
 const findOrCreate = (model, where) => new Promise((resolve, reject) => {
   models[model].findOrCreate(where).spread((result, created) => {
     const item = result.get({
@@ -247,5 +249,6 @@ module.exports = {
   findAllUsers,
   updatePoolMember,
   findUserByName,
-  findPublicPools
+  findPublicPools,
+  getJoinRequests
 };
