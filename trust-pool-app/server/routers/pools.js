@@ -212,7 +212,6 @@ pools.post('/join', (req, res) => {
       const { id } = resUser;
       findAllPoolMembers(poolid)
         .then((poolMembers) => {
-          const poolMembersCount = poolMembers.length;
           poolMembers.forEach((member) => {
             const { dataValues } = member;
             const { pool_member_id } = dataValues;
@@ -222,6 +221,50 @@ pools.post('/join', (req, res) => {
           });
           if (isMemberCheck) {
             res.status(409).send(`${socialUser || googleID} is already a member of pool ${poolid}`);
+          } else {
+            // create join pool request
+            // check if existing join pool request
+            getJoinRequests(poolid, id)
+              .then((requests) => {
+                if (requests[0]) {
+                  res.status(200).json({ error: 'YOU HAVE ALREADY SUBMITTED A JOIN REQUEST' });
+                } else {
+                  createJoinRequest(id, poolid)
+                    .then(() => res.status(200).json({ message: 'SUCCESSFULLY CREATED JOIN POOL REQUEST' }))
+                    .catch(err => console.log(err));
+                }
+              })
+              .catch(err => console.log(err));
+          }
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+});
+
+pools.get('/:poolid/join', (req, res) => {
+  const { poolid } = req.params;
+  const { user } = req;
+  let isMemberCheck = false;
+  const { googleID } = user;
+  findUserByGoogle(googleID)
+    .then((resUser) => {
+      const { id } = resUser;
+      findAllPoolMembers(poolid)
+        .then((poolMembers) => {
+          poolMembers.forEach((member) => {
+            const { dataValues } = member;
+            const { pool_member_id } = dataValues;
+            if (pool_member_id === id) {
+              isMemberCheck = true;
+            }
+          });
+          if (isMemberCheck) {
+            res.status(409).send(`${googleID} is already a member of pool ${poolid}`);
           } else {
             // create join pool request
             // check if existing join pool request
