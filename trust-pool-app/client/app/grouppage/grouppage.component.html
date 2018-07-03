@@ -2,8 +2,8 @@
 
   <div *ngIf="pool">
     <div class='container content'>
-      <div class='row justify-content-center'>
-        <img [src]="pool.imageURL">
+      <div class='justify-content-center'>
+        <img [src]="pool.imageURL" width='300' length='300'>
       </div>
       <h2 class='row justify-content-center'>{{pool.name}}</h2>
       <div class='row justify-content-center'>
@@ -37,7 +37,13 @@
       </div>
       <div class='d-inline row justify-content-center'>
         <div *ngIf="isMember" class='d-inline'>
-          <h4 class='row justify-content-center'> You are a member of this group!</h4>
+          <div *ngIf="!isMember.is_owner"> 
+            <h4 class='row justify-content-center'> You are a member of this group!</h4>
+          </div>
+          <div *ngIf="isMember.is_owner">
+            <h4  class='row justify-content-center'> You are the creator of this group!</h4>
+            
+          </div>
           <h5 class="row justify-content-center">Your Contribution</h5>
           <div class="row justify-content-center">
             ${{isMember.contrubution_amount / 100}}
