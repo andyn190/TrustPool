@@ -94,17 +94,21 @@
             <button (click)='joinGroup(pool.id)'> Join Group </button>
           </div>
           <form *ngIf="isMember" #checkout="ngForm" (ngSubmit)="onSubmit(checkout, pool.id)" class="checkout">
-            <div class="form-row">
+            <div class='form-row justify-content-center'>
               <label> Contribution Amount</label>
+            </div>
+            <div class="form-row justify-content-center">
               <br />
               <input type="number" name="amount" ngModel required #amount="ngModel">
               <br />
-              <label for="card-info">Card Info</label>
+            </div>
+            <div class="form-row justify-content-center">
+              <label for="card-info">Credit or debit card</label>
               <cardinfo id="card-info" #cardInfo></cardinfo>
-          
+            </div>
+            <div class="form-row">
               <div id="card-errors" role="alert" *ngIf="error">{{ error }}</div>
             </div>
-          
             <button type="submit">Contribute ${{ amount.value }}</button>
           </form>
           <button (click)="viewGroups()" class='d-inline'>Back to Groups</button>
