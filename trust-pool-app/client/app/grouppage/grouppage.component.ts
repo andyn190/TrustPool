@@ -134,8 +134,8 @@ export class GrouppageComponent implements OnInit, AfterViewInit, OnDestroy {
     this.cd.detectChanges();
   }
 
-  openVerticallyCentered(content) {
-    this.modalService.open(content, { centered: true });
+  openInviteFriendModal(inviteFriendModal) {
+    this.modalService.open(inviteFriendModal, { centered: true });
   }
 
   async onSubmit(form: NgForm, poolId) {
