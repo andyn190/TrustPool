@@ -1,3 +1,5 @@
+let mailgun = require('mailgun-js');
+
 const {
   sequelize,
   Users,
@@ -11,6 +13,10 @@ const {
   Checks,
   JoinRequests
 } = require('.');
+const { MAILGUN } = require('../server/config');
+
+const { apiKey, domain } = MAILGUN;
+mailgun = mailgun({ apiKey, domain });
 
 const models = {
   Users,
@@ -228,6 +234,28 @@ const createJoinRequest = (user_id, pool_id) => {
     user_id,
     pool_id
   };
+  let poolName;
+  findPoolById(pool_id)
+    .then((pool) => {
+      const { creator, name } = pool;
+      poolName = name;
+      console.log(creator, 'POOL CREATOR');
+      return findUserById(creator);
+    })
+    .then((poolCreator) => {
+      const { email } = poolCreator;
+      const notification = {
+        from: 'Trust Pool App <me@samples.mailgun.org>',
+        to: email,
+        subject: `New Request To Join ${poolName}`,
+        text: `You have received a new request to join Pool ${poolName}`
+      };
+
+      mailgun.messages().send(notification, (err, body) => {
+        console.log(err, body);
+      });
+    })
+    .catch(err => console.log(err));
   return create('JoinRequests', joinRequest);
 };
 

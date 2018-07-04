@@ -23,7 +23,8 @@
               "client/assets"
             ],
             "styles": [
-              "client/styles.scss"
+              "client/styles.scss",
+              "node_modules/bootstrap/dist/css/bootstrap.min.css"
             ],
             "scripts": []
           },

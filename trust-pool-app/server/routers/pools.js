@@ -18,7 +18,6 @@ const {
 } = require('./../../database/helpers');
 const { STRIPEKEY } = require('../config');
 
-
 stripe = stripe(STRIPEKEY);
 
 pools.get('/', (req, res) => {
