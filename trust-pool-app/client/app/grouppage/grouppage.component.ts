@@ -11,7 +11,6 @@ import {
 import { CookieService } from 'ngx-cookie-service';
 import { PoolsService } from '../services/pools/pools.service';
 import { Router, ActivatedRoute, Routes } from '@angular/router';
-import { FormGroup, FormBuilder, Validators, NgForm } from "@angular/forms";
 import { ArrayType } from '@angular/compiler/src/output/output_ast';
 
 @Directive({ selector: 'cardinfo' })
@@ -202,7 +201,7 @@ export class GrouppageComponent implements OnInit, AfterViewInit, OnDestroy {
       () => console.log('done checking is member')
     );
   }
-  goToExpenseRequestForm() {
-    this._router.navigate(['expenseForm']);
+  goToExpenseRequestForm(poolid) {
+    this._router.navigate(['expenseForm'], { queryParams: { poolid: poolid }});
   }
 }

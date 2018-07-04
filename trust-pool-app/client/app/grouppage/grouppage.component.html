@@ -80,7 +80,7 @@
           <button type="submit">Contribute ${{ amount.value }}</button>
         </form>
         <button class="btn btn-primary" (click)="viewGroups()">Back to Groups</button>
-        <button class="btn btn-primary">Expense Request</button>
+        <button *ngIf="isMember" class="btn btn-primary" (click)="goToExpenseRequestForm(pool.id)">Expense Request</button>
       </div>
     </div>
   </div>
