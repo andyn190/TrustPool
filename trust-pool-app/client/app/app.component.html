@@ -1,4 +1,20 @@
-<app-header></app-header>
+<app-header *ngIf="headerHide"></app-header>
+<div class="container-fluid" *ngIf="clicked">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="jumbotron">
+                    <h2>
+                        TrustPool
+                    </h2>
+                    <p>
+                        TrustPool is the place to be when you need to up your buying power!
+                    </p>
+                    <p>
+                        <a class="btn btn-primary btn-large" routerLink="/home" (click)="isClicked();" (click)="showHeader();">Learn more</a>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
 <router-outlet></router-outlet>
-<app-footer></app-footer>
   

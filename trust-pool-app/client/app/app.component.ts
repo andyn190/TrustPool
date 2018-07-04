@@ -9,6 +9,14 @@ import { HttpClient } from '@angular/common/http';
 })
 export class AppComponent { 
   title = 'TrustPool App';
+  clicked:boolean = true;
+  headerHide:boolean = false;
   constructor(private http: HttpClient) {
+  }
+  isClicked() {
+    this.clicked = false;
+  }
+  showHeader() {
+    this.headerHide = true;
   }
 }

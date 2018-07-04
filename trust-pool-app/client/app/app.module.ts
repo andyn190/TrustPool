@@ -7,6 +7,7 @@ import { MatSidenavModule, } from '@angular/material';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations'
 import { MatButtonModule } from '@angular/material/button';
 import { CookieService } from 'ngx-cookie-service';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import {
   SocialLoginModule,
   AuthServiceConfig,
@@ -36,6 +37,7 @@ import { MatListModule } from '@angular/material/list';
 import { MatIconModule } from '@angular/material/icon';
 import { UserService } from './services/user/user.service';
 import { MypoolsComponent} from './mypools/mypools.component';
+import { ExpenseFormComponent } from './expense-form/expense-form.component';
 
 
 const appRoutes: Routes = [
@@ -48,7 +50,8 @@ const appRoutes: Routes = [
   { path: 'account', component: AccountpageComponent},
   { path: 'createrequest', component: CreaterequestComponent},
   { path: 'ebay', component: EbaypageComponent},
-  { path: 'mypools', component: MypoolsComponent }
+  { path: 'mypools', component: MypoolsComponent },
+  { path: 'expenseForm', component: ExpenseFormComponent}
 ];
 
 export function getAuthServiceConfigs() {
@@ -88,7 +91,8 @@ export function getAuthServiceConfigs() {
     GrouppageComponent,
     GoogleAuthComponent,
     MypoolsComponent,
-    SignupFormComponent
+    SignupFormComponent,
+    ExpenseFormComponent
   ],
   imports: [
     BrowserModule,
@@ -106,7 +110,8 @@ export function getAuthServiceConfigs() {
     MatToolbarModule,
     MatCardModule,
     MatListModule,
-    MatIconModule
+    MatIconModule,
+    NgbModule.forRoot()
   ],
     providers: [OwnAuthService, UserService, PoolsService, CookieService, {
     provide: AuthServiceConfig,

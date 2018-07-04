@@ -44,7 +44,7 @@ export class GoogleAuthComponent implements OnInit {
         console.log(socialPlatform + " sign in data : ", userData);
         // Now sign-in with userData
         // ...
-        this.auth.googleLogin(userData.idToken)
+        this.auth.googleLogin()
           .subscribe(onSuccess => {
             console.log(onSuccess, 'on Success');
             // let { email, googleID, last_name, first_name, id } = onSuccess;
@@ -62,10 +62,4 @@ export class GoogleAuthComponent implements OnInit {
       }
     );
   }
-  // handleGoogleSignIn(e) {
-  //   this.auth.googleLogin(account).subscribe((data) => {
-  //     console.log(data, 'this worked');
-  //     this.router.navigate(['home']);
-  //   })
-  // }  
 }

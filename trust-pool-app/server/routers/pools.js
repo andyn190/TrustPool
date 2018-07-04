@@ -1,5 +1,7 @@
 const pools = require('express').Router();
 let stripe = require('stripe');
+let mailgun = require('mailgun-js');
+
 const {
   createPool,
   findPoolById,
@@ -17,8 +19,12 @@ const {
   findPoolByMember
 } = require('./../../database/helpers');
 const { STRIPEKEY } = require('../config');
+const authenticated = require('../passport/authenticated');
 
+const { MAILGUN } = require('../config');
 
+const { apiKey, domain } = MAILGUN;
+mailgun = mailgun({ apiKey, domain });
 stripe = stripe(STRIPEKEY);
 
 pools.get('/', (req, res) => {
@@ -28,6 +34,45 @@ pools.get('/', (req, res) => {
       res.status(500).send(err);
     });
   // this will respond with all public pools
+});
+
+pools.post('/mailinvite', (req, res) => {
+  const { body, user } = req;
+  const { googleID } = user;
+  const {
+    email,
+    message,
+    poolName,
+    poolId,
+    url
+  } = body;
+  findUserByGoogle(googleID)
+    .then((resUser) => {
+      const { first_name, last_name } = resUser;
+      const notification = {
+        from: 'Trust Pool App <me@samples.mailgun.org>',
+        to: email,
+        subject: `Invitaton from ${first_name} ${last_name} to join ${poolName}`,
+        text: `
+
+    You have received an invitation to join: ${poolName}
+    Message from ${first_name}
+    ${message}
+
+    To join this pool click the following link twice (Once to sign up, again to request to join the pool): 
+        ${url}/pools/${poolId}/join
+    `
+      };
+      mailgun.messages().send(notification, (err, resBody) => {
+        console.log(err, resBody);
+        if (err) {
+          res.status(200).json({ err });
+        } else {
+          res.status(200).json({ success: resBody });
+        }
+      });
+    })
+    .catch(err => console.log('error'));
 });
 
 pools.get('/:poolid/ismember', (req, res) => {
@@ -214,7 +259,6 @@ pools.post('/join', (req, res) => {
       const { id } = resUser;
       findAllPoolMembers(poolid)
         .then((poolMembers) => {
-          const poolMembersCount = poolMembers.length;
           poolMembers.forEach((member) => {
             const { dataValues } = member;
             const { pool_member_id } = dataValues;
@@ -224,6 +268,50 @@ pools.post('/join', (req, res) => {
           });
           if (isMemberCheck) {
             res.status(409).send(`${socialUser || googleID} is already a member of pool ${poolid}`);
+          } else {
+            // create join pool request
+            // check if existing join pool request
+            getJoinRequests(poolid, id)
+              .then((requests) => {
+                if (requests[0]) {
+                  res.status(200).json({ error: 'YOU HAVE ALREADY SUBMITTED A JOIN REQUEST' });
+                } else {
+                  createJoinRequest(id, poolid)
+                    .then(() => res.status(200).json({ message: 'SUCCESSFULLY CREATED JOIN POOL REQUEST' }))
+                    .catch(err => console.log(err));
+                }
+              })
+              .catch(err => console.log(err));
+          }
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+});
+
+pools.get('/:poolid/join', authenticated, (req, res) => {
+  const { poolid } = req.params;
+  const { user } = req;
+  let isMemberCheck = false;
+  const { googleID } = user;
+  findUserByGoogle(googleID)
+    .then((resUser) => {
+      const { id } = resUser;
+      findAllPoolMembers(poolid)
+        .then((poolMembers) => {
+          poolMembers.forEach((member) => {
+            const { dataValues } = member;
+            const { pool_member_id } = dataValues;
+            if (pool_member_id === id) {
+              isMemberCheck = true;
+            }
+          });
+          if (isMemberCheck) {
+            res.status(409).send(`${googleID} is already a member of pool ${poolid}`);
           } else {
             // create join pool request
             // check if existing join pool request
