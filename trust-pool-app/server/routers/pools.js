@@ -174,7 +174,6 @@ pools.post('/create', (req, res) => {
 pools.post('/expense', (req, res) => {
   const {
     poolId,
-    creatorId,
     title,
     desc,
     amount,
