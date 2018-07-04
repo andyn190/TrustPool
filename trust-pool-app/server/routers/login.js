@@ -50,7 +50,7 @@ login.post('/', (req, res) => {
 });
 
 login.get('/google/redirect', passport.authenticate('google', {
-  successRedirect: '/',
+  successRedirect: '/#/home',
   failureRedirect: '/login'
 }));
 
