@@ -1,5 +1,7 @@
 const pools = require('express').Router();
 let stripe = require('stripe');
+let mailgun = require('mailgun-js');
+
 const {
   createPool,
   findPoolById,
@@ -19,6 +21,10 @@ const {
 const { STRIPEKEY } = require('../config');
 const authenticated = require('../passport/authenticated');
 
+const { MAILGUN } = require('../config');
+
+const { apiKey, domain } = MAILGUN;
+mailgun = mailgun({ apiKey, domain });
 stripe = stripe(STRIPEKEY);
 
 pools.get('/', (req, res) => {
@@ -28,6 +34,37 @@ pools.get('/', (req, res) => {
       res.status(500).send(err);
     });
   // this will respond with all public pools
+});
+
+pools.post('/mailinvite', (req, res) => {
+  const { body, user } = req;
+  const { googleID } = user;
+  const { email, message, poolName } = body;
+  findUserByGoogle(googleID)
+    .then((resUser) => {
+      console.log(resUser, 'USER!!!');
+      const { id } = resUser;
+      const notification = {
+        from: 'Trust Pool App <me@samples.mailgun.org>',
+        to: email,
+        subject: `Invitaton to join ${poolName}`,
+        text: `
+    You have received an invitation to join Pool ${poolName}
+    from 
+    ${message}
+    `
+      };
+
+      mailgun.messages().send(notification, (err, resBody) => {
+        console.log(err, resBody);
+        if (err) {
+          res.status(200).json({ err });
+        } else {
+          res.status(200).json({ success: resBody });
+        }
+      });
+    })
+    .catch(err => console.log('error'));
 });
 
 pools.get('/:poolid/ismember', (req, res) => {
