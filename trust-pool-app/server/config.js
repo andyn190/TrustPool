@@ -18,5 +18,9 @@ module.exports = {
       maxAge: 86400000 // 24 hours
     }
   },
-  STRIPEKEY: process.env.STRIPEKEYTEST || process.env.STRIPEKEYLIVE
+  STRIPEKEY: process.env.STRIPEKEYTEST || process.env.STRIPEKEYLIVE,
+  MAILGUN: {
+    domain: process.env.MAILDOMAIN,
+    apiKey: process.env.MAILKEY
+  }
 };
