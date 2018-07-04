@@ -13,13 +13,14 @@ export class ExpenseFormComponent implements OnInit {
     private routes: Routes,
     private route: ActivatedRoute
   ) { }
-  public poolid : any
-  private sub = this.route.queryParams
-  .subscribe(params => {
-    this.poolid = params.poolid;
-  })
+  public poolid : number
+  private sub : any
 
   ngOnInit() {
+    this.route.queryParams
+      .subscribe(params => {
+        this.poolid = params.poolid;
+      })
   }
 
 }
