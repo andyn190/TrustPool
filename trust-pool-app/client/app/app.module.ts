@@ -36,6 +36,7 @@ import { MatListModule } from '@angular/material/list';
 import { MatIconModule } from '@angular/material/icon';
 import { UserService } from './services/user/user.service';
 import { MypoolsComponent} from './mypools/mypools.component';
+import { ExpenseFormComponent } from './expense-form/expense-form.component';
 
 
 const appRoutes: Routes = [
@@ -48,7 +49,8 @@ const appRoutes: Routes = [
   { path: 'account', component: AccountpageComponent},
   { path: 'createrequest', component: CreaterequestComponent},
   { path: 'ebay', component: EbaypageComponent},
-  { path: 'mypools', component: MypoolsComponent }
+  { path: 'mypools', component: MypoolsComponent },
+  { path: 'expenseForm', component: ExpenseFormComponent}
 ];
 
 export function getAuthServiceConfigs() {
@@ -88,7 +90,8 @@ export function getAuthServiceConfigs() {
     GrouppageComponent,
     GoogleAuthComponent,
     MypoolsComponent,
-    SignupFormComponent
+    SignupFormComponent,
+    ExpenseFormComponent
   ],
   imports: [
     BrowserModule,

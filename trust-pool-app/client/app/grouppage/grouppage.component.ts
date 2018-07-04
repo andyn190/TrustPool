@@ -50,7 +50,6 @@ export class GrouppageComponent implements OnInit, AfterViewInit, OnDestroy {
     private _cookieService: CookieService,
     private _router: Router,
     private route: ActivatedRoute,
-    private router: Routes
   ) { }
 
   ngAfterViewInit() {
@@ -204,6 +203,6 @@ export class GrouppageComponent implements OnInit, AfterViewInit, OnDestroy {
     );
   }
   goToExpenseRequestForm() {
-    this.routes
+    this._router.navigate(['expenseForm']);
   }
 }
