@@ -10,7 +10,7 @@ import {
 } from '@angular/core';
 import { CookieService } from 'ngx-cookie-service';
 import { PoolsService } from '../services/pools/pools.service';
-import { Router, ActivatedRoute } from '@angular/router';
+import { Router, ActivatedRoute, Routes } from '@angular/router';
 import { FormGroup, FormBuilder, Validators, NgForm } from "@angular/forms";
 import { ArrayType } from '@angular/compiler/src/output/output_ast';
 
@@ -50,6 +50,7 @@ export class GrouppageComponent implements OnInit, AfterViewInit, OnDestroy {
     private _cookieService: CookieService,
     private _router: Router,
     private route: ActivatedRoute,
+    private router: Routes
   ) { }
 
   ngAfterViewInit() {
@@ -202,5 +203,7 @@ export class GrouppageComponent implements OnInit, AfterViewInit, OnDestroy {
       () => console.log('done checking is member')
     );
   }
-
+  goToExpenseRequestForm() {
+    this.routes
+  }
 }

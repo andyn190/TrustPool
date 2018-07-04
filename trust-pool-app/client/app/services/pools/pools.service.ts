@@ -47,5 +47,9 @@ export class PoolsService {
   resJoinRequest(joinRequest){
     return this.http.post('/pools/joinrequests', { joinRequest }, httpOptions);
   }
+
+  sendExpenseRequest(options: object) {
+    return this.http.post('/pools/expense', options, httpOptions);
+  }
 }
 
