@@ -78,6 +78,7 @@
               <button type="submit">Contribute ${{ amount.value }}</button>
             </form>
             <button (click)="viewGroups()" class='d-inline'>Back to Groups</button>
+            <button *ngIf="isMember" class="btn btn-primary" (click)="goToExpenseRequestForm(pool.id)">Expense Request</button>
           </div>
       </div>
     </div>

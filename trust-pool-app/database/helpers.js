@@ -46,7 +46,12 @@ const findUserById = id => findOne('Users', { where: { id } });
 
 const findUserByGoogle = googleID => findOne('Users', { where: { googleID } });
 
-const findPoolMember = (pool_member_id, pool_id) => findOne('PoolMembers', { where: { pool_member_id, pool_id } });
+const findPoolMember = (pool_member_id, pool_id) => {
+  if (!pool_id) {
+    return PoolMembers.findAll({ where: { pool_member_id } });
+  }
+  return findOne('PoolMembers', { where: { pool_member_id, pool_id } });
+};
 
 
 const findPoolByName = name => findOne('Pools', { where: { name } });
@@ -85,7 +90,6 @@ const findPublicPools = () => findAll('Pools')
       if (publicOpt) {
         publicPools.push(pool);
       }
-      console.log(pool.dataValues.publicOpt, 'PUBLIC OPT', pool, 'POOL');
     });
     return publicPools;
   });
@@ -261,6 +265,15 @@ const findUserByName = (username, password) => {
   });
 };
 
+const findPoolByMember = (googleID) => {
+  return Users.findOne({
+    where: {
+      googleID
+    }
+  }).then(user => findPoolMember(user.id)).then(arr => arr)
+    .catch(error => console.log(error));
+};
+
 const findUserByGoogleAndUpdate = (googleID, newInfo) => {
   Users.findOne({ where: { googleID } }).then((user) => {
     user.first_name = newInfo.name;
@@ -293,6 +306,7 @@ module.exports = {
   updatePoolMember,
   findUserByName,
   findPublicPools,
+  findPoolByMember,
   getJoinRequests,
   findUserByGoogleAndUpdate
 };

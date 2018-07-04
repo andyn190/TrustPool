@@ -24,7 +24,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 setupPassport(app);
 setupRouters(app);
-// app.use(authenticated);
+app.use(authenticated);
 app.use(express.static(PUBLIC_PATH));
 
 module.exports.server = server;

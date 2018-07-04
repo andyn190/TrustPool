@@ -29,6 +29,10 @@ export class PoolsService {
     return this.http.get(`/pools/${poolid}/ismember`);
   }
   
+  getPoolsOfMember() {
+    return this.http.get('/pools/member/poolsOfMember');
+  }
+
   joinPool(poolid, socialUser) {
     if(socialUser){
     return this.http.post('/pools/join', { poolid, socialUser }, httpOptions);
@@ -42,6 +46,10 @@ export class PoolsService {
 
   resJoinRequest(joinRequest){
     return this.http.post('/pools/joinrequests', { joinRequest }, httpOptions);
+  }
+
+  sendExpenseRequest(options: object) {
+    return this.http.post('/pools/expense', options, httpOptions);
   }
 }
 
