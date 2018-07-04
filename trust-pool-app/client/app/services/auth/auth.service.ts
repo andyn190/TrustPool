@@ -12,7 +12,7 @@ const httpOptions = {
 };
 const googleAuthHeaders = {
   headers: new HttpHeaders({
-    'Access-Control-Allow-Origin': 'http://localhost:8080',
+    'Access-Control-Allow-Origin': '*',
     'Vary': 'Origin'
   })
 };
@@ -29,8 +29,9 @@ export class OwnAuthService {
   constructor(private http: HttpClient) {
   }
 
-  googleLogin(token: string) {
-    return this.http.post(this.loginUrl, { token })
+  googleLogin() {
+    console.log(googleAuthHeaders);
+    return this.http.get(this.googleUrl);
   }
   login (user: User): Observable<User> {
     return this.http.post<User>(this.loginUrl, user, httpOptions).pipe(
