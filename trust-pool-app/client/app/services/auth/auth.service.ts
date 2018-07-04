@@ -28,7 +28,9 @@ export class OwnAuthService {
 
   constructor(private http: HttpClient) {
   }
-
+  checkLogin() {
+    return this.http.get('/login');
+  }
   googleLogin() {
     console.log(googleAuthHeaders);
     return this.http.get(this.googleUrl);

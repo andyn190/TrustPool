@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CookieService } from 'ngx-cookie-service';
+import { OwnAuthService } from '../services/auth/auth.service';
 
 @Component({
   selector: 'app-header',
@@ -7,10 +8,20 @@ import { CookieService } from 'ngx-cookie-service';
   styleUrls: ['./header.component.css']
 })
 export class HeaderComponent implements OnInit {
-  constructor(private cookieService: CookieService) { }
-  allCookies: {} = this.cookieService.getAll();
+  constructor(
+    private auth: OwnAuthService
+  ) { }
+  user: {};
   loggedIn: boolean;
   ngOnInit() {
-    console.log(this.allCookies);
+    this.auth.checkLogin().subscribe(data => {
+      if (data.user) {
+        this.user = data.user
+        this.loggedIn = true;
+      }
+    });
+  }
+  handleLogout() {
+    this.loggedIn = false;
   }
 }
