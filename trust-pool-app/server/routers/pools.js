@@ -39,22 +39,30 @@ pools.get('/', (req, res) => {
 pools.post('/mailinvite', (req, res) => {
   const { body, user } = req;
   const { googleID } = user;
-  const { email, message, poolName } = body;
+  const {
+    email,
+    message,
+    poolName,
+    poolId,
+    url
+  } = body;
   findUserByGoogle(googleID)
     .then((resUser) => {
-      console.log(resUser, 'USER!!!');
-      const { id } = resUser;
+      const { first_name, last_name } = resUser;
       const notification = {
         from: 'Trust Pool App <me@samples.mailgun.org>',
         to: email,
-        subject: `Invitaton to join ${poolName}`,
+        subject: `Invitaton from ${first_name} ${last_name} to join ${poolName}`,
         text: `
-    You have received an invitation to join Pool ${poolName}
-    from 
+
+    You have received an invitation to join: ${poolName}
+    Message from ${first_name}
     ${message}
+
+    To join this pool click the following link twice (Once to sign up, again to request to join the pool): 
+        ${url}/pools/${poolId}/join
     `
       };
-
       mailgun.messages().send(notification, (err, resBody) => {
         console.log(err, resBody);
         if (err) {
