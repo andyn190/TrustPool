@@ -35,65 +35,81 @@
           </dd>
         </dl>
         <div class='d-inline row justify-content-center'>
-            <form *ngIf="isMember" #inviteForm="ngForm" (ngSubmit)="inviteFriend(pool.name, inviteEmail.value, inviteMessage.value, pool.id)">
-              <div class="form-group">
-                <label> Invite Friends</label>
-                <br />
-                <label for="inviteFormInput">Enter your friend's email address</label>
-                <input type="email" class="form-control" name='email' id="inviteFormInput" placeholder="name@example.com" ngModel required #inviteEmail="ngModel">
+          <div>
+            <ng-template #content let-c="close" let-d="dismiss">
+              <div class="modal-header">
+                <h4 class="modal-title" id="modal-basic-title">Invite Friends</h4>
+                <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+                  <span aria-hidden="true">&times;</span>
+                </button>
               </div>
-              <div class="form-group">
-                <label for="inviteFormTextarea">Enter Message</label>
-                <textarea class="form-control" name='inviteMessage' id="inviteFormTextarea" rows="3" ngModel required #inviteMessage="ngModel"></textarea>
-              </div>
-              <button type="submit" class="btn btn-primary">Submit</button>
-            </form>
-            <div *ngIf="isMember" class='d-inline'>
-              <div *ngIf="!isMember.is_creator"> 
-                <h4 class='row justify-content-center'> You are a member of this group!</h4>
-              </div>
-              <div *ngIf="isMember.is_creator">
-                <h4  class='row justify-content-center'> You are the creator of this group!</h4>
-                <div class='row'>
-                  <h5>Join Requests</h5>
-                  <div class='row justify-content-center'>
-                    <ul>
-                      <li *ngFor="let request of joinRequests">
-                        <h3 class='row justify-content-center'>{{request.name}} Wants to join the pool</h3>
-                          <button (click)='acceptRequest(request)'> Accept </button>
-                          <button (click)='declineRequest(request)'> Decline </button>
-                        <br />
-                      </li>
-                    </ul>
+              <div class="modal-body">
+                <form *ngIf="isMember" #inviteForm="ngForm" (ngSubmit)="inviteFriend(pool.name, inviteEmail.value, inviteMessage.value, pool.id)">
+                  <div class="form-group">
+                    <br />
+                    <label for="inviteFormInput">Enter your friend's email address</label>
+                    <input type="email" class="form-control" name='email' id="inviteFormInput" placeholder="name@example.com" ngModel required
+                      #inviteEmail="ngModel">
                   </div>
+                  <div class="form-group">
+                    <label for="inviteFormTextarea">Enter a Message</label>
+                    <textarea class="form-control" name='inviteMessage' id="inviteFormTextarea" rows="3" ngModel required #inviteMessage="ngModel"></textarea>
+                  </div>
+                  <button type="submit" class="btn btn-primary">Submit</button>
+                </form>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-light" (click)="c('Close click')">Close</button>
+              </div>
+            </ng-template>
+            <button class="btn btn-outline-primary mb-2 mr-2" (click)="openVerticallyCentered(content)">Invite Friends</button>
+          </div>
+          <div *ngIf="isMember" class='d-inline'>
+            <div *ngIf="!isMember.is_creator"> 
+              <h4 class='row justify-content-center'> You are a member of this group!</h4>
+            </div>
+            <div *ngIf="isMember.is_creator">
+              <h4  class='row justify-content-center'> You are the creator of this group!</h4>
+              <div class='row'>
+                <h5>Join Requests</h5>
+                <div class='row justify-content-center'>
+                  <ul>
+                    <li *ngFor="let request of joinRequests">
+                      <h3 class='row justify-content-center'>{{request.name}} Wants to join the pool</h3>
+                        <button (click)='acceptRequest(request)'> Accept </button>
+                        <button (click)='declineRequest(request)'> Decline </button>
+                      <br />
+                    </li>
+                  </ul>
                 </div>
               </div>
-              <h5 class="row justify-content-center">Your Contribution</h5>
-              <div class="row justify-content-center">
-                ${{isMember.contrubution_amount / 100}}
-              </div>
-              <br />
             </div>
-            <div *ngIf="!isMember" class='d-inline row justify-content-center'>
-              <button (click)='joinGroup(pool.id)'> Join Group </button>
+            <h5 class="row justify-content-center">Your Contribution</h5>
+            <div class="row justify-content-center">
+              ${{isMember.contrubution_amount / 100}}
             </div>
-            <form *ngIf="isMember" #checkout="ngForm" (ngSubmit)="onSubmit(checkout, pool.id)" class="checkout">
-              <div class="form-row">
-                <label> Contribution Amount</label>
-                <br />
-                <input type="number" name="amount" ngModel required #amount="ngModel">
-                <br />
-                <label for="card-info">Card Info</label>
-                <cardinfo id="card-info" #cardInfo></cardinfo>
-            
-                <div id="card-errors" role="alert" *ngIf="error">{{ error }}</div>
-              </div>
-            
-              <button type="submit">Contribute ${{ amount.value }}</button>
-            </form>
-            <button (click)="viewGroups()" class='d-inline'>Back to Groups</button>
-            <button *ngIf="isMember" class="btn btn-primary" (click)="goToExpenseRequestForm(pool.id)">Expense Request</button>
+            <br />
           </div>
+          <div *ngIf="!isMember" class='d-inline row justify-content-center'>
+            <button (click)='joinGroup(pool.id)'> Join Group </button>
+          </div>
+          <form *ngIf="isMember" #checkout="ngForm" (ngSubmit)="onSubmit(checkout, pool.id)" class="checkout">
+            <div class="form-row">
+              <label> Contribution Amount</label>
+              <br />
+              <input type="number" name="amount" ngModel required #amount="ngModel">
+              <br />
+              <label for="card-info">Card Info</label>
+              <cardinfo id="card-info" #cardInfo></cardinfo>
+          
+              <div id="card-errors" role="alert" *ngIf="error">{{ error }}</div>
+            </div>
+          
+            <button type="submit">Contribute ${{ amount.value }}</button>
+          </form>
+          <button (click)="viewGroups()" class='d-inline'>Back to Groups</button>
+          <button *ngIf="isMember" class="btn btn-primary" (click)="goToExpenseRequestForm(pool.id)">Expense Request</button>
+        </div>
       </div>
     </div>
   </div>
