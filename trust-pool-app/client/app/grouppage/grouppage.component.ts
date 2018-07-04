@@ -84,6 +84,15 @@ export class GrouppageComponent implements OnInit, AfterViewInit, OnDestroy {
     );
   }
 
+  inviteFriend(poolName, email, message){
+    console.log(poolName, 'Pool NAME' , email, 'EMAIl', message, 'MESSAGE');
+    this._poolsService.inviteFriend(email, message, poolName).subscribe(
+      res => console.log(res),
+      err => console.log(err),
+      () => console.log('done inviting friend')
+    );
+  }
+
   getJoinRequests(poolid) {
     this._poolsService.getJoinRequests(poolid).subscribe(
       (res: {requests: ArrayType}) => {
