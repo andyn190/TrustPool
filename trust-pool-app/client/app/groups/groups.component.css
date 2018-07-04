@@ -1,3 +1,10 @@
 ul {
   list-style-type: none;
 }
+:host /deep/ dt {
+  font-size: large
+}
+
+:host /deep/ dd {
+  font-size: large
+}
