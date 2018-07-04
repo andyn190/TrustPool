@@ -62,7 +62,4 @@ export class GoogleAuthComponent implements OnInit {
       }
     );
   }
-  handleGoogleSignIn() {
-    return this.auth.googleLogin();
-  }  
 }
