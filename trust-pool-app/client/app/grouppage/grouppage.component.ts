@@ -40,7 +40,7 @@ export class GrouppageComponent implements OnInit, AfterViewInit, OnDestroy {
   joinRequests: any;
   poolid: number;
   isMember: any;
-  pool: any;
+  pool: any = {};
   private sub: any;
 
   constructor(
@@ -197,7 +197,7 @@ export class GrouppageComponent implements OnInit, AfterViewInit, OnDestroy {
         this.isMember = false;
       }
     },
-      err => console.log(err),
+      err => console.log('CHECK FILWS',err),
       () => console.log('done checking is member')
     );
   }

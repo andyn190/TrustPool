@@ -80,7 +80,7 @@ Pools.belongsTo(Users, { foreignKey: 'creator' });
 
 const ExpenseRequestType = sequelize.define('Expense_Request_Type', {
   id: {
-    type: Sequelize.CHAR,
+    type: Sequelize.INTEGER,
     primaryKey: true,
     autoIncrement: true,
     unique: true
@@ -327,6 +327,7 @@ sequelize
 // Pools.sync({ force: true }).then(res => console.log(res)).catch(err => console.log(err));
 // ContributionEntry.sync({ force: true }).then(res => console.log(res)).catch(err => console.log(err));
 // JoinRequests.sync({ force: true }).then(res => console.log(res)).catch(err => console.log(err));
+// sequelize.sync({ force: true }).then(res => console.log(res)).catch(err => console.log(err));
 
 module.exports = {
   sequelize,
