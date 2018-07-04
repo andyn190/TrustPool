@@ -1,101 +1,28 @@
-<!-- <form (submit)="createGroup($event)">
-    <div class="input">
-      <label>name</label>
-      <input type="text" />
+<form #groupForm="ngForm" (ngSubmit)="createGroup(groupForm.form)">
+    <div class="form-group">
+      <label for="inputName">Group Name</label>
+      <input type="text" class="form-control" id="inputName" name="group-name" ngModel #nameField ="ngModel" aria-describedby="nameHelp" placeholder="Enter group name">
+      <small id="nameHelp" class="form-text text-muted">Your Group name will be what helps represent your group.</small>
     </div>
-    <div class="input">
-      <label>imgUrl</label>
-      <input type="text" />
+    <div class="form-group">
+      <label for="inputImageUrl">ImageUrl</label>
+      <input type="text" class="form-control" required id="inputImageUrl" name="group-url"
+      ngModel #nameField ="ngModel"placeholder="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSCsdl_2_kmoFSL3WFcipJ6f4go55gLoVDNxa0NkN2ZQ9dwh2eG">
     </div>
-    <div class='input'>
-      <label>description</label>
-      <input type='text'/>
-    </div>
-    <div class="input">
-      <input type="submit" value="createGroup" />
-    </div>
-  </form>
- -->
-<div class='container'>
-  <div class='row justify-content-center'>
-    <form #groupForm="ngForm"
-      (ngSubmit)="createGroup(groupForm.form);"
-    >
-      <div *ngIf="nameField.touched && nameField.errors">
-        <div class="alert alert-danger" 
-          *ngIf="nameField.errors.required"
-        >
-          The Group name is required!
-        </div>
-        <div class="alert alert-danger" 
-            *ngIf="nameField.errors.minlength">
-            The Group descriptions should be atleast 10 characters long!
-        </div>
+    <div class="form-group">
+        <label for="inputGroupDescription">Group Description</label>
+        <input type="text" class="form-control" id="inputGroupDescription" name="group-description" ngModel #nameField ="ngModel" aria-describedby="descriptionHelp" placeholder="Enter group Description">
+        <small id="descriptionHelp" class="form-text text-muted">Your Group description will help others know what your group is all about.</small>
       </div>
-      <h1>Name</h1>
-      <input type="text" 
-        class="form-control" 
-        name="group-name"
-        ngModel
-        required
-        #nameField="ngModel"
-        minlength="5"
-      >
-      <br />
-      <h2>Image Url</h2>
-      <input type="text" 
-        class="form-control" 
-        name="group-url"
-        ngModel
-        required
-        #nameField="ngModel"
-        minlength="5"
-      >
-      <br />
-      <h3>Group Description</h3>
-      <input type="text" 
-      class="form-control" 
-      name="group-description"
-      ngModel
-      required
-      #nameField="ngModel"
-      minlength="10"
-      >
-      <br />
-      <h3>Voter Config (0-100)</h3>
-      <input type="number" 
-        class="form-control" 
-        name="group-voterConfig"
-        ngModel
-        required
-        min="0"
-        max="100"
-        #nameField="ngModel"
-      >
-      <br />
-      <input 
-      type="radio" 
-      value="true" 
-      name="group-publicOpt" 
-      required
-      ngModel
-      #nameField="ngModel"
-      >
-      Public
-      <input
-        type="radio"  
-        name="group-publicOpt"
-        required
-        ngModel 
-        #nameField="ngModel"
-      >
-      Private
-      <br />
-      <button
-        class="btn btn-primary"
-        >Submit</button>
-    </form>
-  </div>
-</div>
+    <div class="form-voteconfig">
+        <label for="voteConfig">Vote Config</label>
+        <input type="number" class="form-control" max="100" min="1" name="group-voterConfig" id="voteConfig" required ngModel #nameField ="ngModel" aria-describedby="voteConfigHelp" placeholder="Enter your config">
+        <small id="descriptionHelp" class="form-text text-muted">The vote config will allow you to dictate the percentage threshold required for an expense request to be approved between (0-100).</small>
+      </div>
+    <div class="form-publicopt">
+      <input type="checkbox" class="form-check-input" value="true" ngModel name="group-publicOpt" #nameField ="ngModel" id="publicOpt">
+      <label class="form-check-label" for="exampleCheck1">Public</label>
+    </div>
+    <button type="submit" class="btn btn-primary">Submit</button>
+  </form>
 
-<!-- [disabled]="!groupForm.valid" SUBMIT BUTTON -->

@@ -57,3 +57,11 @@ form.checkout button:active {
 .StripeElement--complete {
   padding: 0px 0px;
 }
+
+:host /deep/ dt {
+  font-size: large
+}
+
+:host /deep/ dd {
+  font-size: large
+}
