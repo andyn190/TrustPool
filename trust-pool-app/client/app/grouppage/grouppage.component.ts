@@ -6,13 +6,15 @@ import {
   ViewChild,
   ElementRef,
   Directive,
-  ChangeDetectorRef
+  ChangeDetectorRef,
+  ViewEncapsulation
 } from '@angular/core';
 import { CookieService } from 'ngx-cookie-service';
 import { PoolsService } from '../services/pools/pools.service';
 import { Router, ActivatedRoute, Routes } from '@angular/router';
 import { NgForm } from '@angular/forms';
 import { ArrayType } from '@angular/compiler/src/output/output_ast';
+import { NgbModal, ModalDismissReasons } from '@ng-bootstrap/ng-bootstrap';
 
 @Directive({ selector: 'cardinfo' })
 export class CardInfo { 
@@ -21,7 +23,8 @@ export class CardInfo {
 @Component({
   selector: 'app-grouppage',
   templateUrl: './grouppage.component.html',
-  styleUrls: ['./grouppage.component.css']
+  styleUrls: ['./grouppage.component.css'],
+  encapsulation: ViewEncapsulation.None,
 })
 export class GrouppageComponent implements OnInit, AfterViewInit, OnDestroy {
   public cardInfo: ElementRef;
@@ -43,6 +46,7 @@ export class GrouppageComponent implements OnInit, AfterViewInit, OnDestroy {
   isMember: any;
   pool: any = {};
   private sub: any;
+  closeResult: string;
 
   constructor(
     private cd: ChangeDetectorRef,
@@ -50,6 +54,7 @@ export class GrouppageComponent implements OnInit, AfterViewInit, OnDestroy {
     private _cookieService: CookieService,
     private _router: Router,
     private route: ActivatedRoute,
+    private modalService: NgbModal
   ) { }
 
   ngAfterViewInit() {
@@ -81,6 +86,14 @@ export class GrouppageComponent implements OnInit, AfterViewInit, OnDestroy {
       },
       err => console.log(err),
       () => console.log('done loading pool')
+    );
+  }
+
+  inviteFriend(poolName, email, message, poolId){
+    this._poolsService.inviteFriend(email, message, poolName, poolId, window.location.origin).subscribe(
+      res => console.log(res),
+      err => console.log(err),
+      () => console.log('done inviting friend')
     );
   }
 
@@ -119,6 +132,10 @@ export class GrouppageComponent implements OnInit, AfterViewInit, OnDestroy {
       this.error = null;
     }
     this.cd.detectChanges();
+  }
+
+  openVerticallyCentered(content) {
+    this.modalService.open(content, { centered: true });
   }
 
   async onSubmit(form: NgForm, poolId) {
