@@ -35,7 +35,7 @@
           </dd>
         </dl>
         <div class='d-inline row justify-content-center'>
-            <form *ngIf="isMember" #inviteForm="ngForm" (ngSubmit)="inviteFriend(pool.name, inviteEmail.value, inviteMessage.value)">
+            <form *ngIf="isMember" #inviteForm="ngForm" (ngSubmit)="inviteFriend(pool.name, inviteEmail.value, inviteMessage.value, pool.id)">
               <div class="form-group">
                 <label> Invite Friends</label>
                 <br />
