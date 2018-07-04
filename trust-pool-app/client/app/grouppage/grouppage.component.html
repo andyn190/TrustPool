@@ -3,7 +3,7 @@
       <div class="col-md-12">
         <h3>
           {{pool.name}}
-        </h3><img alt="Bootstrap Image Preview" [src]="pool.imageURL" />
+        </h3><img alt="Bootstrap Image Preview" [src]="pool.imageURL" width='250' length='250' />
         <dl>
           <dt>
               Pool Value: 
@@ -36,7 +36,7 @@
         </dl>
         <div class='d-inline row justify-content-center'>
           <div>
-            <ng-template #content let-c="close" let-d="dismiss">
+            <ng-template #inviteFriendModal let-c="close" let-d="dismiss">
               <div class="modal-header">
                 <h4 class="modal-title" id="modal-basic-title">Invite Friends</h4>
                 <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
@@ -62,7 +62,7 @@
                 <button type="button" class="btn btn-light" (click)="c('Close click')">Close</button>
               </div>
             </ng-template>
-            <button class="btn btn-outline-primary mb-2 mr-2" (click)="openVerticallyCentered(content)">Invite Friends</button>
+            <button class="btn btn-outline-primary mb-2 mr-2" (click)="openInviteFriendModal(inviteFriendModal)">Invite Friends</button>
           </div>
           <div *ngIf="isMember" class='d-inline'>
             <div *ngIf="!isMember.is_creator"> 
@@ -94,17 +94,21 @@
             <button (click)='joinGroup(pool.id)'> Join Group </button>
           </div>
           <form *ngIf="isMember" #checkout="ngForm" (ngSubmit)="onSubmit(checkout, pool.id)" class="checkout">
-            <div class="form-row">
+            <div class='form-row justify-content-center'>
               <label> Contribution Amount</label>
+            </div>
+            <div class="form-row justify-content-center">
               <br />
               <input type="number" name="amount" ngModel required #amount="ngModel">
               <br />
-              <label for="card-info">Card Info</label>
+            </div>
+            <div class="form-row justify-content-center">
+              <label for="card-info">Credit or debit card</label>
               <cardinfo id="card-info" #cardInfo></cardinfo>
-          
+            </div>
+            <div class="form-row">
               <div id="card-errors" role="alert" *ngIf="error">{{ error }}</div>
             </div>
-          
             <button type="submit">Contribute ${{ amount.value }}</button>
           </form>
           <button (click)="viewGroups()" class='d-inline'>Back to Groups</button>

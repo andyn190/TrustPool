@@ -58,7 +58,23 @@ export class GrouppageComponent implements OnInit, AfterViewInit, OnDestroy {
   ) { }
 
   ngAfterViewInit() {
-    this.card = elements.create('card');
+    const style = {
+      base: {
+        color: '#32325d',
+        lineHeight: '18px',
+        fontFamily: '"Helvetica Neue", Helvetica, sans-serif',
+        fontSmoothing: 'antialiased',
+        fontSize: '16px',
+        '::placeholder': {
+          color: '#aab7c4'
+        }
+      },
+      invalid: {
+        color: '#fa755a',
+        iconColor: '#fa755a'
+      }
+    };
+    this.card = elements.create('card', { style });
     this.card.addEventListener('change', this.cardHandler);
   }
 
@@ -134,8 +150,8 @@ export class GrouppageComponent implements OnInit, AfterViewInit, OnDestroy {
     this.cd.detectChanges();
   }
 
-  openVerticallyCentered(content) {
-    this.modalService.open(content, { centered: true });
+  openInviteFriendModal(inviteFriendModal) {
+    this.modalService.open(inviteFriendModal, { centered: true });
   }
 
   async onSubmit(form: NgForm, poolId) {
