@@ -36,7 +36,7 @@
         </dl>
         <div class='d-inline row justify-content-center'>
           <div>
-            <ng-template #content let-c="close" let-d="dismiss">
+            <ng-template #inviteFriendModal let-c="close" let-d="dismiss">
               <div class="modal-header">
                 <h4 class="modal-title" id="modal-basic-title">Invite Friends</h4>
                 <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
@@ -62,7 +62,7 @@
                 <button type="button" class="btn btn-light" (click)="c('Close click')">Close</button>
               </div>
             </ng-template>
-            <button class="btn btn-outline-primary mb-2 mr-2" (click)="openVerticallyCentered(content)">Invite Friends</button>
+            <button class="btn btn-outline-primary mb-2 mr-2" (click)="openInviteFriendModal(inviteFriendModal)">Invite Friends</button>
           </div>
           <div *ngIf="isMember" class='d-inline'>
             <div *ngIf="!isMember.is_creator"> 
