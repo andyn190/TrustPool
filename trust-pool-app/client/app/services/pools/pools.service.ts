@@ -52,8 +52,8 @@ export class PoolsService {
     return this.http.post('/pools/expense', options, httpOptions);
   }
 
-  inviteFriend(email, message, poolName){
-    return this.http.post('/pools/mailinvite', { email, message, poolName }, httpOptions)
+  inviteFriend(email, message, poolName, poolId, url){
+    return this.http.post('/pools/mailinvite', { email, message, poolName, poolId, url }, httpOptions)
   }
 }
 
