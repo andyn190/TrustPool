@@ -1,4 +1,4 @@
-<div class='container'>
+<!-- <div class='container'>
   <div class='row justify-content-center'>
     <h2>
       Browse Groups
@@ -27,4 +27,34 @@
       </li>
     </ul>
   </div>
-</div>
+</div> -->
+<h2>
+  Browse Groups
+</h2>
+<li *ngFor="let pool of pools" >
+  <div class="container-fluid">
+  	<div class="row">
+  		<div class="col-md-12">
+  			<img alt="Bootstrap Image Preview" [src]="pool.imageURL" height="250" width="250" />
+  			<h3>
+  				{{pool.name}}
+  			</h3>
+  			<dl>
+  				<dt>
+  					{{pool.description}}
+  				</dt>
+  				<dd>
+            Value: 
+            ${{pool.pool_value / 100}}
+  				</dd>
+  				<dt>
+            members:
+            {{pool.members_count}}
+  				</dt>
+          <button class="btn btn-primary btn-sm" (click)='viewGroup(pool.id)'> View Group </button>
+          <button class="btn btn-primary btn-sm" (click)='joinGroup(pool.id)'> Join Group </button>
+  			</dl>
+  		</div>
+  	</div>
+  </div>
+</li>

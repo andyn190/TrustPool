@@ -12,11 +12,11 @@ const httpOptions = {
   providedIn: 'root'
 })
 export class GroupCreateService {
- 
+
   constructor(private http: HttpClient) { }
-  
+
   createGroup(pool) {
-     const body = {pool};
+    const body = { pool };
     return this.http.post('/pools/create', body, httpOptions)
   }
 }

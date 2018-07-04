@@ -13,7 +13,8 @@ const {
   updatePool,
   getJoinRequests,
   findPoolMember,
-  createContribution
+  createContribution,
+  findPoolByMember
 } = require('./../../database/helpers');
 const { STRIPEKEY } = require('../config');
 const authenticated = require('../passport/authenticated');
@@ -122,7 +123,7 @@ pools.post('/create', (req, res) => {
             });
         });
     })
-    .catch(() => {});
+    .catch(() => { });
 });
 
 pools.post('/expense', (req, res) => {
@@ -294,6 +295,14 @@ pools.get('/:poolid/join', authenticated, (req, res) => {
 pools.post('/chat', (req, res) => {
   const { poolId, userId, message } = req.body;
   res.status(200).send(`recieved request for ${userId} to chat in pool ${poolId}`);
+});
+
+pools.get('/member/poolsOfMember', (req, res) => {
+  const { user } = req;
+  findPoolByMember(user.googleID)
+    .then((data) => {
+      res.status(200).send(data);
+    }).catch(err => console.log(err));
 });
 
 module.exports = pools;
