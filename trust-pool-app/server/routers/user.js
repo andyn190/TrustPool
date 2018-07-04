@@ -4,6 +4,7 @@ const { findUserByGoogleAndUpdate } = require('./../../database/helpers');
 
 user.get('/', (req, res) => {
   const userCookie = req.user;
+  console.log(user);
   const { googleID } = userCookie;
   findUserByGoogle(googleID)
     .then(resUser => res.status(200).json({ user: resUser }))
