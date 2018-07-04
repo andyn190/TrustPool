@@ -11,6 +11,7 @@ import {
 import { CookieService } from 'ngx-cookie-service';
 import { PoolsService } from '../services/pools/pools.service';
 import { Router, ActivatedRoute, Routes } from '@angular/router';
+import { NgForm } from '@angular/forms';
 import { ArrayType } from '@angular/compiler/src/output/output_ast';
 
 @Directive({ selector: 'cardinfo' })
