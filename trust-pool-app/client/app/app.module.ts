@@ -7,6 +7,7 @@ import { MatSidenavModule, } from '@angular/material';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations'
 import { MatButtonModule } from '@angular/material/button';
 import { CookieService } from 'ngx-cookie-service';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import {
   SocialLoginModule,
   AuthServiceConfig,
@@ -109,7 +110,8 @@ export function getAuthServiceConfigs() {
     MatToolbarModule,
     MatCardModule,
     MatListModule,
-    MatIconModule
+    MatIconModule,
+    NgbModule.forRoot()
   ],
     providers: [OwnAuthService, UserService, PoolsService, CookieService, {
     provide: AuthServiceConfig,
