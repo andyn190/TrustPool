@@ -163,6 +163,14 @@ pools.get('/:poolId/expenserequests', (req, res) => {
   // this will respond with the pool requested
 });
 
+pools.post('/:requestId/accept', (req, res) => {
+
+});
+
+pools.post('/:requestId/decline', (req, res) => {
+
+});
+
 pools.post('/create', (req, res) => {
   const { user, body } = req;
   const {

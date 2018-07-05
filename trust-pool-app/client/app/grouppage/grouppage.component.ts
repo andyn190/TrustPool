@@ -138,7 +138,7 @@ export class GrouppageComponent implements OnInit, AfterViewInit, OnDestroy {
     request.voter_count += 1;
     request.vote_up += this.isMember.vote_power;
     this.isMember.has_voted = 't';
-
+    
   }
 
   declineExpenseRequest(request) {
