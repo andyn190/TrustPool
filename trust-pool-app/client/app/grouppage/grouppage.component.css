@@ -56,3 +56,7 @@ form.checkout button:active {
 :host /deep/ dd {
   font-size: large
 }
+
+ul {
+  list-style-type: none;
+}
