@@ -78,7 +78,7 @@ const Pools = sequelize.define('Pools', {
 
 Pools.belongsTo(Users, { foreignKey: 'creator' });
 
-const ExpenseRequestType = sequelize.define('Expense_Request_Type', {
+const ExpenseRequestLink = sequelize.define('Expense_Request_Link', {
   id: {
     type: Sequelize.INTEGER,
     primaryKey: true,
@@ -131,7 +131,7 @@ const ExpenseRequest = sequelize.define('Expense_Request', {
   method: {
     type: Sequelize.INTEGER,
     references: {
-      model: ExpenseRequestType,
+      model: ExpenseRequestLink,
       key: 'id',
       deferrable: Sequelize.Deferrable.INITIALLY_IMMEDIATE
     }
@@ -244,7 +244,7 @@ const EbayWishlistEntry = sequelize.define('Ebay_Wishlist_Entry', {
   expense_request_type_id: {
     type: Sequelize.INTEGER,
     references: {
-      model: ExpenseRequestType,
+      model: ExpenseRequestLink,
       key: 'id',
       deferrable: Sequelize.Deferrable.INITIALLY_IMMEDIATE
     }
@@ -304,7 +304,7 @@ const Checks = sequelize.define('Checks', {
   expense_request_type_id: {
     type: Sequelize.INTEGER,
     references: {
-      model: ExpenseRequestType,
+      model: ExpenseRequestLink,
       key: 'id',
       deferrable: Sequelize.Deferrable.INITIALLY_IMMEDIATE
     }
@@ -327,15 +327,17 @@ sequelize
 // console.log(err));
 // sequelize.sync({ force: true }).then(res => console.log(res)).catch(err => console.log(err));
 // ContributionEntry.sync({ force: true })
-// .then(res => console.log(res)).catch(err => console.log(err));
+//  .then(res => console.log(res)).catch(err => console.log(err));
 // JoinRequests.sync({ force: true }).then(res => console.log(res)).catch(err => console.log(err));
+// ExpenseRequestLink.sync({ force: true }).then(res => console.log(res)).catch(err => console.log(err));
+// ExpenseRequest.sync({ force: true }).then(res => console.log(res)).catch(err => console.log(err));
 // sequelize.sync({ force: true }).then(res => console.log(res)).catch(err => console.log(err));
 
 module.exports = {
   sequelize,
   Users,
   Pools,
-  ExpenseRequestType,
+  ExpenseRequestLink,
   ExpenseRequest,
   ContributionEntry,
   PoolMembers,
