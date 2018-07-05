@@ -229,8 +229,28 @@ const createPool = (name, imageURL, description, voteConfig, creator, publicOpt)
     });
 };
 
-const createExpenseRequest = () => {
+const createExpenseRequest = (
+  pool_id,
+  creator,
+  request_title,
+  description,
+  expense_amount,
+  expiration_date,
+  method
+) => {
+  const expenseRequest = {
+    pool_id,
+    creator,
+    request_title,
+    description,
+    expense_amount,
+    expiration_date,
+    method,
+    active_status: 't',
+    voter_count: 0
+  };
 
+  return create('ExpenseRequest', expenseRequest);
 };
 
 const createJoinRequest = (user_id, pool_id) => {
