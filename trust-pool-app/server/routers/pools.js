@@ -168,29 +168,29 @@ pools.get('/:poolId/expenserequests', (req, res) => {
 pools.post('/:requestId/accept', (req, res) => {
   const { params, body } = req;
   const { requestId } = params;
-  const { votePower, memberId, poolId } = body;
+  const { votePower, memberId } = body;
   updateExpenseRequest(requestId, 'vote_up', votePower)
     .then((request) => {
       const { id } = request;
       return updateExpenseRequest(id, 'voter_count', 1);
     })
-    .then(() => updatePoolMember(memberId, poolId, 'has_voted', 't'))
-    .tap(() => res.status(200).json({ success: 'vote to accept submitted' }))
-    .catch((err) => { res.status(200).json({ err }); });
+    .then(() => updatePoolMember(null, null, 'has_voted', 't', memberId)
+      .then(() => res.status(200).json({ success: 'vote to accept submitted' })))
+    .catch(err => res.status(200).json({ err }));
 });
 
 pools.post('/:requestId/decline', (req, res) => {
   const { params, body } = req;
   const { requestId } = params;
-  const { votePower, memberId, poolId } = body;
+  const { votePower, memberId } = body;
   updateExpenseRequest(requestId, 'vote_down', votePower)
     .then((request) => {
       const { id } = request;
       return updateExpenseRequest(id, 'voter_count', 1);
     })
-    .then(() => updatePoolMember(memberId, poolId, 'has_voted', 't'))
-    .tap(() => res.status(200).json({ success: 'vote to decline submitted' }))
-    .catch((err) => { res.status(200).json({ err }); });
+    .then(() => updatePoolMember(null, null, 'has_voted', 't', memberId)
+      .then(() => res.status(200).json({ success: 'vote to decline submitted' })))
+    .catch(err => res.status(200).json({ err }));
 });
 
 pools.post('/create', (req, res) => {
