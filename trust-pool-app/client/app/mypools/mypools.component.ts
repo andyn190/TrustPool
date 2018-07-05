@@ -18,6 +18,7 @@ export class MypoolsComponent implements OnInit{
   poolid: number;
   isMember: any;
   userPools: any;
+  pools: any = [];
   private sub: any;
 
   ngOnInit() {
@@ -27,7 +28,21 @@ export class MypoolsComponent implements OnInit{
     // });
     this._poolsService.getPoolsOfMember().subscribe(pools => {
       this.userPools = pools;
-      console.log(pools);
+      this.userPools.forEach((pool) =>{
+        const poolsJoin = {};
+        poolsJoin['contribution_amount'] = pool.contrubution_amount
+        poolsJoin['id'] = pool.id;
+        this._poolsService.getPool(pool.pool_id).subscribe(userPool => {
+          poolsJoin['name'] = userPool['name'];
+          poolsJoin['description'] = userPool['description'];
+          poolsJoin['imageURL'] = userPool['imageURL'];
+          this.pools.push(poolsJoin);
+          console.log(this.pools);
+        });
+      });
     })
+  }
+  viewGroup(poolid){
+    this._router.navigate(['group/', poolid]);
   }
 }
