@@ -57,7 +57,6 @@ export class PoolsService {
   }
 
   declineExpenseRequest(requestId, votePower, memberId, poolMembersCount, voteConfig){
-    console.log(voteConfig, 'SERVICE');
     return this.http.post(`/pools/${requestId}/decline`, { votePower, memberId, poolMembersCount, voteConfig }, httpOptions);
   }
 
