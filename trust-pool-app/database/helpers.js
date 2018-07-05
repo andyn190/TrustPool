@@ -1,3 +1,4 @@
+const percent = require('percent');
 let mailgun = require('mailgun-js');
 
 const {
@@ -31,6 +32,13 @@ const models = {
   JoinRequests
 };
 
+const deliveryServices = {
+  Checks: (checkInfo) => {
+    console.log(checkInfo, 'CHECK INFO');
+    return Promise.resolve('Delivered');
+  }
+};
+
 const findOne = (model, where) => new Promise((resolve, reject) => {
   models[model].find(where)
     .then((item) => {
@@ -41,12 +49,14 @@ const findOne = (model, where) => new Promise((resolve, reject) => {
     });
 });
 
-
 const findUserById = id => findOne('Users', { where: { id } });
 
 const findUserByGoogle = googleID => findOne('Users', { where: { googleID } });
 
-const findPoolMember = (pool_member_id, pool_id) => {
+const findPoolMember = (pool_member_id, pool_id, id) => {
+  if (id) {
+    return findOne('PoolMembers', { where: { id } });
+  }
   if (!pool_id) {
     return PoolMembers.findAll({ where: { pool_member_id } });
   }
@@ -57,6 +67,10 @@ const findPoolMember = (pool_member_id, pool_id) => {
 const findPoolByName = name => findOne('Pools', { where: { name } });
 
 const findPoolById = id => findOne('Pools', { where: { id } });
+
+const findLinkById = id => findOne('ExpenseRequestLink', { where: { id } });
+
+const findExpenseRequestById = id => findOne('ExpenseRequest', { where: { id } });
 
 const findAll = (model, where) => {
   if (where) {
@@ -96,6 +110,8 @@ const findPublicPools = () => findAll('Pools')
 
 
 const findAllUsers = () => findAll('Users');
+
+const findExpenseRequests = pool_id => findAll('ExpenseRequest', { where: { pool_id }});
 
 const findAllPoolMembers = pool_id => findAll('PoolMembers', { where: { pool_id } });
 
@@ -150,49 +166,98 @@ const findOrCreateUser = (email, first_name, last_name, image_url, password, goo
 
 const create = (model, item) => models[model].create(item);
 
+const createCheckEntry = (
+  amount,
+  name,
+  email,
+  description,
+  physical_address,
+  link_id
+) => create('Checks', {
+  amount,
+  name,
+  email,
+  description,
+  physical_address,
+  link_id
+});
+
 const updatePool = (id, key, value) => findPoolById(id)
   .then((pool) => {
     if (key === 'pool_value' || key === 'members_count') {
       pool[key] += value;
     } else { pool[key] = value; }
     return pool.save()
-      .then(() => console.log(`POOL ${id} ${key} UPDATED ${value}!!`));
+      .tap(() => console.log(`POOL ${id} ${key} UPDATED ${value}!!`));
   });
 
+const updateExpenseRequest = (id, key, value) => findExpenseRequestById(id)
+  .then((request) => {
+    if (key === 'voter_count' || key === 'vote_up' || key === 'vote_down') {
+      request[key] += value;
+    } else { request[key] = value; }
+    return request.save()
+      .tap(() => console.log(`Request ${id} ${key} UPDATED ${value}!!`));
+  });
 
-const updatePoolMember = (memberId, poolId, key, value) => {
-  return findPoolMember(memberId, poolId)
-    .then((member) => {
-      if (key === 'contrubution_amount') {
-        member[key] += value;
-      } else if (key === 'withdraw_amount') {
-        member[key] -= value;
-      } else {
-        member[key] = value;
-      }
-      return member.save()
-        .then(() => console.log(`POOL MEMBER ${memberId} ${key} UPDATED ${value}!!`));
-    });
-};
+const updatePoolMember = (
+  memberId,
+  poolId,
+  key,
+  value,
+  poolMemberId
+) => findPoolMember(memberId, poolId, poolMemberId)
+  .then((member) => {
+    if (key === 'contrubution_amount') {
+      member[key] += value;
+    } else if (key === 'withdraw_amount') {
+      member[key] -= value;
+    } else {
+      member[key] = value;
+    }
+    return member.save()
+      .tap(() => console.log(`POOL MEMBER ${memberId || poolMemberId} in pool ${poolId} ${key} UPDATED ${value}!!`));
+  });
+
 
 const createContribution = (pool_id, pool_member_id, contribution_amount) => {
   const contribution = { pool_id, pool_member_id, contribution_amount };
   // update pool value
+  let updatedPool;
   return updatePool(pool_id, 'pool_value', contribution_amount)
-    .then(() => updatePoolMember(pool_member_id, pool_id, 'contrubution_amount', contribution_amount))
-    .then(() => create('ContributionEntry', contribution));
+    .then((pool) => {
+      updatedPool = pool;
+      return updatePoolMember(pool_member_id, pool_id, 'contrubution_amount', contribution_amount);
+    })
+    .then(() => findAllPoolMembers(pool_id))
+    .then((poolMembers) => {
+      // recalculate all vote powers in this pool
+      poolMembers.forEach((member) => {
+        let newVotePower = percent.calc(member.contrubution_amount, updatedPool.pool_value, 0);
+        if (newVotePower > 50) {
+          newVotePower = 49;
+          // recalculate everyones vote power to account for this
+        }
+        updatePoolMember(null, null, 'vote_power', newVotePower, member.id);
+      });
+      return Promise.resolve('done');
+    })
+    .then(() => create('ContributionEntry', contribution))
+    .then((contributionEntry) => {
+      return { updatedPool, contributionEntry };
+    });
   // update poolmember contribution amount
 };
 
 const createPoolMember = (pool_id, pool_member_id, is_creator) => {
-  const contrubution_amount = 0;
-  const withdraw_amount = 0;
   const poolMember = {
+    withdraw_amount: 0,
     pool_id,
     pool_member_id,
-    contrubution_amount,
-    withdraw_amount,
-    is_creator
+    contrubution_amount: 0,
+    is_creator,
+    vote_power: 0,
+    has_voted: null
   };
   const memberArchive = {};
   findAllPoolMembers(pool_id).then((members) => {
@@ -205,7 +270,7 @@ const createPoolMember = (pool_id, pool_member_id, is_creator) => {
         memberArchive[member.pool_member_id] = member.pool_member_id;
       }
     });
-  }).catch((err) => { console.log(err); });
+  }).catch(err => console.log(err));
   return create('PoolMembers', poolMember);
 };
 
@@ -262,11 +327,34 @@ const createExpenseRequest = (
     expiration_date,
     method,
     active_status: 't',
-    voter_count: 0
+    voter_count: 0,
+    vote_up: 0,
+    vote_down: 0
   };
 
-  return create('ExpenseRequest', expenseRequest);
+  return findExpenseRequests(pool_id).then((requests) => {
+    if (requests.length > 0) {
+      return Promise.reject(new Error('CAN ONLY HAVE 1 EXPENSE REQUEST OPEN PER POOL AT A GIVEN TIME'));
+    }
+    return create('ExpenseRequest', expenseRequest);
+  });
 };
+
+// createExpenseRequest(
+//   8,
+//   1,
+//   'yoo lets pay my rent',
+//   'description',
+//   1150,
+//   new Date(),
+//   1
+// )
+//   .then((succ) => {
+//     console.log(succ);
+//     return createCheckEntry(100, 'Jelani Hankins', 'jhankins02@gmail.com', 'test check', null, null, 8)
+//       .then(checkEntryRes => console.log('MADE CHECK ENTRY', checkEntryRes));
+//   })
+//   .catch(err => console.log(err));
 
 const createJoinRequest = (user_id, pool_id) => {
   const joinRequest = {
@@ -289,28 +377,24 @@ const createJoinRequest = (user_id, pool_id) => {
         text: `You have received a new request to join Pool ${poolName}`
       };
 
-      mailgun.messages().send(notification, (err, body) => {
-        console.log(err, body);
-      });
+      mailgun.messages().send(notification, (err, body) => console.log(err, body));
     })
     .catch(err => console.log(err));
   return create('JoinRequests', joinRequest);
 };
 
 const findUserByName = (username, password) => {
-  Users.findOne({ where: { username, password } }).then(user => user).catch((err) => {
-    console.log(err);
-  });
+  Users.findOne({ where: { username, password } })
+    .then(user => user)
+    .catch(err => console.log(err));
 };
 
-const findPoolByMember = (googleID) => {
-  return Users.findOne({
-    where: {
-      googleID
-    }
-  }).then(user => findPoolMember(user.id)).then(arr => arr)
-    .catch(error => console.log(error));
-};
+const findPoolByMember = googleID => Users.findOne({
+  where: {
+    googleID
+  }
+}).then(user => findPoolMember(user.id)).then(arr => arr)
+  .catch(error => console.log(error));
 
 const findUserByGoogleAndUpdate = (googleID, newInfo) => {
   Users.findOne({ where: { googleID } }).then((user) => {
@@ -318,11 +402,24 @@ const findUserByGoogleAndUpdate = (googleID, newInfo) => {
     user.last_name = newInfo.lastName;
     user.email = newInfo.email;
     return user.save()
-      .then(() => { console.log('User info updated'); });
+      .tap(() => console.log('User info updated'));
   });
 };
 
+// find method link by id
+const executeDeliveryMethod = link_id => findLinkById(link_id)
+  .then((link) => {
+  // get method type string
+    const { method } = link;
+    return findOne(method, { where: { link_id } })
+      .then(methodTypeInfo => deliveryServices[method](methodTypeInfo));
+  // execute deliver method type with method type info
+  });
+
+
 module.exports = {
+  findLinkById,
+  executeDeliveryMethod,
   createJoinRequest,
   findOrCreate,
   findOrCreateUser,
@@ -349,5 +446,8 @@ module.exports = {
   findUserByGoogleAndUpdate,
   createExpenseRequest,
   createExpenseRequestLink,
-  createCheck
+  createCheck,
+  findExpenseRequests,
+  findExpenseRequestById,
+  updateExpenseRequest
 };
