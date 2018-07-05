@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { CookieService } from 'ngx-cookie-service';
+import { OwnAuthService } from '../services/auth/auth.service';
 
 @Component({
   selector: 'app-header',
@@ -6,10 +8,21 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./header.component.css']
 })
 export class HeaderComponent implements OnInit {
-  title = 'Trust Pool App';
-  constructor() { }
-
+  constructor(
+    private auth: OwnAuthService
+  ) { }
+  user: {};
+  loggedIn: boolean;
   ngOnInit() {
+    this.auth.checkLogin().subscribe(({ user }: any) => {
+      console.log(user);
+      if (user) {
+        this.user = user;
+        this.loggedIn = true;
+      }
+    });
   }
-
+  handleLogout() {
+    this.loggedIn = false;
+  }
 }
