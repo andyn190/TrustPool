@@ -114,9 +114,6 @@ const ExpenseRequest = sequelize.define('Expense_Request', {
   expense_amount: {
     type: Sequelize.INTEGER
   },
-  created_at: {
-    type: Sequelize.DATE
-  },
   expiration_date: {
     type: Sequelize.DATE
   },
