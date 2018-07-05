@@ -16,7 +16,9 @@ const {
   getJoinRequests,
   findPoolMember,
   createContribution,
-  findPoolByMember
+  findPoolByMember,
+  createExpenseRequest,
+  createExpenseRequestLink
 } = require('./../../database/helpers');
 const { STRIPEKEY } = require('../config');
 const authenticated = require('../passport/authenticated');
@@ -171,18 +173,40 @@ pools.post('/create', (req, res) => {
     .catch(() => { });
 });
 
+pools.post('/expenselink', (req, res) => {
+  const { method } = req.body;
+  createExpenseRequestLink(method)
+    .then(link => res.status(200).json({ link }))
+    .catch(err => res.status(200).json({ err }));
+});
+
 pools.post('/expense', (req, res) => {
+  const { body, user } = req;
   const {
-    poolId,
-    creator,
-    title,
-    desc,
-    amount,
-    expiration,
-    method_id,
-    method_type
-  } = req.body;
-  res.status(200).send(`recieved request to create new expense request in pool ${poolId}`);
+    pool_id,
+    request_title,
+    description,
+    expense_amount,
+    expiration_date,
+    method
+  } = body;
+  const { googleID } = user;
+
+  findUserByGoogle(googleID)
+    .then((resUser) => {
+      const { id } = resUser;
+      return createExpenseRequest(
+        pool_id,
+        id,
+        request_title,
+        description,
+        expense_amount,
+        expiration_date,
+        method
+      )
+        .then(expenseRequestEntry => res.status(200).json({ expenseRequestEntry }));
+    })
+    .catch(err => res.status(200).json({ err }));
 });
 
 pools.post('/vote', (req, res) => {

@@ -4,7 +4,7 @@ const {
   sequelize,
   Users,
   Pools,
-  ExpenseRequestType,
+  ExpenseRequestLink,
   ExpenseRequest,
   ContributionEntry,
   PoolMembers,
@@ -21,7 +21,7 @@ mailgun = mailgun({ apiKey, domain });
 const models = {
   Users,
   Pools,
-  ExpenseRequestType,
+  ExpenseRequestLink,
   ExpenseRequest,
   ContributionEntry,
   PoolMembers,
@@ -229,6 +229,33 @@ const createPool = (name, imageURL, description, voteConfig, creator, publicOpt)
     });
 };
 
+const createExpenseRequestLink = method => create('ExpenseRequestLink', { method });
+
+
+const createExpenseRequest = (
+  pool_id,
+  creator,
+  request_title,
+  description,
+  expense_amount,
+  expiration_date,
+  method
+) => {
+  const expenseRequest = {
+    pool_id,
+    creator,
+    request_title,
+    description,
+    expense_amount,
+    expiration_date,
+    method,
+    active_status: 't',
+    voter_count: 0
+  };
+
+  return create('ExpenseRequest', expenseRequest);
+};
+
 const createJoinRequest = (user_id, pool_id) => {
   const joinRequest = {
     user_id,
@@ -307,5 +334,7 @@ module.exports = {
   findPublicPools,
   findPoolByMember,
   getJoinRequests,
-  findUserByGoogleAndUpdate
+  findUserByGoogleAndUpdate,
+  createExpenseRequest,
+  createExpenseRequestLink
 };
