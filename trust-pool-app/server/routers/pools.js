@@ -16,7 +16,8 @@ const {
   getJoinRequests,
   findPoolMember,
   createContribution,
-  findPoolByMember
+  findPoolByMember,
+  createExpenseRequest
 } = require('./../../database/helpers');
 const { STRIPEKEY } = require('../config');
 const authenticated = require('../passport/authenticated');
@@ -182,9 +183,17 @@ pools.post('/expense', (req, res) => {
     method
   } = req.body;
 
-  const active_status = 't';
-  const voter_count = 0;
-  res.status(200).send(`recieved request to create new expense request in pool ${pool_id}`);
+  createExpenseRequest(
+    pool_id,
+    creator,
+    request_title,
+    description,
+    expense_amount,
+    expiration_date,
+    method
+  )
+    .then(expenseRequestEntry => res.status(200).json(expenseRequestEntry))
+    .catch(err => res.status(200).json(err));
 });
 
 pools.post('/vote', (req, res) => {
