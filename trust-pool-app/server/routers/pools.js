@@ -168,28 +168,59 @@ pools.get('/:poolId/expenserequests', (req, res) => {
 pools.post('/:requestId/accept', (req, res) => {
   const { params, body } = req;
   const { requestId } = params;
-  const { votePower, memberId } = body;
+  const {
+    votePower,
+    memberId,
+    poolMembersCount,
+    voteConfig
+  } = body;
   updateExpenseRequest(requestId, 'vote_up', votePower)
     .then((request) => {
       const { id } = request;
       return updateExpenseRequest(id, 'voter_count', 1);
     })
-    .then(() => updatePoolMember(null, null, 'has_voted', 't', memberId)
-      .then(() => res.status(200).json({ success: 'vote to accept submitted' })))
+    .then(requestEntry => updatePoolMember(null, null, 'has_voted', 't', memberId)
+      .then(() => requestEntry))
+    .then((requestEntry) => {
+      const { voter_count, vote_up } = requestEntry;
+      if (vote_up >= voteConfig) {
+        res.status(200).json({ success: 'VOTE PASSED' });
+      } else if (voter_count === poolMembersCount) {
+        res.status(200).json({ success: 'EVERYONE HAS VOTED BUT POWER WAS NOT MET' });
+      } else {
+        res.status(200).json({ success: 'vote to accept submitted' });
+      }
+    })
     .catch(err => res.status(200).json({ err }));
 });
 
 pools.post('/:requestId/decline', (req, res) => {
   const { params, body } = req;
   const { requestId } = params;
-  const { votePower, memberId } = body;
+  const {
+    votePower,
+    memberId,
+    poolMembersCount,
+    voteConfig
+  } = body;
+
   updateExpenseRequest(requestId, 'vote_down', votePower)
     .then((request) => {
       const { id } = request;
       return updateExpenseRequest(id, 'voter_count', 1);
     })
-    .then(() => updatePoolMember(null, null, 'has_voted', 't', memberId)
-      .then(() => res.status(200).json({ success: 'vote to decline submitted' })))
+    .then(requestEntry => updatePoolMember(null, null, 'has_voted', 't', memberId)
+      .then(() => requestEntry))
+    .then((requestEntry) => {
+      const { voter_count, vote_down } = requestEntry;
+      if (vote_down >= voteConfig) {
+        res.status(200).json({ success: 'VOTING FINISHED: DECLINED' });
+      } else if (voter_count === poolMembersCount) {
+        res.status(200).json({ success: 'EVERYONE HAS VOTED BUT POWER WAS NOT MET' });
+      } else {
+        res.status(200).json({ success: 'vote to decline submitted' });
+      }
+    })
     .catch(err => res.status(200).json({ err }));
 });
 
