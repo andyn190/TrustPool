@@ -21,7 +21,8 @@ const {
   createContribution,
   findPoolByMember,
   createExpenseRequest,
-  createExpenseRequestLink
+  createExpenseRequestLink,
+  executeDeliveryMethod
 } = require('./../../database/helpers');
 const { STRIPEKEY } = require('../config');
 const authenticated = require('../passport/authenticated');
@@ -168,28 +169,63 @@ pools.get('/:poolId/expenserequests', (req, res) => {
 pools.post('/:requestId/accept', (req, res) => {
   const { params, body } = req;
   const { requestId } = params;
-  const { votePower, memberId } = body;
+  const {
+    votePower,
+    memberId,
+    poolMembersCount,
+    voteConfig
+  } = body;
   updateExpenseRequest(requestId, 'vote_up', votePower)
     .then((request) => {
       const { id } = request;
       return updateExpenseRequest(id, 'voter_count', 1);
     })
-    .then(() => updatePoolMember(null, null, 'has_voted', 't', memberId)
-      .then(() => res.status(200).json({ success: 'vote to accept submitted' })))
+    .then((requestEntry) => {
+      const { voter_count, vote_up, method } = requestEntry;
+      const methodLink = method;
+      if (vote_up >= voteConfig) {
+        // executeDeliveryMethod(methodLink)
+        executeDeliveryMethod(methodLink)
+          .then(deliveryRes => console.log(deliveryRes))
+          .catch(deliveryErr => console.log(deliveryErr));
+        res.status(200).json({ success: { concluded: 'VOTE PASSED' } });
+      } else if (voter_count === poolMembersCount) {
+        res.status(200).json({ success: { concluded: 'VOTE POWER NOT MET' } });
+      } else {
+        res.status(200).json({ success: 'vote to accept submitted' });
+      }
+    })
+    .then(() => updatePoolMember(null, null, 'has_voted', 't', memberId))
     .catch(err => res.status(200).json({ err }));
 });
 
 pools.post('/:requestId/decline', (req, res) => {
   const { params, body } = req;
   const { requestId } = params;
-  const { votePower, memberId } = body;
+  const {
+    votePower,
+    memberId,
+    poolMembersCount,
+    voteConfig
+  } = body;
+
   updateExpenseRequest(requestId, 'vote_down', votePower)
     .then((request) => {
       const { id } = request;
       return updateExpenseRequest(id, 'voter_count', 1);
     })
-    .then(() => updatePoolMember(null, null, 'has_voted', 't', memberId)
-      .then(() => res.status(200).json({ success: 'vote to decline submitted' })))
+    .then((requestEntry) => {
+      const { voter_count, vote_down } = requestEntry;
+      if (vote_down >= voteConfig) {
+        // delete request entry
+        res.status(200).json({ success: { concluded: 'VOTE NOT PASSED' } });
+      } else if (voter_count === poolMembersCount) {
+        res.status(200).json({ success: { concluded: 'VOTE POWER NOT MET' } });
+      } else {
+        res.status(200).json({ success: 'vote to decline submitted' });
+      }
+    })
+    .then(() => updatePoolMember(null, null, 'has_voted', 't', memberId))
     .catch(err => res.status(200).json({ err }));
 });
 

@@ -310,13 +310,10 @@ const Checks = sequelize.define('Checks', {
   description: {
     type: Sequelize.TEXT
   },
-  is_physical: {
-    type: Sequelize.TEXT
-  },
   physical_address: {
     type: Sequelize.TEXT
   },
-  expense_request_type_id: {
+  link_id: {
     type: Sequelize.INTEGER,
     references: {
       model: ExpenseRequestLink,
@@ -344,7 +341,7 @@ sequelize
 // JoinRequests.sync({ force: true }).then(res => console.log(res)).catch(err => console.log(err));
 // ExpenseRequestLink.sync({ force: true }).then(res => console.log(res)).catch(err => console.log(err));
 // ExpenseRequest.sync({ force: true }).then(res => console.log(res)).catch(err => console.log(err));
-// sequelize.sync({ force: true }).then(res => console.log(res)).catch(err => console.log(err));
+// Checks.sync({ force: true }).then(res => console.log(res)).catch(err => console.log(err));
 
 module.exports = {
   sequelize,

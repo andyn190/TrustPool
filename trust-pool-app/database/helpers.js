@@ -32,6 +32,13 @@ const models = {
   JoinRequests
 };
 
+const deliveryServices = {
+  Checks: (checkInfo) => {
+    console.log(checkInfo, 'CHECK INFO');
+    return Promise.resolve('Delivered');
+  }
+};
+
 const findOne = (model, where) => new Promise((resolve, reject) => {
   models[model].find(where)
     .then((item) => {
@@ -41,7 +48,6 @@ const findOne = (model, where) => new Promise((resolve, reject) => {
       reject(err);
     });
 });
-
 
 const findUserById = id => findOne('Users', { where: { id } });
 
@@ -61,6 +67,8 @@ const findPoolMember = (pool_member_id, pool_id, id) => {
 const findPoolByName = name => findOne('Pools', { where: { name } });
 
 const findPoolById = id => findOne('Pools', { where: { id } });
+
+const findLinkById = id => findOne('ExpenseRequestLink', { where: { id } });
 
 const findExpenseRequestById = id => findOne('ExpenseRequest', { where: { id } });
 
@@ -158,6 +166,22 @@ const findOrCreateUser = (email, first_name, last_name, image_url, password, goo
 
 const create = (model, item) => models[model].create(item);
 
+const createCheckEntry = (
+  amount,
+  name,
+  email,
+  description,
+  physical_address,
+  link_id
+) => create('Checks', {
+  amount,
+  name,
+  email,
+  description,
+  physical_address,
+  link_id
+});
+
 const updatePool = (id, key, value) => findPoolById(id)
   .then((pool) => {
     if (key === 'pool_value' || key === 'members_count') {
@@ -169,10 +193,8 @@ const updatePool = (id, key, value) => findPoolById(id)
 
 const updateExpenseRequest = (id, key, value) => findExpenseRequestById(id)
   .then((request) => {
-    if (key === 'voter_count' || key === 'vote_up') {
+    if (key === 'voter_count' || key === 'vote_up' || key === 'vote_down') {
       request[key] += value;
-    } else if (key === 'vote_down') {
-      request[key] -= value;
     } else { request[key] = value; }
     return request.save()
       .tap(() => console.log(`Request ${id} ${key} UPDATED ${value}!!`));
@@ -194,7 +216,7 @@ const updatePoolMember = (
       member[key] = value;
     }
     return member.save()
-      .tap(() => console.log(`POOL MEMBER ${memberId} ${key} UPDATED ${value}!!`));
+      .tap(() => console.log(`POOL MEMBER ${memberId || poolMemberId} in pool ${poolId} ${key} UPDATED ${value}!!`));
   });
 
 
@@ -307,7 +329,7 @@ const createExpenseRequest = (
 };
 
 // createExpenseRequest(
-//   5,
+//   8,
 //   1,
 //   'yoo lets pay my rent',
 //   'description',
@@ -315,7 +337,11 @@ const createExpenseRequest = (
 //   new Date(),
 //   1
 // )
-//   .then(succ => console.log(succ))
+//   .then((succ) => {
+//     console.log(succ);
+//     return createCheckEntry(100, 'Jelani Hankins', 'jhankins02@gmail.com', 'test check', null, null, 8)
+//       .then(checkEntryRes => console.log('MADE CHECK ENTRY', checkEntryRes));
+//   })
 //   .catch(err => console.log(err));
 
 const createJoinRequest = (user_id, pool_id) => {
@@ -368,7 +394,20 @@ const findUserByGoogleAndUpdate = (googleID, newInfo) => {
   });
 };
 
+// find method link by id
+const executeDeliveryMethod = link_id => findLinkById(link_id)
+  .then((link) => {
+  // get method type string
+    const { method } = link;
+    return findOne(method, { where: { link_id } })
+      .then(methodTypeInfo => deliveryServices[method](methodTypeInfo));
+  // execute deliver method type with method type info
+  });
+
+
 module.exports = {
+  findLinkById,
+  executeDeliveryMethod,
   createJoinRequest,
   findOrCreate,
   findOrCreateUser,

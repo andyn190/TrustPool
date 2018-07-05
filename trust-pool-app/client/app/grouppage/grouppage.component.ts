@@ -132,12 +132,17 @@ export class GrouppageComponent implements OnInit, AfterViewInit, OnDestroy {
 
   approveExpenseRequest(request) {
     const { isMember, _poolsService, pool } = this;
+    const { id } = request;
+    const { vote_power } = isMember; 
+    const { members_count, voteConfig, voter_count } = pool;
+    if (voter_count >= members_count){
+      return 'EVERYONE HAS VOTED ALREADY';
+    }
     if (isMember.has_voted){
       console.log('YOU HAVE ALREADY VOTED');
       return 'YOU HAVE ALREADY VOTED';
     }
-    
-    _poolsService.approveExpenseRequest(request.id, isMember.vote_power, isMember.id, pool.id).subscribe(
+    _poolsService.approveExpenseRequest(id, vote_power, isMember.id, members_count, voteConfig).subscribe(
       res => {
         request.voter_count += 1;
         request.vote_up += isMember.vote_power;
@@ -152,11 +157,14 @@ export class GrouppageComponent implements OnInit, AfterViewInit, OnDestroy {
 
   declineExpenseRequest(request) {
     const { isMember, _poolsService, pool} = this;
+    const { id } = request;
+    const { vote_power } = isMember;
+    const { voteConfig, members_count } = pool;
     if (this.isMember.has_voted) {
       console.log('YOU HAVE ALREADY VOTED');
       return 'YOU HAVE ALREADY VOTED';
     }
-    _poolsService.declineExpenseRequest(request.id, isMember.vote_power, isMember.id, pool.id).subscribe(
+    _poolsService.declineExpenseRequest(id, vote_power, isMember.id, members_count, voteConfig).subscribe(
       res => {
         request.voter_count += 1;
         request.vote_down += isMember.vote_power;
