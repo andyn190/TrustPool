@@ -7,6 +7,7 @@ const {
   findPoolById,
   findPoolByName,
   findAllPools,
+  updateExpenseRequest,
   findExpenseRequests,
   findPublicPools,
   createPoolMember,
@@ -14,6 +15,7 @@ const {
   findUserByGoogle,
   findAllPoolMembers,
   updatePool,
+  updatePoolMember,
   getJoinRequests,
   findPoolMember,
   createContribution,
@@ -164,15 +166,31 @@ pools.get('/:poolId/expenserequests', (req, res) => {
 });
 
 pools.post('/:requestId/accept', (req, res) => {
-  const { params, user } = req;
+  const { params, body } = req;
   const { requestId } = params;
-  res.status(200).send({ success: 'vote to approve sent' });
+  const { votePower, memberId, poolId } = body;
+  updateExpenseRequest(requestId, 'vote_up', votePower)
+    .then((request) => {
+      const { id } = request;
+      return updateExpenseRequest(id, 'voter_count', 1);
+    })
+    .then(() => updatePoolMember(memberId, poolId, 'has_voted', 't'))
+    .tap(() => res.status(200).json({ success: 'vote to accept submitted' }))
+    .catch((err) => { res.status(200).json({ err }); });
 });
 
 pools.post('/:requestId/decline', (req, res) => {
-  const { params, user } = req;
+  const { params, body } = req;
   const { requestId } = params;
-  res.status(200).send({ success: 'vote to decline sent' });
+  const { votePower, memberId, poolId } = body;
+  updateExpenseRequest(requestId, 'vote_down', votePower)
+    .then((request) => {
+      const { id } = request;
+      return updateExpenseRequest(id, 'voter_count', 1);
+    })
+    .then(() => updatePoolMember(memberId, poolId, 'has_voted', 't'))
+    .tap(() => res.status(200).json({ success: 'vote to decline submitted' }))
+    .catch((err) => { res.status(200).json({ err }); });
 });
 
 pools.post('/create', (req, res) => {
