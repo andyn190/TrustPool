@@ -42,6 +42,7 @@ export class GrouppageComponent implements OnInit, AfterViewInit, OnDestroy {
   cardHandler = this.onChange.bind(this);
   error: string;
   joinRequests: any;
+  expenseRequests: any;
   poolid: number;
   isMember: any;
   pool: any = {};
@@ -85,11 +86,12 @@ export class GrouppageComponent implements OnInit, AfterViewInit, OnDestroy {
 
   ngOnInit() {
     this.sub = this.route.params.subscribe(params => {
-      let { poolid, getPool, checkIsMember, getJoinRequests  } = this;
+      let { poolid, getPool, checkIsMember, getJoinRequests, getExpenseRequests } = this;
       poolid = +params['poolid']; // (+) converts string 'id' to a number
       getPool.call(this, poolid);
       checkIsMember.call(this, poolid);
       getJoinRequests.call(this, poolid);
+      getExpenseRequests.call(this, poolid);
     });
   }
   viewGroups() {
@@ -119,6 +121,12 @@ export class GrouppageComponent implements OnInit, AfterViewInit, OnDestroy {
         this.joinRequests = res.requests;
         console.log( this.joinRequests,'JOIN REQUESTS')
       }
+    );
+  }
+
+  getExpenseRequests(poolid) {
+    this._poolsService.getExpenseRequests(poolid).subscribe(
+      (res) => { this.expenseRequests = res; }
     );
   }
 
