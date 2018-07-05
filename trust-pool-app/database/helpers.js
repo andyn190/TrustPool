@@ -169,7 +169,6 @@ const updatePool = (id, key, value) => findPoolById(id)
 
 const updateExpenseRequest = (id, key, value) => findExpenseRequestById(id)
   .then((request) => {
-    console.log('HERRRE');
     if (key === 'voter_count' || key === 'vote_up') {
       request[key] += value;
     } else if (key === 'vote_down') {
@@ -213,7 +212,6 @@ const createContribution = (pool_id, pool_member_id, contribution_amount) => {
       // recalculate all vote powers in this pool
       poolMembers.forEach((member) => {
         let newVotePower = percent.calc(member.contrubution_amount, updatedPool.pool_value, 0);
-        console.log(newVotePower);
         if (newVotePower > 50) {
           newVotePower = 49;
           // recalculate everyones vote power to account for this
@@ -250,7 +248,7 @@ const createPoolMember = (pool_id, pool_member_id, is_creator) => {
         memberArchive[member.pool_member_id] = member.pool_member_id;
       }
     });
-  }).catch((err) => { console.log(err); });
+  }).catch(err => console.log(err));
   return create('PoolMembers', poolMember);
 };
 
@@ -350,9 +348,9 @@ const createJoinRequest = (user_id, pool_id) => {
 };
 
 const findUserByName = (username, password) => {
-  Users.findOne({ where: { username, password } }).then(user => user).catch((err) => {
-    console.log(err);
-  });
+  Users.findOne({ where: { username, password } })
+    .then(user => user)
+    .catch(err => console.log(err));
 };
 
 const findPoolByMember = googleID => Users.findOne({
@@ -368,7 +366,7 @@ const findUserByGoogleAndUpdate = (googleID, newInfo) => {
     user.last_name = newInfo.lastName;
     user.email = newInfo.email;
     return user.save()
-      .then(() => { console.log('User info updated'); });
+      .tap(() => console.log('User info updated'));
   });
 };
 
