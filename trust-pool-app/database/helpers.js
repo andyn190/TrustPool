@@ -1,3 +1,4 @@
+const percent = require('percent');
 let mailgun = require('mailgun-js');
 
 const {
@@ -163,7 +164,7 @@ const updatePool = (id, key, value) => findPoolById(id)
       pool[key] += value;
     } else { pool[key] = value; }
     return pool.save()
-      .then(() => console.log(`POOL ${id} ${key} UPDATED ${value}!!`));
+      .tap(() => console.log(`POOL ${id} ${key} UPDATED ${value}!!`));
   });
 
 const updateExpenseRequest = (id, key, value) => findExpenseRequestById(id)
@@ -178,27 +179,52 @@ const updateExpenseRequest = (id, key, value) => findExpenseRequestById(id)
       .tap(() => console.log(`Request ${id} ${key} UPDATED ${value}!!`));
   });
 
-const updatePoolMember = (memberId, poolId, key, value) => {
-  return findPoolMember(memberId, poolId)
-    .then((member) => {
-      if (key === 'contrubution_amount') {
-        member[key] += value;
-      } else if (key === 'withdraw_amount') {
-        member[key] -= value;
-      } else {
-        member[key] = value;
-      }
-      return member.save()
-        .then(() => console.log(`POOL MEMBER ${memberId} ${key} UPDATED ${value}!!`));
-    });
-};
+const updatePoolMember = (
+  memberId,
+  poolId,
+  key,
+  value,
+  poolMemberId
+) => findPoolMember(memberId, poolId, poolMemberId)
+  .then((member) => {
+    if (key === 'contrubution_amount') {
+      member[key] += value;
+    } else if (key === 'withdraw_amount') {
+      member[key] -= value;
+    } else {
+      member[key] = value;
+    }
+    return member.save()
+      .tap(() => console.log(`POOL MEMBER ${memberId} ${key} UPDATED ${value}!!`));
+  });
+
 
 const createContribution = (pool_id, pool_member_id, contribution_amount) => {
   const contribution = { pool_id, pool_member_id, contribution_amount };
   // update pool value
+  let updatedPool;
   return updatePool(pool_id, 'pool_value', contribution_amount)
-    .then(() => updatePoolMember(pool_member_id, pool_id, 'contrubution_amount', contribution_amount))
-    .then(() => create('ContributionEntry', contribution));
+    .then((pool) => {
+      updatedPool = pool;
+      return updatePoolMember(pool_member_id, pool_id, 'contrubution_amount', contribution_amount);
+    })
+    .then(() => findAllPoolMembers(pool_id))
+    .then((poolMembers) => {
+      // recalculate all vote powers in this pool
+      poolMembers.forEach((member) => {
+        let newVotePower = percent.calc(member.contrubution_amount, updatedPool.pool_value, 0);
+        console.log(newVotePower);
+        if (newVotePower > 50) {
+          newVotePower = 49;
+        }
+        updatePoolMember(null, null, 'vote_power', newVotePower, member.id);
+      });
+      return Promise.resolve('done');
+    })
+    .then(() => create('ContributionEntry', contribution))
+    .then((contributionEntry) => {
+      return { updatedPool, contributionEntry };
+    });
   // update poolmember contribution amount
 };
 
