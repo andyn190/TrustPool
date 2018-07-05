@@ -174,11 +174,13 @@ pools.post('/create', (req, res) => {
 pools.post('/expense', (req, res) => {
   const {
     poolId,
+    creator,
     title,
     desc,
     amount,
     expiration,
-    method
+    method_id,
+    method_type
   } = req.body;
   res.status(200).send(`recieved request to create new expense request in pool ${poolId}`);
 });

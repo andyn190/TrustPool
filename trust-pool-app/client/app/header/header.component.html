@@ -1,34 +1,3 @@
-<!-- <mat-sidenav-container class="sidenav-container">
-    <mat-sidenav
-      #drawer
-      class="sidenav"
-      fixedInViewport="true">
-      <mat-toolbar color="primary">Menu</mat-toolbar>
-      <mat-nav-list>
-        <a mat-list-item routerLink="/home" (click)="drawer.toggle()">Home</a>
-        <a mat-list-item routerLink="/groups" (click)="drawer.toggle()">Browse Pools</a>
-        <a mat-list-item routerLink="/login" (click)="drawer.toggle()">Login</a>
-        <a mat-list-item routerLink="/account" (click)="drawer.toggle()">My Account</a>
-        <a mat-list-item routerLink="/mypools" (click)="drawer.toggle()">My Pools</a>
-        <a mat-list-item routerLink="/creategroup" (click)="drawer.toggle()">Create Pool</a>
-      </mat-nav-list>
-    </mat-sidenav>
-    <mat-sidenav-content>
-      <mat-toolbar color="primary">
-        <button
-          type="button"
-          aria-label="Toggle sidenav"
-          mat-icon-button
-          (click)="drawer.toggle()"
-          >
-          <mat-icon aria-label="Side nav toggle icon">menu</mat-icon>
-        </button>
-      </mat-toolbar>
-    </mat-sidenav-content>
-  </mat-sidenav-container>
-<h1>
-  {{ title }}
-</h1> -->
 <div class="container-fluid">
   <div class="row">
     <div class="col-md-12">
@@ -49,7 +18,7 @@
           <a class="nav-link" href="/logout" (click)="handleLogout()">Logout</a>
         </li>
         <li class="nav-item" *ngIf="!loggedIn">
-          <a class="nav-link" routerLink="/login">Login</a>
+          <a class="nav-link" href="/login/google">Log In</a>
         </li>
       </ul>
     </div>
