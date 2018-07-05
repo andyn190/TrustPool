@@ -51,6 +51,14 @@ export class PoolsService {
   resJoinRequest(joinRequest){
     return this.http.post('/pools/joinrequests', { joinRequest }, httpOptions);
   }
+  
+  approveExpenseRequest(requestId, votePower, memberId){
+    return this.http.post(`/pools/${requestId}/accept`, { votePower, memberId }, httpOptions);
+  }
+
+  declineExpenseRequest(requestId, votePower, memberId){
+    return this.http.post(`/pools/${requestId}/decline`, { votePower, memberId }, httpOptions);
+  }
 
   sendExpenseRequest(options: object) {
     return this.http.post('/pools/expense', options, httpOptions);
