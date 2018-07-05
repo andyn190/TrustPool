@@ -97,6 +97,8 @@ const findPublicPools = () => findAll('Pools')
 
 const findAllUsers = () => findAll('Users');
 
+const findExpenseRequests = pool_id => findAll('ExpenseRequest', { where: { pool_id }});
+
 const findAllPoolMembers = pool_id => findAll('PoolMembers', { where: { pool_id } });
 
 const getJoinRequests = (pool_id, user_id) => {
@@ -291,14 +293,12 @@ const findUserByName = (username, password) => {
   });
 };
 
-const findPoolByMember = (googleID) => {
-  return Users.findOne({
-    where: {
-      googleID
-    }
-  }).then(user => findPoolMember(user.id)).then(arr => arr)
-    .catch(error => console.log(error));
-};
+const findPoolByMember = googleID => Users.findOne({
+  where: {
+    googleID
+  }
+}).then(user => findPoolMember(user.id)).then(arr => arr)
+  .catch(error => console.log(error));
 
 const findUserByGoogleAndUpdate = (googleID, newInfo) => {
   Users.findOne({ where: { googleID } }).then((user) => {
@@ -336,5 +336,6 @@ module.exports = {
   getJoinRequests,
   findUserByGoogleAndUpdate,
   createExpenseRequest,
-  createExpenseRequestLink
+  createExpenseRequestLink,
+  findExpenseRequests
 };
