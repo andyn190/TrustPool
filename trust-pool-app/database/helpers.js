@@ -229,6 +229,10 @@ const createPool = (name, imageURL, description, voteConfig, creator, publicOpt)
     });
 };
 
+const createExpenseRequest = () => {
+
+};
+
 const createJoinRequest = (user_id, pool_id) => {
   const joinRequest = {
     user_id,
@@ -307,5 +311,6 @@ module.exports = {
   findPublicPools,
   findPoolByMember,
   getJoinRequests,
-  findUserByGoogleAndUpdate
+  findUserByGoogleAndUpdate,
+  createExpenseRequest
 };
