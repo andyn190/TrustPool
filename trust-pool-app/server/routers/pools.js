@@ -177,10 +177,7 @@ pools.post('/expenselink', (req, res) => {
   const { method } = req.body;
   createExpenseRequestLink(method)
     .then(link => res.status(200).json({ link }))
-    .catch((err) => {
-      console.log(err, 'ERROR');
-      res.status(200).json({ err });
-    });
+    .catch(err => res.status(200).json({ err }));
 });
 
 pools.post('/expense', (req, res) => {
