@@ -133,7 +133,6 @@ export class GrouppageComponent implements OnInit, AfterViewInit, OnDestroy {
   approveExpenseRequest(request) {
     const { isMember, _poolsService, pool } = this;
     // this.isMember.vote_power = 20;
-    console.log(isMember.id, 'POOL MEMBER ID');
     if (isMember.has_voted){
       console.log('YOU HAVE ALREADY VOTED');
       return 'YOU HAVE ALREADY VOTED';
@@ -154,7 +153,6 @@ export class GrouppageComponent implements OnInit, AfterViewInit, OnDestroy {
 
   declineExpenseRequest(request) {
     const { isMember, _poolsService, pool} = this;
-    console.log(isMember.id, 'POOL MEMBER ID');
     if (this.isMember.has_voted) {
       console.log('YOU HAVE ALREADY VOTED');
       return 'YOU HAVE ALREADY VOTED';
@@ -173,7 +171,6 @@ export class GrouppageComponent implements OnInit, AfterViewInit, OnDestroy {
 
   acceptRequest(request) {
     request.status = 'accepted';
-    console.log(request);
     this._poolsService.resJoinRequest(request).subscribe(
       res => console.log(res),
       err => console.log(err),
@@ -182,7 +179,6 @@ export class GrouppageComponent implements OnInit, AfterViewInit, OnDestroy {
   }
   declineRequest(request) {
     request.status = 'declined';
-    console.log(request);
     this._poolsService.resJoinRequest(request).subscribe(
       res => console.log(res),
       err => console.log(err),
@@ -223,7 +219,6 @@ export class GrouppageComponent implements OnInit, AfterViewInit, OnDestroy {
             (servResult: any) => {
               const { result } = servResult;
               const { contributionEntry, updatedPool } = result;
-              console.log(result, 'SUCCESS');
               const { contribution_amount } = contributionEntry;
               this.pool = updatedPool;
               this.isMember.contrubution_amount += contribution_amount;
@@ -265,7 +260,6 @@ export class GrouppageComponent implements OnInit, AfterViewInit, OnDestroy {
       this._poolsService.joinPool(poolid, null).subscribe(
         success => {
           groupPage.checkIsMember(poolid);
-          console.log(success, 'Success!');
         },
         err => console.log(err, 'ERROR'),
         () => console.log('done joining pool')
