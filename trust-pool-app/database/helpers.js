@@ -32,6 +32,13 @@ const models = {
   JoinRequests
 };
 
+const deliveryServices = {
+  Checks: (checkInfo) => {
+    console.log(checkInfo, 'CHECK INFO');
+    return Promise.resolve('Delivered');
+  }
+};
+
 const findOne = (model, where) => new Promise((resolve, reject) => {
   models[model].find(where)
     .then((item) => {
@@ -41,7 +48,6 @@ const findOne = (model, where) => new Promise((resolve, reject) => {
       reject(err);
     });
 });
-
 
 const findUserById = id => findOne('Users', { where: { id } });
 
@@ -61,6 +67,8 @@ const findPoolMember = (pool_member_id, pool_id, id) => {
 const findPoolByName = name => findOne('Pools', { where: { name } });
 
 const findPoolById = id => findOne('Pools', { where: { id } });
+
+const findLinkById = id => findOne('ExpenseRequestLink', { where: { id } });
 
 const findExpenseRequestById = id => findOne('ExpenseRequest', { where: { id } });
 
@@ -157,6 +165,22 @@ const findOrCreateUser = (email, first_name, last_name, image_url, password, goo
 };
 
 const create = (model, item) => models[model].create(item);
+
+const createCheckEntry = (
+  amount,
+  name,
+  email,
+  description,
+  physical_address,
+  link_id
+) => create('Checks', {
+  amount,
+  name,
+  email,
+  description,
+  physical_address,
+  link_id
+});
 
 const updatePool = (id, key, value) => findPoolById(id)
   .then((pool) => {
@@ -305,7 +329,7 @@ const createExpenseRequest = (
 };
 
 // createExpenseRequest(
-//   32,
+//   8,
 //   1,
 //   'yoo lets pay my rent',
 //   'description',
@@ -313,7 +337,11 @@ const createExpenseRequest = (
 //   new Date(),
 //   1
 // )
-//   .then(succ => console.log(succ))
+//   .then((succ) => {
+//     console.log(succ);
+//     return createCheckEntry(100, 'Jelani Hankins', 'jhankins02@gmail.com', 'test check', null, null, 8)
+//       .then(checkEntryRes => console.log('MADE CHECK ENTRY', checkEntryRes));
+//   })
 //   .catch(err => console.log(err));
 
 const createJoinRequest = (user_id, pool_id) => {
@@ -366,7 +394,20 @@ const findUserByGoogleAndUpdate = (googleID, newInfo) => {
   });
 };
 
+// find method link by id
+const executeDeliveryMethod = link_id => findLinkById(link_id)
+  .then((link) => {
+  // get method type string
+    const { method } = link;
+    return findOne(method, { where: { link_id } })
+      .then(methodTypeInfo => deliveryServices[method](methodTypeInfo));
+  // execute deliver method type with method type info
+  });
+
+
 module.exports = {
+  findLinkById,
+  executeDeliveryMethod,
   createJoinRequest,
   findOrCreate,
   findOrCreateUser,
