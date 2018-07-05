@@ -204,9 +204,10 @@ export class GrouppageComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   async onSubmit(form: NgForm, poolId) {
+    const { isMember, _poolsService, card, pool} = this
     const { amount } = form.value;
-    const { token, error } = await stripe.createToken(this.card);
-    if (!this.isMember) {
+    const { token, error } = await stripe.createToken(card);
+    if (!isMember) {
       console.log('YOU ARE NOT A MEMBER OF THIS GROUP');
     }
     if (error) {
@@ -217,15 +218,16 @@ export class GrouppageComponent implements OnInit, AfterViewInit, OnDestroy {
       if (decimalStr && decimalStr.length > 2) {
         this.error = 'Too Many Decimals'
       } else if (!decimalStr) {
-        this._poolsService.sendContrib(token, poolId, amount * 100)
+        _poolsService.sendContrib(token, poolId, amount * 100, isMember.id)
           .subscribe(
-            (result: any) => {
-              const { success } = result;
-              const { contribution } = success;
-              console.log(success, 'SUCCESS');
-              const { contribution_amount } = contribution;
-              this.pool.pool_value += contribution_amount;
+            (servResult: any) => {
+              const { result } = servResult;
+              const { contributionEntry, updatedPool } = result;
+              console.log(result, 'SUCCESS');
+              const { contribution_amount } = contributionEntry;
+              this.pool = updatedPool;
               this.isMember.contrubution_amount += contribution_amount;
+              // get vote power back, / get new isMember
             },
             err => console.log(err, 'ERROR'),
             () => console.log('done contributing to pool')
@@ -234,7 +236,7 @@ export class GrouppageComponent implements OnInit, AfterViewInit, OnDestroy {
         if (decimalStr.length === 1) {
           amountArr[1] = decimalStr + '0';
         }
-        this._poolsService.sendContrib(token, poolId, amountArr.join(''))
+        _poolsService.sendContrib(token, poolId, amountArr.join(''), isMember.id)
           .subscribe(
             success => { console.log(success, 'SUCCESS') },
             err => console.log(err, 'ERROR'),
