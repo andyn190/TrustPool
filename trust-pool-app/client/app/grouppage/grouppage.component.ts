@@ -130,6 +130,14 @@ export class GrouppageComponent implements OnInit, AfterViewInit, OnDestroy {
     );
   }
 
+  approveExpenseRequest(request) {
+
+  }
+
+  declineExpenseRequest(request) {
+
+  }
+
   acceptRequest(request) {
     request.status = 'accepted';
     console.log(request);
