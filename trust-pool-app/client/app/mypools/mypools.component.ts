@@ -30,7 +30,7 @@ export class MypoolsComponent implements OnInit{
       this.userPools = pools;
       this.userPools.forEach((pool) =>{
         const poolsJoin = {};
-        poolsJoin['contrubution_amount'] = pool.contrubution_amount
+        poolsJoin['contribution_amount'] = pool.contrubution_amount
         poolsJoin['id'] = pool.id;
         this._poolsService.getPool(pool.pool_id).subscribe(userPool => {
           poolsJoin['name'] = userPool['name'];
