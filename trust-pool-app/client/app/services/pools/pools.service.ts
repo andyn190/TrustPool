@@ -25,6 +25,10 @@ export class PoolsService {
     return this.http.get(`/pools/${poolid}/joinrequests`);
   }
 
+  getExpenseRequests(poolid) {
+    return this.http.get(`/pools/${poolid}/expenserequests`);
+  }
+
   checkIsMember(poolid){
     return this.http.get(`/pools/${poolid}/ismember`);
   }
