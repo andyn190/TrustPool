@@ -187,14 +187,14 @@ const createContribution = (pool_id, pool_member_id, contribution_amount) => {
 };
 
 const createPoolMember = (pool_id, pool_member_id, is_creator) => {
-  const contrubution_amount = 0;
-  const withdraw_amount = 0;
   const poolMember = {
+    withdraw_amount: 0,
     pool_id,
     pool_member_id,
-    contrubution_amount,
-    withdraw_amount,
-    is_creator
+    contrubution_amount: 0,
+    is_creator,
+    vote_power: 0,
+    has_voted: null
   };
   const memberArchive = {};
   findAllPoolMembers(pool_id).then((members) => {
