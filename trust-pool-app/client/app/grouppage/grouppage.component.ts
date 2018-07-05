@@ -131,14 +131,15 @@ export class GrouppageComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   approveExpenseRequest(request) {
-    const { isMember, _poolsService } = this;
+    const { isMember, _poolsService, pool } = this;
+    // this.isMember.vote_power = 20;
     console.log(isMember.id, 'POOL MEMBER ID');
     if (isMember.has_voted){
       console.log('YOU HAVE ALREADY VOTED');
       return 'YOU HAVE ALREADY VOTED';
     }
     
-    _poolsService.approveExpenseRequest(request, isMember.vote_power, isMember.id).subscribe(
+    _poolsService.approveExpenseRequest(request.id, isMember.vote_power, isMember.id, pool.id).subscribe(
       res => {
         request.voter_count += 1;
         request.vote_up += isMember.vote_power;
@@ -152,13 +153,13 @@ export class GrouppageComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   declineExpenseRequest(request) {
-    const { isMember, _poolsService } = this;
+    const { isMember, _poolsService, pool} = this;
     console.log(isMember.id, 'POOL MEMBER ID');
     if (this.isMember.has_voted) {
       console.log('YOU HAVE ALREADY VOTED');
       return 'YOU HAVE ALREADY VOTED';
     }
-    _poolsService.declineExpenseRequest(request, isMember.vote_power, isMember.id).subscribe(
+    _poolsService.declineExpenseRequest(request.id, isMember.vote_power, isMember.id, pool.id).subscribe(
       res => {
         request.voter_count += 1;
         request.vote_down += isMember.vote_power;
