@@ -1,7 +1,9 @@
 import { Component, OnInit, Optional } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { FormGroup, FormBuilder, Validators, NgForm } from "@angular/forms";
+
 import { OwnAuthService } from '../services/auth/auth.service';
+import { CheckFormComponent } from '../check-form/check-form.component';
 
 @Component({
   selector: 'app-expense-form',
@@ -15,9 +17,10 @@ export class ExpenseFormComponent implements OnInit {
     private route: ActivatedRoute,
     private auth: OwnAuthService
   ) { }
-  public poolid : number
-  private sub : any
-  private user: any
+  public poolid : number;
+  private sub : any;
+  private user: any;
+  public click: boolean;
 
   ngOnInit() {
     this.route.queryParams
@@ -29,6 +32,9 @@ export class ExpenseFormComponent implements OnInit {
     })
   }
   handleExpenseSubmit() {
-    
+
+  }
+  clicked() {
+    this.click = !this.click;
   }
 }
