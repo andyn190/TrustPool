@@ -179,18 +179,17 @@ pools.post('/:requestId/accept', (req, res) => {
       const { id } = request;
       return updateExpenseRequest(id, 'voter_count', 1);
     })
-    .then(requestEntry => updatePoolMember(null, null, 'has_voted', 't', memberId)
-      .then(() => requestEntry))
     .then((requestEntry) => {
       const { voter_count, vote_up } = requestEntry;
       if (vote_up >= voteConfig) {
-        res.status(200).json({ success: 'VOTE PASSED' });
+        res.status(200).json({ success: 'CONCLUDED: VOTE PASSED' });
       } else if (voter_count === poolMembersCount) {
         res.status(200).json({ success: 'EVERYONE HAS VOTED BUT POWER WAS NOT MET' });
       } else {
         res.status(200).json({ success: 'vote to accept submitted' });
       }
     })
+    .then(() => updatePoolMember(null, null, 'has_voted', 't', memberId))
     .catch(err => res.status(200).json({ err }));
 });
 
@@ -209,18 +208,17 @@ pools.post('/:requestId/decline', (req, res) => {
       const { id } = request;
       return updateExpenseRequest(id, 'voter_count', 1);
     })
-    .then(requestEntry => updatePoolMember(null, null, 'has_voted', 't', memberId)
-      .then(() => requestEntry))
     .then((requestEntry) => {
       const { voter_count, vote_down } = requestEntry;
       if (vote_down >= voteConfig) {
-        res.status(200).json({ success: 'VOTING FINISHED: DECLINED' });
+        res.status(200).json({ success: 'CONCLUDED: VOTE NOT PASSED' });
       } else if (voter_count === poolMembersCount) {
         res.status(200).json({ success: 'EVERYONE HAS VOTED BUT POWER WAS NOT MET' });
       } else {
         res.status(200).json({ success: 'vote to decline submitted' });
       }
     })
+    .then(() => updatePoolMember(null, null, 'has_voted', 't', memberId))
     .catch(err => res.status(200).json({ err }));
 });
 
