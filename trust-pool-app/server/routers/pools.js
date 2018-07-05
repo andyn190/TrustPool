@@ -173,26 +173,31 @@ pools.post('/create', (req, res) => {
 });
 
 pools.post('/expense', (req, res) => {
+  const { body, user } = req;
   const {
     pool_id,
-    creator,
     request_title,
     description,
     expense_amount,
     expiration_date,
     method
-  } = req.body;
+  } = body;
+  const { googleID } = user;
 
-  createExpenseRequest(
-    pool_id,
-    creator,
-    request_title,
-    description,
-    expense_amount,
-    expiration_date,
-    method
-  )
-    .then(expenseRequestEntry => res.status(200).json(expenseRequestEntry))
+  findUserByGoogle(googleID)
+    .then((resUser) => {
+      const { id } = resUser;
+      return createExpenseRequest(
+        pool_id,
+        id,
+        request_title,
+        description,
+        expense_amount,
+        expiration_date,
+        method
+      )
+        .then(expenseRequestEntry => res.status(200).json(expenseRequestEntry));
+    })
     .catch(err => res.status(200).json(err));
 });
 
