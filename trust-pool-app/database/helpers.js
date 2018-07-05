@@ -4,7 +4,7 @@ const {
   sequelize,
   Users,
   Pools,
-  ExpenseRequestType,
+  ExpenseRequestLink,
   ExpenseRequest,
   ContributionEntry,
   PoolMembers,
@@ -21,7 +21,7 @@ mailgun = mailgun({ apiKey, domain });
 const models = {
   Users,
   Pools,
-  ExpenseRequestType,
+  ExpenseRequestLink,
   ExpenseRequest,
   ContributionEntry,
   PoolMembers,
@@ -148,7 +148,12 @@ const findOrCreateUser = (email, first_name, last_name, image_url, password, goo
   return 'NO EMAIL OR GOOGLE ID';
 };
 
-const create = (model, item) => models[model].create(item);
+const create = (model, item) => {
+  if (item) {
+    return models[model].create(item);
+  }
+  return models[model].create();
+};
 
 const updatePool = (id, key, value) => findPoolById(id)
   .then((pool) => {
@@ -228,6 +233,9 @@ const createPool = (name, imageURL, description, voteConfig, creator, publicOpt)
         .then((poolmember) => { return { poolmember, newPool }; });
     });
 };
+
+const createExpenseRequestLink = () => create('ExpenseRequestLink');
+
 
 const createExpenseRequest = (
   pool_id,
