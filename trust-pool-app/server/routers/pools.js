@@ -164,11 +164,15 @@ pools.get('/:poolId/expenserequests', (req, res) => {
 });
 
 pools.post('/:requestId/accept', (req, res) => {
-
+  const { params, user } = req;
+  const { requestId } = params;
+  res.status(200).send({ success: 'vote to approve sent' });
 });
 
 pools.post('/:requestId/decline', (req, res) => {
-
+  const { params, user } = req;
+  const { requestId } = params;
+  res.status(200).send({ success: 'vote to decline sent' });
 });
 
 pools.post('/create', (req, res) => {
