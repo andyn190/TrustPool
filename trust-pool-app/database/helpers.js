@@ -216,6 +216,7 @@ const createContribution = (pool_id, pool_member_id, contribution_amount) => {
         console.log(newVotePower);
         if (newVotePower > 50) {
           newVotePower = 49;
+          // recalculate everyones vote power to account for this
         }
         updatePoolMember(null, null, 'vote_power', newVotePower, member.id);
       });
