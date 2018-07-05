@@ -131,24 +131,43 @@ export class GrouppageComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   approveExpenseRequest(request) {
-    if (this.isMember.has_voted){
+    const { isMember, _poolsService } = this;
+    console.log(isMember.id, 'POOL MEMBER ID');
+    if (isMember.has_voted){
       console.log('YOU HAVE ALREADY VOTED');
       return 'YOU HAVE ALREADY VOTED';
     }
-    request.voter_count += 1;
-    request.vote_up += this.isMember.vote_power;
-    this.isMember.has_voted = 't';
     
+    _poolsService.approveExpenseRequest(request, isMember.vote_power, isMember.id).subscribe(
+      res => {
+        request.voter_count += 1;
+        request.vote_up += isMember.vote_power;
+        isMember.has_voted = 't';
+        console.log(res);
+      },
+      err => console.log(err),
+      () => console.log('done loading pool')
+    );
+
   }
 
   declineExpenseRequest(request) {
+    const { isMember, _poolsService } = this;
+    console.log(isMember.id, 'POOL MEMBER ID');
     if (this.isMember.has_voted) {
       console.log('YOU HAVE ALREADY VOTED');
       return 'YOU HAVE ALREADY VOTED';
     }
-    request.voter_count += 1;
-    request.vote_down += this.isMember.vote_power;
-    this.isMember.has_voted = 't';
+    _poolsService.declineExpenseRequest(request, isMember.vote_power, isMember.id).subscribe(
+      res => {
+        request.voter_count += 1;
+        request.vote_down += isMember.vote_power;
+        isMember.has_voted = 't';
+        console.log(res);
+      },
+      err => console.log(err),
+      () => console.log('done loading pool')
+    );
   }
 
   acceptRequest(request) {
