@@ -1,24 +1,25 @@
 <form role="form" #expenseRequest="ngForm" (ngSubmit)="handleExpenseSubmit(expenseRequest.form)">
   <div class="form-group row">
-    <label for="inputEmail3" class="col-sm-2 col-form-label">Title</label>
+    <label class="col-sm-2 col-form-label">Title</label>
     <div class="col-sm-10">
-      <input type="text" class="form-control" placeholder="Title" ngModel required [(ngModel)]="title" #nameField="ngModel">
+      <input type="text" class="form-control" placeholder="Title" ngModel required [(ngModel)]="title" #nameField="ngModel" name="title">
     </div>
   </div>
   <div class="form-group row">
-    <label for="inputPassword3" class="col-sm-2 col-form-label">Description</label>
+    <label class="col-sm-2 col-form-label">Description</label>
     <div class="col-sm-10">
-      <input type="password" class="form-control" placeholder="A short description for the request" ngModel required [(ngModel)]="description" #namefield="ngModel">
+      <input type="text" class="form-control" placeholder="A short description for the request" ngModel required
+      [(ngModel)]="description" #namefield="ngModel" name="description">
     </div>
   </div>
   <div class="form-group row">
-    <label for="inputPassword3" class="col-sm-2 col-form-label">Expiration Date</label>
+    <label class="col-sm-2 col-form-label">Expiration Date</label>
     <div class="col-sm-10">
-      <input type="date" class="form-control" ngModel required [(ngModel)]="expirationDate" #namefield="ngModel">
+      <input type="date" class="form-control" ngModel required [(ngModel)]="expirationDate" #namefield="ngModel" name="expirationDate">
     </div>
   </div>
   <div class="form-group row" *ngIf="click">
-    <label for="inputPassword3" class="col-sm-2 col-form-label">Check Information</label>
+    <label class="col-sm-2 col-form-label">Check Information</label>
     <div class="col-sm-10">
       <app-check-form></app-check-form>
     </div>
@@ -26,7 +27,7 @@
   <div class="form-group row">
     <div class="col-sm-10">
       <button type="submit" class="btn btn-primary">Submit Request</button>
-      <button (click)="clicked()" class="btn btn-primary">Send a Check</button>
     </div>
   </div>
 </form>
+<button (click)="checkClicked()" class="btn btn-primary">Send a Check</button>

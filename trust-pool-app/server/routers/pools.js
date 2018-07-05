@@ -74,7 +74,7 @@ pools.post('/mailinvite', (req, res) => {
         }
       });
     })
-    .catch(err => console.log('error'));
+    .catch(err => console.log(`error: ${err}`));
 });
 
 pools.get('/:poolid/ismember', (req, res) => {

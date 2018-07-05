@@ -332,8 +332,10 @@ sequelize
 // ContributionEntry.sync({ force: true })
 //  .then(res => console.log(res)).catch(err => console.log(err));
 // JoinRequests.sync({ force: true }).then(res => console.log(res)).catch(err => console.log(err));
-// ExpenseRequestLink.sync({ force: true }).then(res => console.log(res)).catch(err => console.log(err));
-// ExpenseRequest.sync({ force: true }).then(res => console.log(res)).catch(err => console.log(err));
+// ExpenseRequestLink.sync({ force: true }).then(res => console.log(res))
+// .catch(err => console.log(err));
+// ExpenseRequest.sync({ force: true }).then(res => console.log(res))
+// .catch(err => console.log(err));
 // sequelize.sync({ force: true }).then(res => console.log(res)).catch(err => console.log(err));
 
 module.exports = {

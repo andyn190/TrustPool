@@ -21,6 +21,10 @@ export class ExpenseFormComponent implements OnInit {
   private sub : any;
   private user: any;
   public click: boolean;
+  private title: string;
+  private desc: string;
+  private expDate: Date;
+  private method: string;
 
   ngOnInit() {
     this.route.queryParams
@@ -31,10 +35,16 @@ export class ExpenseFormComponent implements OnInit {
       this.user = user;
     })
   }
-  handleExpenseSubmit() {
-
+  handleExpenseSubmit(form) {
+    const { title, description, expirationDate } = form.value;
+    this.title = title;
+    this.desc = description;
+    this.expDate = expirationDate;
+    console.log(title, description, expirationDate);
   }
-  clicked() {
+  checkClicked() {
     this.click = !this.click;
+    this.method = 'check';
+    console.log(this.method);
   }
 }
