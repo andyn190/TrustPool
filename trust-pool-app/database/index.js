@@ -206,6 +206,12 @@ const PoolMembers = sequelize.define('Pool_Members', {
   },
   withdraw_amount: {
     type: Sequelize.INTEGER
+  },
+  has_voted: {
+    type: Sequelize.STRING
+  },
+  vote_power: {
+    type: Sequelize.INTEGER
   }
 });
 
@@ -332,8 +338,6 @@ sequelize
 
 // PoolMembers.sync({ force: true }).then(res => console.log(res)).catch(err => console.log(err));
 // Pools.sync({ force: true }).then(res => console.log(res)).catch(err => console.log(err));
-// ContributionEntry.sync({ force: true }).then(res => console.log(res)).catch(err =>
-// console.log(err));
 // sequelize.sync({ force: true }).then(res => console.log(res)).catch(err => console.log(err));
 // ContributionEntry.sync({ force: true })
 //  .then(res => console.log(res)).catch(err => console.log(err));
