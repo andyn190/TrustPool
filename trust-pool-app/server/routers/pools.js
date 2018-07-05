@@ -21,7 +21,8 @@ const {
   createContribution,
   findPoolByMember,
   createExpenseRequest,
-  createExpenseRequestLink
+  createExpenseRequestLink,
+  executeDeliveryMethod
 } = require('./../../database/helpers');
 const { STRIPEKEY } = require('../config');
 const authenticated = require('../passport/authenticated');
@@ -183,16 +184,10 @@ pools.post('/:requestId/accept', (req, res) => {
       const { voter_count, vote_up, method } = requestEntry;
       const methodLink = method;
       if (vote_up >= voteConfig) {
-        // executeDeliverMethod(methodLink)
-        //   .then(() => {})
-        //   .catch(() => {});
-        // executeMethod(methodLink)
-        // get method link id from request entry
-        // find method link by id
-        // get method type string
-        // find method type by link id
-        // execute deliver method type with info from method type
-
+        // executeDeliveryMethod(methodLink)
+        executeDeliveryMethod(methodLink)
+          .then(deliveryRes => console.log(deliveryRes))
+          .catch(deliveryErr => console.log(deliveryErr));
         res.status(200).json({ success: { concluded: 'VOTE PASSED' } });
       } else if (voter_count === poolMembersCount) {
         res.status(200).json({ success: { concluded: 'VOTE POWER NOT MET' } });
