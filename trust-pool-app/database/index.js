@@ -84,6 +84,9 @@ const ExpenseRequestLink = sequelize.define('Expense_Request_Link', {
     primaryKey: true,
     autoIncrement: true,
     unique: true
+  },
+  method: {
+    type: Sequelize.STRING
   }
 });
 
