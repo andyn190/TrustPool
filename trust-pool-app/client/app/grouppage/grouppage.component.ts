@@ -132,7 +132,6 @@ export class GrouppageComponent implements OnInit, AfterViewInit, OnDestroy {
 
   approveExpenseRequest(request) {
     const { isMember, _poolsService, pool } = this;
-    // this.isMember.vote_power = 20;
     if (isMember.has_voted){
       console.log('YOU HAVE ALREADY VOTED');
       return 'YOU HAVE ALREADY VOTED';
@@ -197,6 +196,10 @@ export class GrouppageComponent implements OnInit, AfterViewInit, OnDestroy {
 
   openInviteFriendModal(inviteFriendModal) {
     this.modalService.open(inviteFriendModal, { centered: true });
+  }
+
+  openExpenseRequestModal(expenseRequestModal){
+    this.modalService.open(expenseRequestModal, { centered: true });
   }
 
   async onSubmit(form: NgForm, poolId) {
