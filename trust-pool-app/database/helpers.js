@@ -307,7 +307,7 @@ const createExpenseRequest = (
 };
 
 // createExpenseRequest(
-//   4,
+//   5,
 //   1,
 //   'yoo lets pay my rent',
 //   'description',
@@ -339,9 +339,7 @@ const createJoinRequest = (user_id, pool_id) => {
         text: `You have received a new request to join Pool ${poolName}`
       };
 
-      mailgun.messages().send(notification, (err, body) => {
-        console.log(err, body);
-      });
+      mailgun.messages().send(notification, (err, body) => console.log(err, body));
     })
     .catch(err => console.log(err));
   return create('JoinRequests', joinRequest);
