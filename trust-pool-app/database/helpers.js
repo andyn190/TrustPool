@@ -46,7 +46,10 @@ const findUserById = id => findOne('Users', { where: { id } });
 
 const findUserByGoogle = googleID => findOne('Users', { where: { googleID } });
 
-const findPoolMember = (pool_member_id, pool_id) => {
+const findPoolMember = (pool_member_id, pool_id, id) => {
+  if (id) {
+    return findOne('PoolMembers', { where: { id } });
+  }
   if (!pool_id) {
     return PoolMembers.findAll({ where: { pool_member_id } });
   }
@@ -57,6 +60,8 @@ const findPoolMember = (pool_member_id, pool_id) => {
 const findPoolByName = name => findOne('Pools', { where: { name } });
 
 const findPoolById = id => findOne('Pools', { where: { id } });
+
+const findExpenseRequestById = id => findOne('ExpenseRequest', { where: { id } });
 
 const findAll = (model, where) => {
   if (where) {
@@ -161,6 +166,17 @@ const updatePool = (id, key, value) => findPoolById(id)
       .then(() => console.log(`POOL ${id} ${key} UPDATED ${value}!!`));
   });
 
+const updateExpenseRequest = (id, key, value) => findExpenseRequestById(id)
+  .then((request) => {
+    console.log('HERRRE');
+    if (key === 'voter_count' || key === 'vote_up') {
+      request[key] += value;
+    } else if (key === 'vote_down') {
+      request[key] -= value;
+    } else { request[key] = value; }
+    return request.save()
+      .tap(() => console.log(`Request ${id} ${key} UPDATED ${value}!!`));
+  });
 
 const updatePoolMember = (memberId, poolId, key, value) => {
   return findPoolMember(memberId, poolId)
@@ -356,5 +372,7 @@ module.exports = {
   findUserByGoogleAndUpdate,
   createExpenseRequest,
   createExpenseRequestLink,
-  findExpenseRequests
+  findExpenseRequests,
+  findExpenseRequestById,
+  updateExpenseRequest
 };
