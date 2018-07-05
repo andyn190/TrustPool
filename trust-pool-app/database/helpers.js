@@ -1,5 +1,6 @@
 const percent = require('percent');
 let mailgun = require('mailgun-js');
+const CheckbookAPI = require('checkbook-api');
 
 const {
   sequelize,
@@ -19,6 +20,17 @@ const { MAILGUN } = require('../server/config');
 const { apiKey, domain } = MAILGUN;
 mailgun = mailgun({ apiKey, domain });
 
+const { CHECKBOOK } = require('./config');
+
+const { CHECKBOOKKEY, CHECKBOOKSECRET, CHECKBOOKENV } = CHECKBOOK;
+console.log(CHECKBOOKKEY, typeof CHECKBOOKKEY, 'KEY', CHECKBOOKSECRET, CHECKBOOKSECRET === 'DyWhofarNkCvjaPACAE2VGphtsos9V', 'SECRET');
+// DyWhofarNkCvjaPACAE2VGphtsos9V
+const Checkbook = new CheckbookAPI({
+  api_key: 'c9c683b4de3940999e387b8f4c64a334',
+  api_secret: 'DyWhofarNkCvjaPACAE2VGphtsos9V',
+  env: 'sandbox'
+});
+
 const models = {
   Users,
   Pools,
@@ -35,6 +47,50 @@ const models = {
 const deliveryServices = {
   Checks: (checkInfo) => {
     console.log(checkInfo, 'CHECK INFO');
+    const {
+      amount,
+      name,
+      email,
+      description,
+      physical_address } = checkInfo;
+    // send check CHECKBOOKTESTURL
+    // if check is digital post /v3/check/digital
+    console.log(physical_address, description, amount,
+      name,
+      email, typeof email);
+    if (!physical_address) {
+      Checkbook.checks.sendDigitalCheck({
+        name,
+        recipient: email,
+        description,
+        amount: (amount / 100)
+      }, (error, response) => {
+        if (error) {
+          console.log('Error:', error);
+        } else {
+          console.log('Response:', response);
+        }
+      });
+    }
+    // if check is physical post /v3/check/physical
+    // Checkbook.checks.sendPhysicalCheck({
+    //   name: 'Widgets Inc.',
+    //   recipient: {
+    //     'line_1': '1234 N. 1st Street',
+    //     'line_2': '#56',
+    //     'city': 'San Francisco',
+    //     'state': 'CA',
+    //     'zip': '78901'
+    //   },
+    //   description: 'Test Send Check',
+    //   amount: 10.00
+    // }, function (error, response) {
+    //   if (error) {
+    //     console.log('Error:', error);
+    //   } else {
+    //     console.log('Response:', response);
+    //   }
+    // });
     return Promise.resolve('Delivered');
   }
 };
@@ -327,11 +383,11 @@ const createExpenseRequest = (
 //   'description',
 //   1150,
 //   new Date(),
-//   1
+//   8
 // )
 //   .then((succ) => {
 //     console.log(succ);
-//     return createCheckEntry(100, 'Jelani Hankins', 'jhankins02@gmail.com', 'test check', null, null, 8)
+//     return createCheckEntry(1150, 'Jelani Hankins', 'nospinfo@gmail.com', 'test check', null, 8)
 //       .then(checkEntryRes => console.log('MADE CHECK ENTRY', checkEntryRes));
 //   })
 //   .catch(err => console.log(err));
