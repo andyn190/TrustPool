@@ -114,6 +114,12 @@ const ExpenseRequest = sequelize.define('Expense_Request', {
   voter_count: {
     type: Sequelize.INTEGER
   },
+  vote_down: {
+    type: Sequelize.INTEGER
+  },
+  vote_up: {
+    type: Sequelize.INTEGER
+  },
   expense_amount: {
     type: Sequelize.INTEGER
   },
