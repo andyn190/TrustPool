@@ -19,16 +19,23 @@ export class ExpenseFormComponent implements OnInit {
     private auth: OwnAuthService,
     private poolService: PoolsService
   ) { }
-  public poolid : number;
-  private sub : any;
+  public poolid: number;
+  private sub: any;
   private user: any;
   public click: boolean;
   private title: string;
   private desc: string;
   private expDate: Date;
   private method: string;
+  amount: number;
   link: any;
   recipientName: string;
+  recipientEmail: string;
+  recipientStreet: string;
+  recipientCity: string;
+  recipientState: string;
+  recipientZip: string;
+  
   ngOnInit() {
     this.route.queryParams
       .subscribe(params => {
@@ -39,41 +46,50 @@ export class ExpenseFormComponent implements OnInit {
     })
   }
   handleExpenseSubmit(form) {
-    const { title, description, expirationDate, recipientName } = form.value;
+    const { title, description, expirationDate, amount } = form.value;
     this.title = title;
     this.desc = description;
     this.expDate = expirationDate;
-    console.log(title, description, expirationDate, recipientName);
+    this.amount = amount;
+    const options = {
+      request_title: title,
+      description,
+      expiration_date: expirationDate,
+      pool_id: this.poolid,
+      method: this.link.id,
+      expense_amount: this.amount
+    };
+    const Checkinfo = {
+
+    }
+    this.poolService.sendExpenseRequest(options).subscribe((data) => {
+      console.log(data);
+    })
   }
   receiveName($event) {
     this.recipientName = $event;
-    console.log(this.recipientName);
   }
   receiveEmail($event) {
-    this.recipientName = $event;
-    console.log(this.recipientName);
+    this.recipientEmail = $event;
   }
   receiveStreet($event) {
-    this.recipientName = $event;
-    console.log(this.recipientName);
+    this.recipientStreet = $event;
   }
   receiveCity($event) {
-    this.recipientName = $event;
-    console.log(this.recipientName);
+    this.recipientCity = $event;
   }
   receiveState($event) {
-    this.recipientName = $event;
-    console.log(this.recipientName);
+    this.recipientState = $event;
+    
   }
   receiveZip($event) {
-    this.recipientName = $event;
-    console.log(this.recipientName);
+    this.recipientZip = $event;
   }
   checkClicked() {
     this.click = !this.click;
-    this.method = 'check';
-    // this.poolService.sendExpenseRequestMethod({ method: this.method }).subscribe(link => {
-    //   this.link = link;
-    // })
+    this.method = 'Checks';
+    this.poolService.sendExpenseRequestMethod({ method: this.method }).subscribe(({ link }: any) => {
+      this.link = link
+    })
   }
 }

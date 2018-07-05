@@ -231,6 +231,18 @@ const createPool = (name, imageURL, description, voteConfig, creator, publicOpt)
 
 const createExpenseRequestLink = method => create('ExpenseRequestLink', { method });
 
+const createCheck = (amount, name, email, description, isPhysical, address, methodId) => {
+  const check = {
+    amount,
+    name,
+    email,
+    description,
+    is_physical: isPhysical,
+    physical_address: address,
+    expense_request_type_id: methodId
+  };
+  return Checks.create(check);
+};
 
 const createExpenseRequest = (
   pool_id,
@@ -336,5 +348,6 @@ module.exports = {
   getJoinRequests,
   findUserByGoogleAndUpdate,
   createExpenseRequest,
-  createExpenseRequestLink
+  createExpenseRequestLink,
+  createCheck
 };
