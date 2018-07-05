@@ -169,10 +169,8 @@ const updatePool = (id, key, value) => findPoolById(id)
 
 const updateExpenseRequest = (id, key, value) => findExpenseRequestById(id)
   .then((request) => {
-    if (key === 'voter_count' || key === 'vote_up') {
+    if (key === 'voter_count' || key === 'vote_up' || key === 'vote_down') {
       request[key] += value;
-    } else if (key === 'vote_down') {
-      request[key] -= value;
     } else { request[key] = value; }
     return request.save()
       .tap(() => console.log(`Request ${id} ${key} UPDATED ${value}!!`));
@@ -194,7 +192,7 @@ const updatePoolMember = (
       member[key] = value;
     }
     return member.save()
-      .tap(() => console.log(`POOL MEMBER ${memberId} ${key} UPDATED ${value}!!`));
+      .tap(() => console.log(`POOL MEMBER ${memberId || poolMemberId} in pool ${poolId} ${key} UPDATED ${value}!!`));
   });
 
 
@@ -307,7 +305,7 @@ const createExpenseRequest = (
 };
 
 // createExpenseRequest(
-//   5,
+//   30,
 //   1,
 //   'yoo lets pay my rent',
 //   'description',
