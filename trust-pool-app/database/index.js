@@ -327,7 +327,6 @@ module.exports = {
   sequelize,
   Users,
   Pools,
-  ExpenseRequestType,
   ExpenseRequest,
   ContributionEntry,
   PoolMembers,
