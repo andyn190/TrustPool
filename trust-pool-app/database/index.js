@@ -78,15 +78,6 @@ const Pools = sequelize.define('Pools', {
 
 Pools.belongsTo(Users, { foreignKey: 'creator' });
 
-const ExpenseRequestType = sequelize.define('Expense_Request_Type', {
-  id: {
-    type: Sequelize.INTEGER,
-    primaryKey: true,
-    autoIncrement: true,
-    unique: true
-  }
-});
-
 const ExpenseRequest = sequelize.define('Expense_Request', {
   id: {
     type: Sequelize.INTEGER,
@@ -131,13 +122,11 @@ const ExpenseRequest = sequelize.define('Expense_Request', {
   request_title: {
     type: Sequelize.TEXT
   },
-  method: {
-    type: Sequelize.INTEGER,
-    references: {
-      model: ExpenseRequestType,
-      key: 'id',
-      deferrable: Sequelize.Deferrable.INITIALLY_IMMEDIATE
-    }
+  method_id: {
+    type: Sequelize.INTEGER
+  },
+  method_type: {
+    type: Sequelize.STRING
   }
 });
 
