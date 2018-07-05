@@ -2,19 +2,27 @@
   <table class="table table-striped table-dark">
     <thead>
       <th>
-        Created By
+        Group Image
       </th>
       <th>
-        Contribution Amount
+        Group Name
       </th>
       <th>
-        Pool ID
+         Group Description
+      </th>
+      <th>
+        Your Contributions
+      </th>
+      <th>
+        View Group
       </th>
     </thead>
-        <tbody *ngFor="let pool of userPools">
-          <td>{{pool.pool_member_id}}</td>
-          <td>{{pool.contrubution_amount / 100}}</td>
-          <td>{{pool.pool_id}}</td>
+        <tbody *ngFor="let userPool of pools">
+          <td><img alt="Bootstrap Image Preview" [src]="userPool.imageURL" height="250" width="250"></td>
+          <td>{{ userPool.name }}</td>
+          <td>{{ userPool.description }}</td>
+          <td>${{ userPool.contribution_amount / 100 }}</td>
+          <button class="btn btn-primary btn-sm" (click)='viewGroup(userPool.id)'> View Group </button>
         </tbody>
   </table>
 </div>
