@@ -7,6 +7,7 @@ const {
   findPoolById,
   findPoolByName,
   findAllPools,
+  findExpenseRequests,
   findPublicPools,
   createPoolMember,
   createJoinRequest,
@@ -133,6 +134,22 @@ pools.post('/joinrequests', (req, res) => {
 pools.get('/:poolId', (req, res) => {
   const { poolId } = req.params;
   findPoolById(poolId)
+    .then((pool) => {
+      if (pool) {
+        res.status(200).send(pool);
+      } else {
+        res.status(200).send({ error: 'Pool Not Found' });
+      }
+    })
+    .catch((err) => {
+      res.status(500).send(err);
+    });
+  // this will respond with the pool requested
+});
+
+pools.get('/:poolId/expenserequests', (req, res) => {
+  const { poolId } = req.params;
+  findExpenseRequests(poolId)
     .then((pool) => {
       if (pool) {
         res.status(200).send(pool);
