@@ -255,7 +255,12 @@ const createExpenseRequest = (
     voter_count: 0
   };
 
-  return create('ExpenseRequest', expenseRequest);
+  return findExpenseRequests(pool_id).then((requests) => {
+    if (requests.length > 0) {
+      return Promise.reject(new Error('CAN ONLY HAVE 1 EXPENSE REQUEST OPEN PER POOL AT A GIVEN TIME'));
+    }
+    return create('ExpenseRequest', expenseRequest);
+  });
 };
 
 const createJoinRequest = (user_id, pool_id) => {
