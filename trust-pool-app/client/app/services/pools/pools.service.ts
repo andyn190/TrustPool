@@ -44,8 +44,8 @@ export class PoolsService {
     return this.http.post('/pools/join', {poolid}, httpOptions);
   }
 
-  sendContrib(stripeToken, poolId, amount){
-    return this.http.post('/pools/contribute', { stripeToken, poolId, amount }, httpOptions);
+  sendContrib(stripeToken, poolId, amount, memberId){
+    return this.http.post('/pools/contribute', { stripeToken, poolId, amount, memberId }, httpOptions);
   }
 
   resJoinRequest(joinRequest){
