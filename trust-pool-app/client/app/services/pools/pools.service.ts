@@ -25,6 +25,10 @@ export class PoolsService {
     return this.http.get(`/pools/${poolid}/joinrequests`);
   }
 
+  getExpenseRequests(poolid) {
+    return this.http.get(`/pools/${poolid}/expenserequests`);
+  }
+
   checkIsMember(poolid){
     return this.http.get(`/pools/${poolid}/ismember`);
   }
@@ -40,12 +44,20 @@ export class PoolsService {
     return this.http.post('/pools/join', {poolid}, httpOptions);
   }
 
-  sendContrib(stripeToken, poolId, amount){
-    return this.http.post('/pools/contribute', { stripeToken, poolId, amount }, httpOptions);
+  sendContrib(stripeToken, poolId, amount, memberId){
+    return this.http.post('/pools/contribute', { stripeToken, poolId, amount, memberId }, httpOptions);
   }
 
   resJoinRequest(joinRequest){
     return this.http.post('/pools/joinrequests', { joinRequest }, httpOptions);
+  }
+
+  approveExpenseRequest(requestId, votePower, memberId, poolId){
+    return this.http.post(`/pools/${requestId}/accept`, { votePower, memberId, poolId }, httpOptions);
+  }
+
+  declineExpenseRequest(requestId, votePower, memberId, poolId){
+    return this.http.post(`/pools/${requestId}/decline`, { votePower, memberId, poolId}, httpOptions);
   }
 
   sendExpenseRequest(options: object) {
