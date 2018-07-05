@@ -48,6 +48,10 @@ export class PoolsService {
     return this.http.post('/pools/joinrequests', { joinRequest }, httpOptions);
   }
 
+  sendExpenseRequestMethod(options: object) {
+    return this.http.post('/pools/expenselink', options, httpOptions);
+  }
+
   sendExpenseRequest(options: object) {
     return this.http.post('/pools/expense', options, httpOptions);
   }

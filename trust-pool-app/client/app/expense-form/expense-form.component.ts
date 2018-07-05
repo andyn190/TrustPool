@@ -3,6 +3,7 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { FormGroup, FormBuilder, Validators, NgForm } from "@angular/forms";
 
 import { OwnAuthService } from '../services/auth/auth.service';
+import { PoolsService } from '../services/pools/pools.service'
 import { CheckFormComponent } from '../check-form/check-form.component';
 
 @Component({
@@ -15,7 +16,8 @@ export class ExpenseFormComponent implements OnInit {
   constructor(
     private _router: Router,
     private route: ActivatedRoute,
-    private auth: OwnAuthService
+    private auth: OwnAuthService,
+    private poolService: PoolsService
   ) { }
   public poolid : number;
   private sub : any;
@@ -25,7 +27,8 @@ export class ExpenseFormComponent implements OnInit {
   private desc: string;
   private expDate: Date;
   private method: string;
-
+  link: any;
+  recipientName: string;
   ngOnInit() {
     this.route.queryParams
       .subscribe(params => {
@@ -36,15 +39,41 @@ export class ExpenseFormComponent implements OnInit {
     })
   }
   handleExpenseSubmit(form) {
-    const { title, description, expirationDate } = form.value;
+    const { title, description, expirationDate, recipientName } = form.value;
     this.title = title;
     this.desc = description;
     this.expDate = expirationDate;
-    console.log(title, description, expirationDate);
+    console.log(title, description, expirationDate, recipientName);
+  }
+  receiveName($event) {
+    this.recipientName = $event;
+    console.log(this.recipientName);
+  }
+  receiveEmail($event) {
+    this.recipientName = $event;
+    console.log(this.recipientName);
+  }
+  receiveStreet($event) {
+    this.recipientName = $event;
+    console.log(this.recipientName);
+  }
+  receiveCity($event) {
+    this.recipientName = $event;
+    console.log(this.recipientName);
+  }
+  receiveState($event) {
+    this.recipientName = $event;
+    console.log(this.recipientName);
+  }
+  receiveZip($event) {
+    this.recipientName = $event;
+    console.log(this.recipientName);
   }
   checkClicked() {
     this.click = !this.click;
     this.method = 'check';
-    console.log(this.method);
+    // this.poolService.sendExpenseRequestMethod({ method: this.method }).subscribe(link => {
+    //   this.link = link;
+    // })
   }
 }
