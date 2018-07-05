@@ -39,15 +39,7 @@ const deliveryServices = {
   }
 };
 
-const findOne = (model, where) => new Promise((resolve, reject) => {
-  models[model].find(where)
-    .then((item) => {
-      resolve(item);
-    })
-    .catch((err) => {
-      reject(err);
-    });
-});
+const findOne = (model, where) => models[model].find(where);
 
 const findUserById = id => findOne('Users', { where: { id } });
 
@@ -399,8 +391,12 @@ const executeDeliveryMethod = link_id => findLinkById(link_id)
   .then((link) => {
   // get method type string
     const { method } = link;
+    console.log(method, 'METHOD WHERE', link_id, 'LINK _ ID');
     return findOne(method, { where: { link_id } })
-      .then(methodTypeInfo => deliveryServices[method](methodTypeInfo));
+      .then((methodTypeInfo) => {
+        console.log(methodTypeInfo, 'CHECK INFO');
+        return deliveryServices[method](methodTypeInfo);
+      });
   // execute deliver method type with method type info
   });
 
