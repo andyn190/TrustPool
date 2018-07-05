@@ -252,7 +252,9 @@ const createExpenseRequest = (
     expiration_date,
     method,
     active_status: 't',
-    voter_count: 0
+    voter_count: 0,
+    vote_up: 0,
+    vote_down: 0
   };
 
   return findExpenseRequests(pool_id).then((requests) => {
@@ -262,6 +264,18 @@ const createExpenseRequest = (
     return create('ExpenseRequest', expenseRequest);
   });
 };
+
+// createExpenseRequest(
+//   4,
+//   1,
+//   'yoo lets pay my rent',
+//   'description',
+//   1150,
+//   new Date(),
+//   1
+// )
+//   .then(succ => console.log(succ))
+//   .catch(err => console.log(err));
 
 const createJoinRequest = (user_id, pool_id) => {
   const joinRequest = {
