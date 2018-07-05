@@ -134,7 +134,10 @@ export class GrouppageComponent implements OnInit, AfterViewInit, OnDestroy {
     const { isMember, _poolsService, pool } = this;
     const { id } = request;
     const { vote_power } = isMember; 
-    const { members_count, voteConfig } = pool;
+    const { members_count, voteConfig, voter_count } = pool;
+    if (voter_count >= members_count){
+      return 'EVERYONE HAS VOTED ALREADY';
+    }
     if (isMember.has_voted){
       console.log('YOU HAVE ALREADY VOTED');
       return 'YOU HAVE ALREADY VOTED';
