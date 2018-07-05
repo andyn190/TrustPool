@@ -173,16 +173,18 @@ pools.post('/create', (req, res) => {
 
 pools.post('/expense', (req, res) => {
   const {
-    poolId,
+    pool_id,
     creator,
-    title,
-    desc,
-    amount,
-    expiration,
-    method_id,
-    method_type
+    request_title,
+    description,
+    expense_amount,
+    expiration_date,
+    method
   } = req.body;
-  res.status(200).send(`recieved request to create new expense request in pool ${poolId}`);
+
+  const active_status = 't';
+  const voter_count = 0;
+  res.status(200).send(`recieved request to create new expense request in pool ${pool_id}`);
 });
 
 pools.post('/vote', (req, res) => {
