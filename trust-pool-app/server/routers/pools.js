@@ -174,7 +174,8 @@ pools.post('/:requestId/accept', (req, res) => {
     votePower,
     memberId,
     poolMembersCount,
-    voteConfig
+    voteConfig,
+    poolId
   } = body;
   updateExpenseRequest(requestId, 'vote_up', votePower)
     .then((request) => {
@@ -186,16 +187,20 @@ pools.post('/:requestId/accept', (req, res) => {
       const methodLink = method;
       if (vote_up >= voteConfig) {
         // executeDeliveryMethod(methodLink)
-        executeDeliveryMethod(methodLink)
-          .then(updatedRequest => res.status(200).json({ success: { concluded: 'VOTE PASSED, LINK DESTROYED', updatedRequest } }))
-          .catch(deliveryErr => res.status(200).json({ success: { deliveryErr } }));
-      } else if (voter_count === poolMembersCount) {
-        res.status(200).json({ success: { concluded: 'VOTE POWER NOT MET' } });
-      } else {
-        res.status(200).json({ success: 'vote to accept submitted' });
+        return executeDeliveryMethod(methodLink)
+          .then(updatedRequest => res.status(200).json({ success: { concluded: 'VOTE PASSED', updatedRequest } }))
+          .then(() => updateExpenseRequest(requestId, 'active_status', 'false'))
+          .then(() => updateCurrentRequest(poolId))
+          .then(() => updatePoolMember(null, null, 'has_voted', null, memberId))
+          .catch(deliveryErr => console.log(deliveryErr));
       }
+      if (voter_count === poolMembersCount) {
+        res.status(200).json({ success: { concluded: 'VOTE POWER NOT MET' } });
+        return updatePoolMember(null, null, 'has_voted', null, memberId);
+      }
+      res.status(200).json({ success: 'vote to accept submitted' });
+      return updatePoolMember(null, null, 'has_voted', 't', memberId);
     })
-    .then(() => updatePoolMember(null, null, 'has_voted', 't', memberId))
     .catch(err => res.status(200).json({ err }));
 });
 
