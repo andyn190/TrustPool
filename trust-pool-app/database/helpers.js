@@ -268,10 +268,6 @@ const updateCurrentRequest = pool_id => findExpenseRequests(pool_id)
     return Promise.resolve('Already current request');
   });
 
-// updateCurrentRequest(1)
-//   .then(current => console.log(current, 'CURRENT'))
-//   .catch(err => console.log(err));
-
 const updateExpenseRequest = (id, key, value, link_id) => {
   if (link_id) {
     return findExpenseRequestByLink(link_id)
@@ -417,9 +413,9 @@ const createExpenseRequest = (
 };
 
 // createExpenseRequest(
+//   3,
 //   1,
-//   1,
-//   'newest request',
+//   'request 1',
 //   'description',
 //   1150,
 //   new Date(),
@@ -430,6 +426,10 @@ const createExpenseRequest = (
 //     return createCheckEntry(1150, 'Jelani Hankins', 'nospinfo@gmail.com', 'test check', null, 4)
 //       .then(checkEntryRes => console.log('MADE CHECK ENTRY', checkEntryRes));
 //   })
+//   .catch(err => console.log(err));
+
+// updateCurrentRequest(3)
+//   .then(current => console.log(current))
 //   .catch(err => console.log(err));
 
 const createJoinRequest = (user_id, pool_id) => {
