@@ -109,7 +109,7 @@ const ExpenseRequest = sequelize.define('Expense_Request', {
     type: Sequelize.TEXT
   },
   active_status: {
-    type: Sequelize.CHAR
+    type: Sequelize.STRING
   },
   voter_count: {
     type: Sequelize.INTEGER
