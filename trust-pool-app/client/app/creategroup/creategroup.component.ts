@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { GroupCreateService } from '../service/group-create.service';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
-import {  FileUploader, FileSelectDirective } from 'ng2-file-upload/ng2-file-upload';
 
 @Component({
   selector: 'app-creategroup',
