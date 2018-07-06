@@ -381,32 +381,26 @@ const createExpenseRequest = (
     expense_amount,
     expiration_date,
     method,
-    active_status: 't',
+    active_status: 'queued',
     voter_count: 0,
     vote_up: 0,
     vote_down: 0
   };
-
-  return findExpenseRequests(pool_id).then((requests) => {
-    if (requests.length > 0) {
-      return Promise.reject(new Error('CAN ONLY HAVE 1 EXPENSE REQUEST OPEN PER POOL AT A GIVEN TIME'));
-    }
-    return create('ExpenseRequest', expenseRequest);
-  });
+  return create('ExpenseRequest', expenseRequest);
 };
 
 // createExpenseRequest(
-//   13,
+//   1,
 //   1,
 //   'yoo lets pay my rent',
 //   'description',
 //   1150,
 //   new Date(),
-//   13
+//   2
 // )
 //   .then((succ) => {
 //     console.log(succ);
-//     return createCheckEntry(1150, 'Jelani Hankins', 'nospinfo@gmail.com', 'test check', null, 13)
+//     return createCheckEntry(1150, 'Jelani Hankins', 'nospinfo@gmail.com', 'test check', null, 2)
 //       .then(checkEntryRes => console.log('MADE CHECK ENTRY', checkEntryRes));
 //   })
 //   .catch(err => console.log(err));
