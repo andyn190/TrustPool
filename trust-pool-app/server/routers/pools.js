@@ -1,6 +1,7 @@
 const pools = require('express').Router();
 let stripe = require('stripe');
 let mailgun = require('mailgun-js');
+const cloudinary = require('cloudinary');
 
 const {
   createPool,
@@ -28,6 +29,7 @@ const {
 } = require('./../../database/helpers');
 const { STRIPEKEY } = require('../config');
 const authenticated = require('../passport/authenticated');
+const { CLOUDINARY } = require('../config');
 
 const { MAILGUN } = require('../config');
 
@@ -255,22 +257,35 @@ pools.post('/create', (req, res) => {
     voteConfig,
     publicOpt
   } = body.pool;
-  const { googleID } = user;
-  findUserByGoogle(googleID)
-    .then((resUser) => {
-      const { id } = resUser;
-      return findPoolByName(name)
-        .then((pool) => {
-          if (pool) {
-            return res.status(200).send({ error: 'POOL ALREADY EXISTS' });
-          }
-          return createPool(name, imgUrl, desc, voteConfig, id, publicOpt)
-            .then((result) => {
-              res.status(200).send(result);
+  const options = {
+    tags: name,
+    api_key: CLOUDINARY.api_key,
+    cloud_name: CLOUDINARY.cloud_name,
+    api_secret: CLOUDINARY.api_secret
+  };
+  cloudinary.v2.uploader.upload(imgUrl, options, (err, response) => {
+    if (err) {
+      console.log(err, 'this is that cloud error');
+    } else {
+      const imgURL = response.url;
+      const { googleID } = user;
+      findUserByGoogle(googleID)
+        .then((resUser) => {
+          const { id } = resUser;
+          return findPoolByName(name)
+            .then((pool) => {
+              if (pool) {
+                return res.status(200).send({ error: 'POOL ALREADY EXISTS' });
+              }
+              return createPool(name, imgUrl, desc, voteConfig, id, publicOpt)
+                .then((result) => {
+                  res.status(200).send(result);
+                });
             });
-        });
-    })
-    .catch(() => { });
+        })
+        .catch(() => { });
+    }
+  });
 });
 
 pools.post('/expenselink', (req, res) => {
