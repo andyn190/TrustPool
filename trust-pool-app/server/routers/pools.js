@@ -190,17 +190,19 @@ pools.post('/:requestId/accept', (req, res) => {
         // executeDeliveryMethod(methodLink)
         return executeDeliveryMethod(methodLink)
           .then(updatedRequest => res.status(200).json({ success: { concluded: 'VOTE PASSED', updatedRequest } }))
-          .then(() => updateExpenseRequest(requestId, 'active_status', 'false'))
+          .then(() => updateExpenseRequest(requestId, 'active_status', 'passed'))
           .then(() => updateCurrentRequest(poolId))
           .then(() => updatePoolMember(null, null, 'has_voted', null, memberId))
           .catch(deliveryErr => console.log(deliveryErr));
       }
       if (voter_count === poolMembersCount) {
-        res.status(200).json({ success: { concluded: 'VOTE POWER NOT MET' } });
-        return updatePoolMember(null, null, 'has_voted', null, memberId);
+        return updateExpenseRequest(requestId, 'active_status', 'failed')
+          .then(() => updateCurrentRequest(poolId))
+          .then(() => updatePoolMember(null, null, 'has_voted', null, memberId))
+          .then(() => Promise.resolve(res.status(200).json({ success: { concluded: 'VOTE POWER NOT MET' } })));
       }
-      res.status(200).json({ success: 'vote to accept submitted' });
-      return updatePoolMember(null, null, 'has_voted', 't', memberId);
+      return updatePoolMember(null, null, 'has_voted', 't', memberId)
+        .then(() => Promise.resolve(res.status(200).json({ success: 'vote to accept submitted' })));
     })
     .catch(err => res.status(200).json({ err }));
 });
@@ -212,7 +214,8 @@ pools.post('/:requestId/decline', (req, res) => {
     votePower,
     memberId,
     poolMembersCount,
-    voteConfig
+    voteConfig,
+    poolId
   } = body;
 
   updateExpenseRequest(requestId, 'vote_down', votePower)
@@ -223,16 +226,24 @@ pools.post('/:requestId/decline', (req, res) => {
     .then((requestEntry) => {
       const { voter_count, vote_down } = requestEntry;
       if (vote_down >= voteConfig) {
-        // delete request entry
-        res.status(200).json({ success: { concluded: 'VOTE NOT PASSED' } });
-      } else if (voter_count === poolMembersCount) {
-        res.status(200).json({ success: { concluded: 'VOTE POWER NOT MET' } });
-      } else {
-        res.status(200).json({ success: 'vote to decline submitted' });
+        // request entry active status === failed
+        return updateExpenseRequest(requestId, 'active_status', 'failed')
+          .then(() => updateCurrentRequest(poolId))
+          .then(() => updatePoolMember(null, null, 'has_voted', null, memberId))
+          .then(() => Promise.resolve(res.status(200).json({ success: { concluded: 'VOTE NOT PASSED' } })));
       }
+      if (voter_count === poolMembersCount) {
+        return updateExpenseRequest(requestId, 'active_status', 'failed')
+          .then(() => updateCurrentRequest(poolId))
+          .then(() => updatePoolMember(null, null, 'has_voted', null, memberId))
+          .then(() => Promise.resolve(res.status(200).json({ success: { concluded: 'VOTE POWER NOT MET' } })));
+      }
+      return updatePoolMember(null, null, 'has_voted', 't', memberId)
+        .then(() => Promise.resolve(res.status(200).json({ success: 'vote to decline submitted' })));
     })
-    .then(() => updatePoolMember(null, null, 'has_voted', 't', memberId))
-    .catch(err => res.status(200).json({ err }));
+    .catch((err) => {
+      if (err) res.status(200).json({ err });
+    });
 });
 
 pools.post('/create', (req, res) => {
