@@ -43,7 +43,8 @@ export class GrouppageComponent implements OnInit, AfterViewInit, OnDestroy {
   error: string;
   joinRequests: any;
   currentExpenseRequest: any;
-  pastExpenseRequests: any;
+  failedExpenseRequests: any;
+  passedExpenseRequests: any;
   poolid: number;
   isMember: any;
   pool: any = {};
@@ -121,7 +122,6 @@ export class GrouppageComponent implements OnInit, AfterViewInit, OnDestroy {
     this._poolsService.getJoinRequests(poolid).subscribe(
       (res: { requests: ArrayType }) => {
         this.joinRequests = res.requests;
-        console.log(this.joinRequests, 'JOIN REQUESTS')
       }
     );
   }
@@ -130,12 +130,15 @@ export class GrouppageComponent implements OnInit, AfterViewInit, OnDestroy {
     this._poolsService.getExpenseRequests(poolid).subscribe(
       (res: any) => {
         this.expenseRequests = res;
-        this.pastExpenseRequests = [];
-        res.forEach((request) => {
-          if (request.active_status === 'current') {
+        this.failedExpenseRequests = [];
+        this.passedExpenseRequests = [];
+        res.forEach((request)=>{
+          if(request.active_status === 'current'){
             this.currentExpenseRequest = request;
-          } else if (request.active_status === 'false') {
-            this.pastExpenseRequests.push(request);
+          } else if (request.active_status === 'failed'){
+            this.failedExpenseRequests.push(request);
+          } else if (request.active_status === 'passed') {
+            this.passedExpenseRequests.push(request);
           }
         });
       }
@@ -154,12 +157,11 @@ export class GrouppageComponent implements OnInit, AfterViewInit, OnDestroy {
       console.log('YOU HAVE ALREADY VOTED');
       return 'YOU HAVE ALREADY VOTED';
     }
-    _poolsService.approveExpenseRequest(id, vote_power, isMember.id, members_count, voteConfig).subscribe(
+    _poolsService.approveExpenseRequest(id, vote_power, isMember.id, members_count, voteConfig, pool.id).subscribe(
       res => {
         request.voter_count += 1;
         request.vote_up += isMember.vote_power;
         isMember.has_voted = 't';
-        console.log(res);
       },
       err => console.log(err),
       () => console.log('done loading pool')
@@ -176,12 +178,11 @@ export class GrouppageComponent implements OnInit, AfterViewInit, OnDestroy {
       console.log('YOU HAVE ALREADY VOTED');
       return 'YOU HAVE ALREADY VOTED';
     }
-    _poolsService.declineExpenseRequest(id, vote_power, isMember.id, members_count, voteConfig).subscribe(
+    _poolsService.declineExpenseRequest(id, vote_power, isMember.id, members_count, voteConfig, pool.id).subscribe(
       res => {
         request.voter_count += 1;
         request.vote_down += isMember.vote_power;
         isMember.has_voted = 't';
-        console.log(res);
       },
       err => console.log(err),
       () => console.log('done loading pool')
@@ -218,8 +219,8 @@ export class GrouppageComponent implements OnInit, AfterViewInit, OnDestroy {
     this.modalService.open(inviteFriendModal, { centered: true });
   }
 
-  openExpenseRequestModal(expenseRequestModal) {
-    this.modalService.open(expenseRequestModal, { centered: true });
+  openExpenseRequestModal(expenseRequestModal){
+    this.modalService.open(expenseRequestModal, { centered: true, size: 'lg' });
   }
 
   async onSubmit(form: NgForm, poolId) {
@@ -240,8 +241,9 @@ export class GrouppageComponent implements OnInit, AfterViewInit, OnDestroy {
         _poolsService.sendContrib(token, poolId, amount * 100, isMember.id)
           .subscribe(
             (servResult: any) => {
-              const { result } = servResult;
-              const { contributionEntry, updatedPool } = result;
+              const { success } = servResult;
+              const { contribution, charge  } = success;
+              const { contributionEntry, updatedPool } = contribution;
               const { contribution_amount } = contributionEntry;
               this.pool = updatedPool;
               this.isMember.contrubution_amount += contribution_amount;
