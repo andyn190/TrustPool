@@ -241,6 +241,33 @@ const updatePool = (id, key, value) => findPoolById(id)
       .tap(() => console.log(`POOL ${id} ${key} UPDATED ${value}!!`));
   });
 
+const updateCurrentRequest = pool_id => findExpenseRequests(pool_id)
+  .then((expenseRequests) => {
+    let currentRequest;
+    const queue = [];
+    expenseRequests.forEach((request) => {
+      if (request.active_status === 'queued') {
+        queue.push(request);
+      }
+      if (request.active_status === 'current') {
+        currentRequest = request;
+      }
+    });
+
+    if (!currentRequest) {
+      const compare = (a, b) => {
+        if (a.createdAt < b.createdAt) { return -1; }
+        if (a.createdAt > b.createdAt) { return 1; }
+        return 0;
+      };
+      queue.sort(compare);
+      queue[0].active_status = 'current';
+      return queue[0].save();
+    }
+    console.log('Already current request');
+    return Promise.resolve('Already current request');
+  });
+
 const updateExpenseRequest = (id, key, value, link_id) => {
   if (link_id) {
     return findExpenseRequestByLink(link_id)
@@ -410,19 +437,23 @@ const createExpenseRequest = (
 };
 
 // createExpenseRequest(
+//   3,
 //   1,
-//   1,
-//   'yoo lets pay my rent',
+//   'request 1',
 //   'description',
 //   1150,
 //   new Date(),
-//   2
+//   4
 // )
 //   .then((succ) => {
 //     console.log(succ);
-//     return createCheckEntry(1150, 'Jelani Hankins', 'nospinfo@gmail.com', 'test check', null, 2)
+//     return createCheckEntry(1150, 'Jelani Hankins', 'nospinfo@gmail.com', 'test check', null, 4)
 //       .then(checkEntryRes => console.log('MADE CHECK ENTRY', checkEntryRes));
 //   })
+//   .catch(err => console.log(err));
+
+// updateCurrentRequest(3)
+//   .then(current => console.log(current))
 //   .catch(err => console.log(err));
 
 const createJoinRequest = (user_id, pool_id) => {
@@ -519,5 +550,6 @@ module.exports = {
   findExpenseRequests,
   findExpenseRequestById,
   updateExpenseRequest,
-  createCheckEntry
+  createCheckEntry,
+  updateCurrentRequest
 };
