@@ -161,7 +161,7 @@ const findPublicPools = () => findAll('Pools')
 
 const findAllUsers = () => findAll('Users');
 
-const findExpenseRequests = pool_id => findAll('ExpenseRequest', { where: { pool_id }});
+const findExpenseRequests = pool_id => findAll('ExpenseRequest', { where: { pool_id } });
 
 const findAllPoolMembers = pool_id => findAll('PoolMembers', { where: { pool_id } });
 
@@ -240,6 +240,37 @@ const updatePool = (id, key, value) => findPoolById(id)
     return pool.save()
       .tap(() => console.log(`POOL ${id} ${key} UPDATED ${value}!!`));
   });
+
+const updateCurrentRequest = pool_id => findExpenseRequests(pool_id)
+  .then((expenseRequests) => {
+    let currentRequest;
+    const queue = [];
+    expenseRequests.forEach((request) => {
+      if (request.active_status === 'queued') {
+        queue.push(request);
+      }
+      if (request.active_status === 'current') {
+        currentRequest = request;
+      }
+    });
+
+    if (!currentRequest) {
+      const compare = (a, b) => {
+        if (a.createdAt < b.createdAt) { return -1; }
+        if (a.createdAt > b.createdAt) { return 1; }
+        return 0;
+      };
+      queue.sort(compare);
+      queue[0].active_status = 'current';
+      return queue[0].save();
+    }
+    console.log('Already current request');
+    return Promise.resolve('Already current request');
+  });
+
+// updateCurrentRequest(1)
+//   .then(current => console.log(current, 'CURRENT'))
+//   .catch(err => console.log(err));
 
 const updateExpenseRequest = (id, key, value, link_id) => {
   if (link_id) {
@@ -388,15 +419,15 @@ const createExpenseRequest = (
 // createExpenseRequest(
 //   1,
 //   1,
-//   'yoo lets pay my rent',
+//   'newest request',
 //   'description',
 //   1150,
 //   new Date(),
-//   2
+//   4
 // )
 //   .then((succ) => {
 //     console.log(succ);
-//     return createCheckEntry(1150, 'Jelani Hankins', 'nospinfo@gmail.com', 'test check', null, 2)
+//     return createCheckEntry(1150, 'Jelani Hankins', 'nospinfo@gmail.com', 'test check', null, 4)
 //       .then(checkEntryRes => console.log('MADE CHECK ENTRY', checkEntryRes));
 //   })
 //   .catch(err => console.log(err));
@@ -494,5 +525,6 @@ module.exports = {
   findExpenseRequests,
   findExpenseRequestById,
   updateExpenseRequest,
-  createCheckEntry
+  createCheckEntry,
+  updateCurrentRequest
 };
