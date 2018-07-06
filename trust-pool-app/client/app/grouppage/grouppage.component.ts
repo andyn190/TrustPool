@@ -153,12 +153,11 @@ export class GrouppageComponent implements OnInit, AfterViewInit, OnDestroy {
       console.log('YOU HAVE ALREADY VOTED');
       return 'YOU HAVE ALREADY VOTED';
     }
-    _poolsService.approveExpenseRequest(id, vote_power, isMember.id, members_count, voteConfig).subscribe(
+    _poolsService.approveExpenseRequest(id, vote_power, isMember.id, members_count, voteConfig, pool.id).subscribe(
       res => {
         request.voter_count += 1;
         request.vote_up += isMember.vote_power;
         isMember.has_voted = 't';
-        console.log(res);
       },
       err => console.log(err),
       () => console.log('done loading pool')
@@ -175,12 +174,11 @@ export class GrouppageComponent implements OnInit, AfterViewInit, OnDestroy {
       console.log('YOU HAVE ALREADY VOTED');
       return 'YOU HAVE ALREADY VOTED';
     }
-    _poolsService.declineExpenseRequest(id, vote_power, isMember.id, members_count, voteConfig).subscribe(
+    _poolsService.declineExpenseRequest(id, vote_power, isMember.id, members_count, voteConfig, pool.id).subscribe(
       res => {
         request.voter_count += 1;
         request.vote_down += isMember.vote_power;
         isMember.has_voted = 't';
-        console.log(res);
       },
       err => console.log(err),
       () => console.log('done loading pool')
@@ -239,8 +237,9 @@ export class GrouppageComponent implements OnInit, AfterViewInit, OnDestroy {
         _poolsService.sendContrib(token, poolId, amount * 100, isMember.id)
           .subscribe(
             (servResult: any) => {
-              const { result } = servResult;
-              const { contributionEntry, updatedPool } = result;
+              const { success } = servResult;
+              const { contribution, charge  } = success;
+              const { contributionEntry, updatedPool } = contribution;
               const { contribution_amount } = contributionEntry;
               this.pool = updatedPool;
               this.isMember.contrubution_amount += contribution_amount;
