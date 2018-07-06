@@ -167,25 +167,25 @@ pools.post('/create', (req, res) => {
     if (err) {
       console.log(err, 'this is that cloud error');
     } else {
-      console.log(response, 'this is the response');
+      const imgURL = response.url;
+      const { googleID } = user;
+      findUserByGoogle(googleID)
+        .then((resUser) => {
+          const { id } = resUser;
+          return findPoolByName(name)
+            .then((pool) => {
+              if (pool) {
+                return res.status(200).send({ error: 'POOL ALREADY EXISTS' });
+              }
+              return createPool(name, imgUrl, desc, voteConfig, id, publicOpt)
+                .then((result) => {
+                  res.status(200).send(result);
+                });
+            });
+        })
+        .catch(() => { });
     }
   });
-  const { googleID } = user;
-  findUserByGoogle(googleID)
-    .then((resUser) => {
-      const { id } = resUser;
-      return findPoolByName(name)
-        .then((pool) => {
-          if (pool) {
-            return res.status(200).send({ error: 'POOL ALREADY EXISTS' });
-          }
-          return createPool(name, imgUrl, desc, voteConfig, id, publicOpt)
-            .then((result) => {
-              res.status(200).send(result);
-            });
-        });
-    })
-    .catch(() => { });
 });
 
 pools.post('/expenselink', (req, res) => {

@@ -5,9 +5,9 @@
       <small id="nameHelp" class="form-text text-muted">Your Group name will be what helps represent your group.</small>
     </div>
     <div class="form-group">
-      <label for="inputImageUrl">ImageUrl</label>
-      <input type="text" class="form-control" required id="inputImageUrl" name="group-url"
-      ngModel #nameField ="ngModel"placeholder="ImageUrl Here">
+      <label for="inputImageUrl">Upload Image</label>
+      <input type="file" class="form-control" required id="inputImageUrl" (change)="encodeImageFileAsURL($event)" name="group-url"
+       ngModel #nameField="ngModel" accept=".jpg, .jpeg, .png" placeholder="ImageUrl Here">
     </div>
     <div class="form-group">
         <label for="inputGroupDescription">Group Description</label>
