@@ -23,11 +23,10 @@ mailgun = mailgun({ apiKey, domain });
 const { CHECKBOOK } = require('./config');
 
 const { CHECKBOOKKEY, CHECKBOOKSECRET, CHECKBOOKENV } = CHECKBOOK;
-console.log(CHECKBOOKKEY, typeof CHECKBOOKKEY, 'KEY', CHECKBOOKSECRET, CHECKBOOKSECRET === 'DyWhofarNkCvjaPACAE2VGphtsos9V', 'SECRET');
 const Checkbook = new CheckbookAPI({
-  api_key: 'c9c683b4de3940999e387b8f4c64a334',
-  api_secret: 'DyWhofarNkCvjaPACAE2VGphtsos9V',
-  env: 'sandbox'
+  api_key: CHECKBOOKKEY,
+  api_secret: CHECKBOOKSECRET,
+  env: CHECKBOOKENV
 });
 
 const models = {
@@ -45,18 +44,15 @@ const models = {
 
 const deliveryServices = {
   Checks: (checkInfo) => {
-    console.log(checkInfo, 'CHECK INFO');
     const {
       amount,
       name,
       email,
       description,
-      physical_address } = checkInfo;
+      physical_address
+    } = checkInfo;
     // send check CHECKBOOKTESTURL
     // if check is digital post /v3/check/digital
-    console.log(physical_address, description, amount,
-      name,
-      email, typeof email);
     if (!physical_address) {
       return new Promise((resolve, reject) => {
         Checkbook.checks.sendDigitalCheck({
