@@ -109,9 +109,15 @@ const ExpenseRequest = sequelize.define('Expense_Request', {
     type: Sequelize.TEXT
   },
   active_status: {
-    type: Sequelize.CHAR
+    type: Sequelize.STRING
   },
   voter_count: {
+    type: Sequelize.INTEGER
+  },
+  vote_down: {
+    type: Sequelize.INTEGER
+  },
+  vote_up: {
     type: Sequelize.INTEGER
   },
   expense_amount: {
@@ -199,6 +205,12 @@ const PoolMembers = sequelize.define('Pool_Members', {
     type: Sequelize.INTEGER
   },
   withdraw_amount: {
+    type: Sequelize.INTEGER
+  },
+  has_voted: {
+    type: Sequelize.STRING
+  },
+  vote_power: {
     type: Sequelize.INTEGER
   }
 });
@@ -290,21 +302,19 @@ const Checks = sequelize.define('Checks', {
     type: Sequelize.INTEGER
   },
   name: {
-    type: Sequelize.CHAR
+    type: Sequelize.STRING
   },
   email: {
-    type: Sequelize.CHAR
+    type: Sequelize.STRING
   },
   description: {
-    type: Sequelize.TEXT
-  },
-  is_physical: {
-    type: Sequelize.TEXT
+    type: Sequelize.STRING
   },
   physical_address: {
-    type: Sequelize.TEXT
+    type: Sequelize.TEXT,
+    allowNull: true
   },
-  expense_request_type_id: {
+  link_id: {
     type: Sequelize.INTEGER,
     references: {
       model: ExpenseRequestLink,
@@ -326,15 +336,15 @@ sequelize
 
 // PoolMembers.sync({ force: true }).then(res => console.log(res)).catch(err => console.log(err));
 // Pools.sync({ force: true }).then(res => console.log(res)).catch(err => console.log(err));
-// ContributionEntry.sync({ force: true }).then(res => console.log(res)).catch(err =>
-// console.log(err));
 // sequelize.sync({ force: true }).then(res => console.log(res)).catch(err => console.log(err));
 // ContributionEntry.sync({ force: true })
 //  .then(res => console.log(res)).catch(err => console.log(err));
 // JoinRequests.sync({ force: true }).then(res => console.log(res)).catch(err => console.log(err));
-// ExpenseRequestLink.sync({ force: true }).then(res => console.log(res)).catch(err => console.log(err));
-// ExpenseRequest.sync({ force: true }).then(res => console.log(res)).catch(err => console.log(err));
-// sequelize.sync({ force: true }).then(res => console.log(res)).catch(err => console.log(err));
+// ExpenseRequestLink.sync({ force: true }).then(res => console.log(res))
+// .catch(err => console.log(err));
+// ExpenseRequest.sync({ force: true }).then(res => console.log(res))
+// .catch(err => console.log(err));
+// Checks.sync({ force: true }).then(res => console.log(res)).catch(err => console.log(err));
 
 module.exports = {
   sequelize,

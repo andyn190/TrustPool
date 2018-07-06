@@ -38,6 +38,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { UserService } from './services/user/user.service';
 import { MypoolsComponent} from './mypools/mypools.component';
 import { ExpenseFormComponent } from './expense-form/expense-form.component';
+import { CheckFormComponent } from './check-form/check-form.component';
 
 
 const appRoutes: Routes = [
@@ -92,7 +93,8 @@ export function getAuthServiceConfigs() {
     GoogleAuthComponent,
     MypoolsComponent,
     SignupFormComponent,
-    ExpenseFormComponent
+    ExpenseFormComponent,
+    CheckFormComponent
   ],
   imports: [
     BrowserModule,

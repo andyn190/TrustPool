@@ -42,11 +42,15 @@ export class GrouppageComponent implements OnInit, AfterViewInit, OnDestroy {
   cardHandler = this.onChange.bind(this);
   error: string;
   joinRequests: any;
+  currentExpenseRequest: any;
+  failedExpenseRequests: any;
+  passedExpenseRequests: any;
   poolid: number;
   isMember: any;
   pool: any = {};
   private sub: any;
   closeResult: string;
+  expenseRequests: any;
 
   constructor(
     private cd: ChangeDetectorRef,
@@ -85,11 +89,12 @@ export class GrouppageComponent implements OnInit, AfterViewInit, OnDestroy {
 
   ngOnInit() {
     this.sub = this.route.params.subscribe(params => {
-      let { poolid, getPool, checkIsMember, getJoinRequests  } = this;
+      let { poolid, getPool, checkIsMember, getJoinRequests, getExpenseRequests } = this;
       poolid = +params['poolid']; // (+) converts string 'id' to a number
       getPool.call(this, poolid);
       checkIsMember.call(this, poolid);
       getJoinRequests.call(this, poolid);
+      getExpenseRequests.call(this, poolid);
     });
   }
   viewGroups() {
@@ -117,14 +122,75 @@ export class GrouppageComponent implements OnInit, AfterViewInit, OnDestroy {
     this._poolsService.getJoinRequests(poolid).subscribe(
       (res: {requests: ArrayType}) => {
         this.joinRequests = res.requests;
-        console.log( this.joinRequests,'JOIN REQUESTS')
       }
+    );
+  }
+
+  getExpenseRequests(poolid) {
+    this._poolsService.getExpenseRequests(poolid).subscribe(
+      (res:any) => { 
+        this.expenseRequests = res;
+        this.failedExpenseRequests = [];
+        this.passedExpenseRequests = [];
+        res.forEach((request)=>{
+          if(request.active_status === 'current'){
+            this.currentExpenseRequest = request;
+          } else if (request.active_status === 'failed'){
+            this.failedExpenseRequests.push(request);
+          } else if (request.active_status === 'passed') {
+            this.passedExpenseRequests.push(request);
+          }
+        });
+      }
+    );
+  }
+
+  approveExpenseRequest(request) {
+    const { isMember, _poolsService, pool } = this;
+    const { id } = request;
+    const { vote_power } = isMember; 
+    const { members_count, voteConfig, voter_count } = pool;
+    if (voter_count >= members_count){
+      return 'EVERYONE HAS VOTED ALREADY';
+    }
+    if (isMember.has_voted){
+      console.log('YOU HAVE ALREADY VOTED');
+      return 'YOU HAVE ALREADY VOTED';
+    }
+    _poolsService.approveExpenseRequest(id, vote_power, isMember.id, members_count, voteConfig, pool.id).subscribe(
+      res => {
+        request.voter_count += 1;
+        request.vote_up += isMember.vote_power;
+        isMember.has_voted = 't';
+      },
+      err => console.log(err),
+      () => console.log('done loading pool')
+    );
+
+  }
+
+  declineExpenseRequest(request) {
+    const { isMember, _poolsService, pool} = this;
+    const { id } = request;
+    const { vote_power } = isMember;
+    const { voteConfig, members_count } = pool;
+    if (this.isMember.has_voted) {
+      console.log('YOU HAVE ALREADY VOTED');
+      return 'YOU HAVE ALREADY VOTED';
+    }
+    _poolsService.declineExpenseRequest(id, vote_power, isMember.id, members_count, voteConfig, pool.id).subscribe(
+      res => {
+        request.voter_count += 1;
+        request.vote_down += isMember.vote_power;
+        isMember.has_voted = 't';
+      },
+      err => console.log(err),
+      () => console.log('done loading pool')
     );
   }
 
   acceptRequest(request) {
     request.status = 'accepted';
-    console.log(request);
     this._poolsService.resJoinRequest(request).subscribe(
       res => console.log(res),
       err => console.log(err),
@@ -133,7 +199,6 @@ export class GrouppageComponent implements OnInit, AfterViewInit, OnDestroy {
   }
   declineRequest(request) {
     request.status = 'declined';
-    console.log(request);
     this._poolsService.resJoinRequest(request).subscribe(
       res => console.log(res),
       err => console.log(err),
@@ -154,10 +219,15 @@ export class GrouppageComponent implements OnInit, AfterViewInit, OnDestroy {
     this.modalService.open(inviteFriendModal, { centered: true });
   }
 
+  openExpenseRequestModal(expenseRequestModal){
+    this.modalService.open(expenseRequestModal, { centered: true, size: 'lg' });
+  }
+
   async onSubmit(form: NgForm, poolId) {
+    const { isMember, _poolsService, card, pool} = this
     const { amount } = form.value;
-    const { token, error } = await stripe.createToken(this.card);
-    if (!this.isMember) {
+    const { token, error } = await stripe.createToken(card);
+    if (!isMember) {
       console.log('YOU ARE NOT A MEMBER OF THIS GROUP');
     }
     if (error) {
@@ -168,15 +238,16 @@ export class GrouppageComponent implements OnInit, AfterViewInit, OnDestroy {
       if (decimalStr && decimalStr.length > 2) {
         this.error = 'Too Many Decimals'
       } else if (!decimalStr) {
-        this._poolsService.sendContrib(token, poolId, amount * 100)
+        _poolsService.sendContrib(token, poolId, amount * 100, isMember.id)
           .subscribe(
-            (result: any) => {
-              const { success } = result;
-              const { contribution } = success;
-              console.log(success, 'SUCCESS');
-              const { contribution_amount } = contribution;
-              this.pool.pool_value += contribution_amount;
+            (servResult: any) => {
+              const { success } = servResult;
+              const { contribution, charge  } = success;
+              const { contributionEntry, updatedPool } = contribution;
+              const { contribution_amount } = contributionEntry;
+              this.pool = updatedPool;
               this.isMember.contrubution_amount += contribution_amount;
+              // get vote power back, / get new isMember
             },
             err => console.log(err, 'ERROR'),
             () => console.log('done contributing to pool')
@@ -185,7 +256,7 @@ export class GrouppageComponent implements OnInit, AfterViewInit, OnDestroy {
         if (decimalStr.length === 1) {
           amountArr[1] = decimalStr + '0';
         }
-        this._poolsService.sendContrib(token, poolId, amountArr.join(''))
+        _poolsService.sendContrib(token, poolId, amountArr.join(''), isMember.id)
           .subscribe(
             success => { console.log(success, 'SUCCESS') },
             err => console.log(err, 'ERROR'),
@@ -214,7 +285,6 @@ export class GrouppageComponent implements OnInit, AfterViewInit, OnDestroy {
       this._poolsService.joinPool(poolid, null).subscribe(
         success => {
           groupPage.checkIsMember(poolid);
-          console.log(success, 'Success!');
         },
         err => console.log(err, 'ERROR'),
         () => console.log('done joining pool')

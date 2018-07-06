@@ -50,7 +50,7 @@ login.post('/', (req, res) => {
 });
 
 login.get('/google/redirect', passport.authenticate('google', {
-  successRedirect: '/#/home',
+  successRedirect: '/',
   failureRedirect: '/login'
 }));
 
@@ -59,5 +59,5 @@ login.get('/', (req, res) => res.send({ user: req.user || null }));
 login.get('/google', passport.authenticate('google', {
   scope: ['profile']
 }));
-
+// what do
 module.exports = login;
