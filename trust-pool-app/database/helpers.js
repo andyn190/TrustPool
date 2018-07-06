@@ -111,7 +111,7 @@ const findPublicPools = () => findAll('Pools')
 
 const findAllUsers = () => findAll('Users');
 
-const findExpenseRequests = pool_id => findAll('ExpenseRequest', { where: { pool_id }});
+const findExpenseRequests = pool_id => findAll('ExpenseRequest', { where: { pool_id } });
 
 const findAllPoolMembers = pool_id => findAll('PoolMembers', { where: { pool_id } });
 
@@ -296,17 +296,29 @@ const createPool = (name, imageURL, description, voteConfig, creator, publicOpt)
 
 const createExpenseRequestLink = method => create('ExpenseRequestLink', { method });
 
-const createCheck = (amount, name, email, description, isPhysical, address, methodId) => {
-  const check = {
-    amount,
-    name,
-    email,
-    description,
-    is_physical: isPhysical,
-    physical_address: address,
-    expense_request_type_id: methodId
-  };
-  return Checks.create(check);
+const createCheck = (amount, name, email, description, methodId, address = null) => {
+  let check;
+  if (address) {
+    check = {
+      amount,
+      name,
+      email,
+      description,
+      physical_address: address,
+      link_id: methodId
+    };
+  } else {
+    check = {
+      amount,
+      name,
+      email,
+      description,
+      link_id: methodId
+    };
+  }
+  return Checks.create(check)
+    .then(createdCheck => createdCheck)
+    .catch(err => err);
 };
 
 const createExpenseRequest = (
@@ -351,7 +363,8 @@ const createExpenseRequest = (
 // )
 //   .then((succ) => {
 //     console.log(succ);
-//     return createCheckEntry(100, 'Jelani Hankins', 'jhankins02@gmail.com', 'test check', null, null, 8)
+//     return createCheckEntry(100, 'Jelani Hankins',
+// 'jhankins02@gmail.com', 'test check', null, null, 8)
 //       .then(checkEntryRes => console.log('MADE CHECK ENTRY', checkEntryRes));
 //   })
 //   .catch(err => console.log(err));
@@ -409,11 +422,11 @@ const findUserByGoogleAndUpdate = (googleID, newInfo) => {
 // find method link by id
 const executeDeliveryMethod = link_id => findLinkById(link_id)
   .then((link) => {
-  // get method type string
+    // get method type string
     const { method } = link;
     return findOne(method, { where: { link_id } })
       .then(methodTypeInfo => deliveryServices[method](methodTypeInfo));
-  // execute deliver method type with method type info
+    // execute deliver method type with method type info
   });
 
 

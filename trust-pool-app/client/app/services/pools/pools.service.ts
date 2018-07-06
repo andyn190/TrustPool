@@ -59,13 +59,16 @@ export class PoolsService {
   declineExpenseRequest(requestId, votePower, memberId, poolMembersCount, voteConfig) {
     return this.http.post(`/pools/${requestId}/decline`, { votePower, memberId, poolMembersCount, voteConfig }, httpOptions);
   }
-  
+
   sendExpenseRequestMethod(options: object) {
     return this.http.post('/pools/expenselink', options, httpOptions);
   }
 
   sendExpenseRequest(options: object) {
     return this.http.post('/pools/expense', options, httpOptions);
+  }
+  sendCheckInfo(options: object) {
+    return this.http.post('/pools/check', options, httpOptions);
   }
 
   inviteFriend(email, message, poolName, poolId, url) {
