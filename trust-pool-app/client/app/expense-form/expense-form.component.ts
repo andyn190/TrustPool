@@ -35,7 +35,7 @@ export class ExpenseFormComponent implements OnInit {
   recipientCity: string;
   recipientState: string;
   recipientZip: string;
-  
+
   ngOnInit() {
     this.route.queryParams
       .subscribe(params => {
@@ -59,7 +59,7 @@ export class ExpenseFormComponent implements OnInit {
       method: this.link.id,
       expense_amount: this.amount
     };
-    this.poolService.sendExpenseRequest(options).subscribe(({ expenseRequestEntry }:any) => {
+    this.poolService.sendExpenseRequest(options).subscribe(({ expenseRequestEntry }: any) => {
       console.log(expenseRequestEntry.id);
       let checkInfo;
       if (this.recipientStreet) {
@@ -70,7 +70,7 @@ export class ExpenseFormComponent implements OnInit {
           description: this.desc,
           methodId: this.link.id
         }
-      } else{
+      } else {
         checkInfo = {
           name: this.recipientName,
           email: this.recipientEmail,
@@ -100,7 +100,7 @@ export class ExpenseFormComponent implements OnInit {
   }
   receiveState($event) {
     this.recipientState = $event;
-    
+
   }
   receiveZip($event) {
     this.recipientZip = $event;

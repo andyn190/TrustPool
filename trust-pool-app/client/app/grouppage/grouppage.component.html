@@ -34,14 +34,29 @@
         <div *ngIf=expenseRequests class='row'>
           <ng-template #expenseRequestModal let-c="close" let-d="dismiss">
             <div class="modal-header">
-              <h4 class="modal-title" id="modal-basic-title">Current Expense Request</h4>
+              <h4 class="modal-title" id="modal-basic-title">Expense Request</h4>
               <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
                 <span aria-hidden="true">&times;</span>
               </button>
             </div>
             <div class="modal-body">
+
+              <div *ngIf=currentExpenseRequest>
+                <h3> Current Expense Request </h3>
+                <h3 class='row justify-content-center'>{{currentExpenseRequest.request_title}}</h3>
+                <h3 class='row justify-content-center'>${{currentExpenseRequest.expense_amount}}</h3>
+                <p>{{currentExpenseRequest.description}}</p>
+                <h4> Expires: {{currentExpenseRequest.expiration_date}}</h4>
+                <div> Number of Votes: {{currentExpenseRequest.voter_count}}</div>
+                <div>Vote Power: {{currentExpenseRequest.vote_up}} Up / {{currentExpenseRequest.vote_down}} Down</div>
+                <button (click)='approveExpenseRequest(currentExpenseRequest)'> Approve </button>
+                <button (click)='declineExpenseRequest(currentExpenseRequest)'> Decline </button>
+                <br />
+              </div>
+              
               <ul>
-                <li *ngFor="let request of expenseRequests">
+                <h3> Past Expense Requests </h3>
+                <li *ngFor="let request of pastExpenseRequests">
                   <h3 class='row justify-content-center'>{{request.request_title}}</h3>
                   <h3 class='row justify-content-center'>${{request.expense_amount}}</h3>
                   <p>{{request.description}}</p>
@@ -58,7 +73,7 @@
               <button type="button" class="btn btn-light" (click)="c('Close click')">Close</button>
             </div>
           </ng-template>
-          <button class="btn btn-outline-primary mb-2 mr-2" (click)="openExpenseRequestModal(expenseRequestModal)">Current Expense Request</button>
+          <button class="btn btn-outline-primary mb-2 mr-2" (click)="openExpenseRequestModal(expenseRequestModal)">Expense Request</button>
         </div>
         <div class='d-inline row justify-content-center'>
           <div>
