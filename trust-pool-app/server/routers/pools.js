@@ -186,9 +186,8 @@ pools.post('/:requestId/accept', (req, res) => {
       if (vote_up >= voteConfig) {
         // executeDeliveryMethod(methodLink)
         executeDeliveryMethod(methodLink)
-          .then(deliveryRes => console.log(deliveryRes))
-          .catch(deliveryErr => console.log(deliveryErr));
-        res.status(200).json({ success: { concluded: 'VOTE PASSED' } });
+          .then(updatedRequest => res.status(200).json({ success: { concluded: 'VOTE PASSED, LINK DESTROYED', updatedRequest } }))
+          .catch(deliveryErr => res.status(200).json({ success: { deliveryErr } }));
       } else if (voter_count === poolMembersCount) {
         res.status(200).json({ success: { concluded: 'VOTE POWER NOT MET' } });
       } else {
