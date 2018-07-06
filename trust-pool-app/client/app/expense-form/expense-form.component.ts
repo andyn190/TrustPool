@@ -46,11 +46,10 @@ export class ExpenseFormComponent implements OnInit {
     })
   }
   handleExpenseSubmit(form) {
-    const { title, description, expirationDate, amount } = form.value;
+    const { title, description, expirationDate } = form.value;
     this.title = title;
     this.desc = description;
     this.expDate = expirationDate;
-    this.amount = amount;
     const options = {
       request_title: title,
       description,
@@ -67,13 +66,6 @@ export class ExpenseFormComponent implements OnInit {
           name: this.recipientName,
           email: this.recipientEmail,
           address: `${this.recipientStreet} ${this.recipientCity} ${this.recipientState} ${this.recipientZip}`,
-          description: this.desc,
-          methodId: this.link.id
-        }
-      } else {
-        checkInfo = {
-          name: this.recipientName,
-          email: this.recipientEmail,
           description: this.desc,
           methodId: this.link.id,
           amount: this.amount
@@ -104,6 +96,10 @@ export class ExpenseFormComponent implements OnInit {
   }
   receiveZip($event) {
     this.recipientZip = $event;
+  }
+  receiveAmount($event) {
+    this.amount = $event;
+    console.log(this.amount);
   }
   checkClicked() {
     this.click = !this.click;

@@ -17,7 +17,7 @@ import { ArrayType } from '@angular/compiler/src/output/output_ast';
 import { NgbModal, ModalDismissReasons } from '@ng-bootstrap/ng-bootstrap';
 
 @Directive({ selector: 'cardinfo' })
-export class CardInfo { 
+export class CardInfo {
 }
 
 @Component({
@@ -32,7 +32,7 @@ export class GrouppageComponent implements OnInit, AfterViewInit, OnDestroy {
     const groupPage = this;
     setTimeout(() => {
       groupPage.cardInfo = cardInfo;
-      if(groupPage.cardInfo){
+      if (groupPage.cardInfo) {
         groupPage.card.mount(groupPage.cardInfo.nativeElement);
       }
     }, 0);
@@ -109,7 +109,7 @@ export class GrouppageComponent implements OnInit, AfterViewInit, OnDestroy {
     );
   }
 
-  inviteFriend(poolName, email, message, poolId){
+  inviteFriend(poolName, email, message, poolId) {
     this._poolsService.inviteFriend(email, message, poolName, poolId, window.location.origin).subscribe(
       res => console.log(res),
       err => console.log(err),
@@ -119,38 +119,38 @@ export class GrouppageComponent implements OnInit, AfterViewInit, OnDestroy {
 
   getJoinRequests(poolid) {
     this._poolsService.getJoinRequests(poolid).subscribe(
-      (res: {requests: ArrayType}) => {
+      (res: { requests: ArrayType }) => {
         this.joinRequests = res.requests;
-        console.log( this.joinRequests,'JOIN REQUESTS')
+        console.log(this.joinRequests, 'JOIN REQUESTS')
       }
     );
   }
 
   getExpenseRequests(poolid) {
     this._poolsService.getExpenseRequests(poolid).subscribe(
-      (res:any) => { 
+      (res: any) => {
         this.expenseRequests = res;
         this.pastExpenseRequests = [];
-        res.forEach((request)=>{
-          if(request.active_status === 'current'){
+        res.forEach((request) => {
+          if (request.active_status === 'current') {
             this.currentExpenseRequest = request;
-          } else if (request.active_status === 'false'){
+          } else if (request.active_status === 'false') {
             this.pastExpenseRequests.push(request);
           }
         });
-         }
+      }
     );
   }
 
   approveExpenseRequest(request) {
     const { isMember, _poolsService, pool } = this;
     const { id } = request;
-    const { vote_power } = isMember; 
+    const { vote_power } = isMember;
     const { members_count, voteConfig, voter_count } = pool;
-    if (voter_count >= members_count){
+    if (voter_count >= members_count) {
       return 'EVERYONE HAS VOTED ALREADY';
     }
-    if (isMember.has_voted){
+    if (isMember.has_voted) {
       console.log('YOU HAVE ALREADY VOTED');
       return 'YOU HAVE ALREADY VOTED';
     }
@@ -168,7 +168,7 @@ export class GrouppageComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   declineExpenseRequest(request) {
-    const { isMember, _poolsService, pool} = this;
+    const { isMember, _poolsService, pool } = this;
     const { id } = request;
     const { vote_power } = isMember;
     const { voteConfig, members_count } = pool;
@@ -218,12 +218,12 @@ export class GrouppageComponent implements OnInit, AfterViewInit, OnDestroy {
     this.modalService.open(inviteFriendModal, { centered: true });
   }
 
-  openExpenseRequestModal(expenseRequestModal){
+  openExpenseRequestModal(expenseRequestModal) {
     this.modalService.open(expenseRequestModal, { centered: true });
   }
 
   async onSubmit(form: NgForm, poolId) {
-    const { isMember, _poolsService, card, pool} = this
+    const { isMember, _poolsService, card, pool } = this
     const { amount } = form.value;
     const { token, error } = await stripe.createToken(card);
     if (!isMember) {
@@ -299,11 +299,11 @@ export class GrouppageComponent implements OnInit, AfterViewInit, OnDestroy {
         this.isMember = false;
       }
     },
-      err => console.log('CHECK FILWS',err),
+      err => console.log('CHECK FILWS', err),
       () => console.log('done checking is member')
     );
   }
   goToExpenseRequestForm(poolid) {
-    this._router.navigate(['expenseForm'], { queryParams: { poolid: poolid }});
+    this._router.navigate(['expenseForm'], { queryParams: { poolid: poolid } });
   }
 }

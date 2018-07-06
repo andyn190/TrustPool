@@ -17,6 +17,7 @@ export class CheckFormComponent implements OnInit {
   city: string;
   state: string;
   inputZip: string;
+  amount: number;
 
   @Output() nameEvent = new EventEmitter<string>();
   @Output() emailEvent = new EventEmitter<string>();
@@ -24,6 +25,7 @@ export class CheckFormComponent implements OnInit {
   @Output() cityEvent = new EventEmitter<string>();
   @Output() stateEvent = new EventEmitter<string>();
   @Output() zipEvent = new EventEmitter<string>();
+  @Output() amountEvent = new EventEmitter<number>();
 
   checkedPhysical() {
     this.physical = !this.physical;
@@ -51,6 +53,10 @@ export class CheckFormComponent implements OnInit {
   zipChange(event: any) {
     this.inputZip = event.target.value;
     this.zipEvent.emit(this.inputZip);
+  }
+  amountChange(event: any) {
+    this.amount = event.target.value;
+    this.amountEvent.emit(this.amount);
   }
 
 }
