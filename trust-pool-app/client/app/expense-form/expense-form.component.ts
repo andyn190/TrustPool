@@ -5,6 +5,7 @@ import { FormGroup, FormBuilder, Validators, NgForm } from "@angular/forms";
 import { OwnAuthService } from '../services/auth/auth.service';
 import { PoolsService } from '../services/pools/pools.service'
 import { CheckFormComponent } from '../check-form/check-form.component';
+import { NgbModal } from '../../../node_modules/@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'app-expense-form',
@@ -17,7 +18,8 @@ export class ExpenseFormComponent implements OnInit {
     private _router: Router,
     private route: ActivatedRoute,
     private auth: OwnAuthService,
-    private poolService: PoolsService
+    private poolService: PoolsService,
+    private modalService: NgbModal
   ) { }
   public poolid: number;
   private sub: any;
@@ -50,33 +52,38 @@ export class ExpenseFormComponent implements OnInit {
     this.title = title;
     this.desc = description;
     this.expDate = expirationDate;
-    const options = {
-      request_title: title,
-      description,
-      expiration_date: expirationDate,
-      pool_id: this.poolid,
-      method: this.link.id,
-      expense_amount: this.amount
-    };
-    this.poolService.sendExpenseRequest(options).subscribe(({ expenseRequestEntry }: any) => {
-      console.log(expenseRequestEntry.id);
-      let checkInfo;
-      if (this.recipientStreet) {
-        checkInfo = {
-          name: this.recipientName,
-          email: this.recipientEmail,
-          address: `${this.recipientStreet} ${this.recipientCity} ${this.recipientState} ${this.recipientZip}`,
-          description: this.desc,
-          methodId: this.link.id,
-          amount: this.amount
+    this.poolService.sendExpenseRequestMethod({ method: this.method }).subscribe(({ link }: any) => {
+      this.link = link
+      const options = {
+        request_title: title,
+        description,
+        expiration_date: this.expDate,
+        pool_id: this.poolid,
+        method: this.link.id,
+        expense_amount: this.amount
+      };
+      this.poolService.sendExpenseRequest(options).subscribe(({ expenseRequestEntry }: any) => {
+        console.log(expenseRequestEntry.id);
+        let checkInfo;
+        if (this.recipientStreet) {
+          checkInfo = {
+            name: this.recipientName,
+            email: this.recipientEmail,
+            address: `${this.recipientStreet} ${this.recipientCity} ${this.recipientState} ${this.recipientZip}`,
+            description: this.desc,
+            methodId: this.link.id,
+            amount: this.amount
+          }
         }
-      }
-      this.poolService.sendCheckInfo(checkInfo).subscribe((check) => {
-        console.log(check);
-      })
-    }, err => {
-      console.log(err);
-    })
+        this.poolService.sendCheckInfo(checkInfo).subscribe((check) => {
+          console.log(check);
+        })
+      }, err => {
+        console.log(err);
+      });
+    }, (err) => {
+      this.modalService.open(err, { centered: true });
+    });
   }
   receiveName($event) {
     this.recipientName = $event;
@@ -104,8 +111,8 @@ export class ExpenseFormComponent implements OnInit {
   checkClicked() {
     this.click = !this.click;
     this.method = 'Checks';
-    this.poolService.sendExpenseRequestMethod({ method: this.method }).subscribe(({ link }: any) => {
-      this.link = link
-    })
+  }
+  openCheckModal(checkFormModal) {
+    this.modalService.open(checkFormModal, { centered: true });
   }
 }
