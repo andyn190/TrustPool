@@ -22,7 +22,8 @@ const {
   findPoolByMember,
   createExpenseRequest,
   createExpenseRequestLink,
-  executeDeliveryMethod
+  executeDeliveryMethod,
+  updateCurrentRequest
 } = require('./../../database/helpers');
 const { STRIPEKEY } = require('../config');
 const authenticated = require('../passport/authenticated');
@@ -286,7 +287,8 @@ pools.post('/expense', (req, res) => {
         expiration_date,
         method
       )
-        .then(expenseRequestEntry => res.status(200).json({ expenseRequestEntry }));
+        .then(expenseRequestEntry => res.status(200).json({ expenseRequestEntry }))
+        .then(() => updateCurrentRequest(pool_id));
     })
     .catch(err => res.status(200).json({ err }));
 });
