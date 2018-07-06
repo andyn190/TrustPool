@@ -121,7 +121,6 @@ export class GrouppageComponent implements OnInit, AfterViewInit, OnDestroy {
     this._poolsService.getJoinRequests(poolid).subscribe(
       (res: {requests: ArrayType}) => {
         this.joinRequests = res.requests;
-        console.log( this.joinRequests,'JOIN REQUESTS')
       }
     );
   }
@@ -138,7 +137,7 @@ export class GrouppageComponent implements OnInit, AfterViewInit, OnDestroy {
             this.pastExpenseRequests.push(request);
           }
         });
-         }
+      }
     );
   }
 
