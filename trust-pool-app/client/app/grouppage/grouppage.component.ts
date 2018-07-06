@@ -42,12 +42,14 @@ export class GrouppageComponent implements OnInit, AfterViewInit, OnDestroy {
   cardHandler = this.onChange.bind(this);
   error: string;
   joinRequests: any;
-  expenseRequests: any;
+  currentExpenseRequest: any;
+  pastExpenseRequests: any;
   poolid: number;
   isMember: any;
   pool: any = {};
   private sub: any;
   closeResult: string;
+  expenseRequests: any;
 
   constructor(
     private cd: ChangeDetectorRef,
@@ -126,7 +128,17 @@ export class GrouppageComponent implements OnInit, AfterViewInit, OnDestroy {
 
   getExpenseRequests(poolid) {
     this._poolsService.getExpenseRequests(poolid).subscribe(
-      (res) => { this.expenseRequests = res; }
+      (res:any) => { 
+        this.expenseRequests = res;
+        this.pastExpenseRequests = [];
+        res.forEach((request)=>{
+          if(request.active_status === 'current'){
+            this.currentExpenseRequest = request;
+          } else if (request.active_status === 'false'){
+            this.pastExpenseRequests.push(request);
+          }
+        });
+         }
     );
   }
 
