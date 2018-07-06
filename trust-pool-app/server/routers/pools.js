@@ -252,7 +252,7 @@ pools.post('/create', (req, res) => {
   const { user, body } = req;
   const {
     name,
-    imgUrl,
+    imgUrl64,
     desc,
     voteConfig,
     publicOpt
@@ -263,11 +263,11 @@ pools.post('/create', (req, res) => {
     cloud_name: CLOUDINARY.cloud_name,
     api_secret: CLOUDINARY.api_secret
   };
-  cloudinary.v2.uploader.upload(imgUrl, options, (err, response) => {
+  cloudinary.v2.uploader.upload(imgUrl64, options, (err, response) => {
     if (err) {
       console.log(err, 'this is that cloud error');
     } else {
-      const imgURL = response.url;
+      const imgUrl = response.url;
       const { googleID } = user;
       findUserByGoogle(googleID)
         .then((resUser) => {
