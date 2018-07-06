@@ -39,11 +39,10 @@ export class CreategroupComponent implements OnInit {
 
   encodeImageFileAsURL(element) {
     const outer = this;
-    console.log(element);
     const file = element.target.files[0];
     const reader = new FileReader();
     reader.onloadend = function() {
-      console.log('RESULT', reader.result);
+      // console.log('RESULT', reader.result);
       outer.file = reader.result;
     }
     reader.readAsDataURL(file);
