@@ -43,7 +43,8 @@ export class GrouppageComponent implements OnInit, AfterViewInit, OnDestroy {
   error: string;
   joinRequests: any;
   currentExpenseRequest: any;
-  pastExpenseRequests: any;
+  failedExpenseRequests: any;
+  passedExpenseRequests: any;
   poolid: number;
   isMember: any;
   pool: any = {};
@@ -129,12 +130,15 @@ export class GrouppageComponent implements OnInit, AfterViewInit, OnDestroy {
     this._poolsService.getExpenseRequests(poolid).subscribe(
       (res:any) => { 
         this.expenseRequests = res;
-        this.pastExpenseRequests = [];
+        this.failedExpenseRequests = [];
+        this.passedExpenseRequests = [];
         res.forEach((request)=>{
           if(request.active_status === 'current'){
             this.currentExpenseRequest = request;
-          } else if (request.active_status === 'false'){
-            this.pastExpenseRequests.push(request);
+          } else if (request.active_status === 'failed'){
+            this.failedExpenseRequests.push(request);
+          } else if (request.active_status === 'passed') {
+            this.passedExpenseRequests.push(request);
           }
         });
       }
@@ -216,7 +220,7 @@ export class GrouppageComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   openExpenseRequestModal(expenseRequestModal){
-    this.modalService.open(expenseRequestModal, { centered: true });
+    this.modalService.open(expenseRequestModal, { centered: true, size: 'lg' });
   }
 
   async onSubmit(form: NgForm, poolId) {
