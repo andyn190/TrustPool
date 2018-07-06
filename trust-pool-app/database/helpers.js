@@ -24,7 +24,6 @@ const { CHECKBOOK } = require('./config');
 
 const { CHECKBOOKKEY, CHECKBOOKSECRET, CHECKBOOKENV } = CHECKBOOK;
 console.log(CHECKBOOKKEY, typeof CHECKBOOKKEY, 'KEY', CHECKBOOKSECRET, CHECKBOOKSECRET === 'DyWhofarNkCvjaPACAE2VGphtsos9V', 'SECRET');
-// DyWhofarNkCvjaPACAE2VGphtsos9V
 const Checkbook = new CheckbookAPI({
   api_key: 'c9c683b4de3940999e387b8f4c64a334',
   api_secret: 'DyWhofarNkCvjaPACAE2VGphtsos9V',
@@ -59,17 +58,22 @@ const deliveryServices = {
       name,
       email, typeof email);
     if (!physical_address) {
-      Checkbook.checks.sendDigitalCheck({
-        name,
-        recipient: email,
-        description,
-        amount: (amount / 100)
-      }, (error, response) => {
-        if (error) {
-          console.log('Error:', error);
-        } else {
-          console.log('Response:', response);
-        }
+      return new Promise((resolve, reject) => {
+        Checkbook.checks.sendDigitalCheck({
+          name,
+          recipient: email,
+          description,
+          amount
+        }, (error, response) => {
+          if (error) {
+            console.log('Error:', error);
+            reject(error);
+          } else {
+            console.log('Response:', response);
+            checkInfo.destroy();
+            resolve(response);
+          }
+        });
       });
     }
     // if check is physical post /v3/check/physical
@@ -119,6 +123,8 @@ const findPoolById = id => findOne('Pools', { where: { id } });
 const findLinkById = id => findOne('ExpenseRequestLink', { where: { id } });
 
 const findExpenseRequestById = id => findOne('ExpenseRequest', { where: { id } });
+
+const findExpenseRequestByLink = method => findOne('ExpenseRequest', { where: { method } });
 
 const findAll = (model, where) => {
   if (where) {
@@ -239,14 +245,27 @@ const updatePool = (id, key, value) => findPoolById(id)
       .tap(() => console.log(`POOL ${id} ${key} UPDATED ${value}!!`));
   });
 
-const updateExpenseRequest = (id, key, value) => findExpenseRequestById(id)
-  .then((request) => {
-    if (key === 'voter_count' || key === 'vote_up' || key === 'vote_down') {
-      request[key] += value;
-    } else { request[key] = value; }
-    return request.save()
-      .tap(() => console.log(`Request ${id} ${key} UPDATED ${value}!!`));
-  });
+const updateExpenseRequest = (id, key, value, link_id) => {
+  if (link_id) {
+    return findExpenseRequestByLink(link_id)
+      .then((request) => {
+        if (key === 'voter_count' || key === 'vote_up' || key === 'vote_down') {
+          request[key] += value;
+        } else { request[key] = value; }
+        return request.save()
+          .tap(() => console.log(`Request ${id} ${key} UPDATED ${value}!!`));
+      });
+  }
+
+  return findExpenseRequestById(id)
+    .then((request) => {
+      if (key === 'voter_count' || key === 'vote_up' || key === 'vote_down') {
+        request[key] += value;
+      } else { request[key] = value; }
+      return request.save()
+        .tap(() => console.log(`Request ${id} ${key} UPDATED ${value}!!`));
+    });
+};
 
 const updatePoolMember = (
   memberId,
@@ -377,17 +396,17 @@ const createExpenseRequest = (
 };
 
 // createExpenseRequest(
-//   8,
+//   13,
 //   1,
 //   'yoo lets pay my rent',
 //   'description',
 //   1150,
 //   new Date(),
-//   8
+//   13
 // )
 //   .then((succ) => {
 //     console.log(succ);
-//     return createCheckEntry(1150, 'Jelani Hankins', 'nospinfo@gmail.com', 'test check', null, 8)
+//     return createCheckEntry(1150, 'Jelani Hankins', 'nospinfo@gmail.com', 'test check', null, 13)
 //       .then(checkEntryRes => console.log('MADE CHECK ENTRY', checkEntryRes));
 //   })
 //   .catch(err => console.log(err));
@@ -447,13 +466,9 @@ const executeDeliveryMethod = link_id => findLinkById(link_id)
   .then((link) => {
   // get method type string
     const { method } = link;
-    console.log(method, 'METHOD WHERE', link_id, 'LINK _ ID');
     return findOne(method, { where: { link_id } })
-      .then((methodTypeInfo) => {
-        console.log(methodTypeInfo, 'CHECK INFO');
-        return deliveryServices[method](methodTypeInfo);
-      });
-  // execute deliver method type with method type info
+      .then(methodTypeInfo => deliveryServices[method](methodTypeInfo))
+      .then(() => updateExpenseRequest(null, 'active_status', 'false', link_id));
   });
 
 
@@ -488,5 +503,6 @@ module.exports = {
   createExpenseRequestLink,
   findExpenseRequests,
   findExpenseRequestById,
-  updateExpenseRequest
+  updateExpenseRequest,
+  createCheckEntry
 };
