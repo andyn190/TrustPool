@@ -7,23 +7,24 @@ const {
   findPoolById,
   findPoolByName,
   findAllPools,
-  updateExpenseRequest,
-  findExpenseRequests,
   findPublicPools,
   createPoolMember,
   createJoinRequest,
   findUserByGoogle,
   findAllPoolMembers,
   updatePool,
-  updatePoolMember,
   getJoinRequests,
   findPoolMember,
   createContribution,
   findPoolByMember,
   createExpenseRequest,
   createExpenseRequestLink,
+  updateCurrentRequest,
+  createCheck,
+  findExpenseRequests,
   executeDeliveryMethod,
-  updateCurrentRequest
+  updateExpenseRequest,
+  updatePoolMember
 } = require('./../../database/helpers');
 const { STRIPEKEY } = require('../config');
 const authenticated = require('../passport/authenticated');
@@ -79,7 +80,7 @@ pools.post('/mailinvite', (req, res) => {
         }
       });
     })
-    .catch(err => console.log('error'));
+    .catch(err => console.log(`error: ${err}`));
 });
 
 pools.get('/:poolid/ismember', (req, res) => {
@@ -295,7 +296,33 @@ pools.post('/expense', (req, res) => {
         .then(expenseRequestEntry => res.status(200).json({ expenseRequestEntry }))
         .then(() => updateCurrentRequest(pool_id));
     })
-    .catch(err => res.status(200).json({ err }));
+    .catch(err => res.status(400).json({ err }));
+});
+
+pools.post('/check', (req, res) => {
+  if (req.body.address) {
+    const {
+      amount,
+      name,
+      email,
+      address,
+      description,
+      methodId
+    } = req.body;
+    createCheck(amount, name, email, description, methodId, address)
+      .then(check => res.status(200).send(check))
+      .catch(err => res.status(400).send(err));
+  }
+  const {
+    amount,
+    name,
+    email,
+    description,
+    methodId
+  } = req.body;
+  return createCheck(amount, name, email, description, methodId)
+    .then(check => res.status(200).send(check))
+    .catch(err => res.status(400).send(err));
 });
 
 pools.post('/vote', (req, res) => {
@@ -308,12 +335,10 @@ pools.post('/contribute', (req, res) => {
   const {
     poolId,
     amount,
-    stripeToken,
-    memberId
+    stripeToken
   } = body;
   const token = stripeToken;
   const { googleID } = user;
-  const result = {};
 
   // Pay with stripe,
   // if stripe payment is accepted,
@@ -351,16 +376,14 @@ pools.post('/contribute', (req, res) => {
     if (err) {
       res.status(200).json({ err });
     } else {
-      result.charge = charge;
       findUserByGoogle(googleID)
         .then((resUser) => {
           const { id } = resUser;
+          // create contribution entry
           return createContribution(poolId, id, amount);
         })
-        .then((contribRes) => {
-          result.contributionEntry = contribRes.contributionEntry;
-          result.updatedPool = contribRes.updatedPool;
-          res.status(200).json({ result });
+        .then((contribution) => {
+          res.status(200).json({ success: { charge, contribution } });
         })
         .catch(dberr => res.status(200).json({ dberr }));
     }

@@ -29,42 +29,49 @@ export class PoolsService {
     return this.http.get(`/pools/${poolid}/expenserequests`);
   }
 
-  checkIsMember(poolid){
+  checkIsMember(poolid) {
     return this.http.get(`/pools/${poolid}/ismember`);
   }
-  
+
   getPoolsOfMember() {
     return this.http.get('/pools/member/poolsOfMember');
   }
 
   joinPool(poolid, socialUser) {
-    if(socialUser){
-    return this.http.post('/pools/join', { poolid, socialUser }, httpOptions);
+    if (socialUser) {
+      return this.http.post('/pools/join', { poolid, socialUser }, httpOptions);
     }
-    return this.http.post('/pools/join', {poolid}, httpOptions);
+    return this.http.post('/pools/join', { poolid }, httpOptions);
   }
 
-  sendContrib(stripeToken, poolId, amount, memberId){
+  sendContrib(stripeToken, poolId, amount, memberId) {
     return this.http.post('/pools/contribute', { stripeToken, poolId, amount, memberId }, httpOptions);
   }
 
-  resJoinRequest(joinRequest){
+  resJoinRequest(joinRequest) {
     return this.http.post('/pools/joinrequests', { joinRequest }, httpOptions);
   }
 
-  approveExpenseRequest(requestId, votePower, memberId, poolMembersCount, voteConfig){
+  approveExpenseRequest(requestId, votePower, memberId, poolMembersCount, voteConfig) {
     return this.http.post(`/pools/${requestId}/accept`, { votePower, memberId, poolMembersCount, voteConfig }, httpOptions);
   }
 
-  declineExpenseRequest(requestId, votePower, memberId, poolMembersCount, voteConfig){
+  declineExpenseRequest(requestId, votePower, memberId, poolMembersCount, voteConfig) {
     return this.http.post(`/pools/${requestId}/decline`, { votePower, memberId, poolMembersCount, voteConfig }, httpOptions);
+  }
+
+  sendExpenseRequestMethod(options: object) {
+    return this.http.post('/pools/expenselink', options, httpOptions);
   }
 
   sendExpenseRequest(options: object) {
     return this.http.post('/pools/expense', options, httpOptions);
   }
+  sendCheckInfo(options: object) {
+    return this.http.post('/pools/check', options, httpOptions);
+  }
 
-  inviteFriend(email, message, poolName, poolId, url){
+  inviteFriend(email, message, poolName, poolId, url) {
     return this.http.post('/pools/mailinvite', { email, message, poolName, poolId, url }, httpOptions)
   }
 }

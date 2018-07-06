@@ -1,3 +1,47 @@
-<p>
-  expense-form works!
-</p>
+<form role="form" #expenseRequest="ngForm" (ngSubmit)="handleExpenseSubmit(expenseRequest.form)">
+  <div class="form-group row">
+    <label class="col-sm-2 col-form-label">Title</label>
+    <div class="col-sm-10">
+      <input type="text" class="form-control" placeholder="Title" ngModel required [(ngModel)]="title" #nameField="ngModel" name="title">
+    </div>
+  </div>
+  <div class="form-group row">
+    <label class="col-sm-2 col-form-label">Description</label>
+    <div class="col-sm-10">
+      <input type="text" class="form-control" placeholder="A short description for the request" ngModel required
+      [(ngModel)]="description" #namefield="ngModel" name="description">
+    </div>
+  </div>
+  <div class="form-group row">
+    <label class="col-sm-2 col-form-label">Expense Amount</label>
+    <div class="col-sm-10">
+      <input type="number" class="form-control" placeholder="Amount you want to Spend" ngModel required [(ngModel)]="amount"
+        #namefield="ngModel" name="amount">
+    </div>
+  </div>
+  <div class="form-group row">
+    <label class="col-sm-2 col-form-label">Expiration Date</label>
+    <div class="col-sm-10">
+      <input type="date" class="form-control" ngModel required [(ngModel)]="expirationDate" #namefield="ngModel" name="expirationDate">
+    </div>
+  </div>
+  <div class="form-group row" *ngIf="click">
+    <label class="col-sm-2 col-form-label">Check Information</label>
+    <div class="col-sm-10">
+      <app-check-form
+      (nameEvent)="receiveName($event)"
+      (emailEvent)="receiveEmail($event)"
+      (streetEvent)="receiveStreet($event)"
+      (cityEvent)="receiveCity($event)"
+      (stateEvent)="receiveState($event)"
+      (zipEvent)="receiveZip($event)"
+      ></app-check-form>
+    </div>
+  </div>
+  <div class="form-group row">
+    <div class="col-sm-10">
+      <button type="submit" class="btn btn-primary">Submit Request</button>
+    </div>
+  </div>
+</form>
+<button (click)="checkClicked()" class="btn btn-primary">Send a Check</button>

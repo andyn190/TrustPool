@@ -386,6 +386,30 @@ const createPool = (name, imageURL, description, voteConfig, creator, publicOpt)
 
 const createExpenseRequestLink = method => create('ExpenseRequestLink', { method });
 
+const createCheck = (amount, name, email, description, methodId, address = null) => {
+  let check;
+  if (address) {
+    check = {
+      amount,
+      name,
+      email,
+      description,
+      physical_address: address,
+      link_id: methodId
+    };
+  } else {
+    check = {
+      amount,
+      name,
+      email,
+      description,
+      link_id: methodId
+    };
+  }
+  return Checks.create(check)
+    .then(createdCheck => createdCheck)
+    .catch(err => err);
+};
 
 const createExpenseRequest = (
   pool_id,
@@ -485,7 +509,7 @@ const findUserByGoogleAndUpdate = (googleID, newInfo) => {
 // find method link by id
 const executeDeliveryMethod = link_id => findLinkById(link_id)
   .then((link) => {
-  // get method type string
+    // get method type string
     const { method } = link;
     return findOne(method, { where: { link_id } })
       .then(methodTypeInfo => deliveryServices[method](methodTypeInfo))
@@ -522,6 +546,7 @@ module.exports = {
   findUserByGoogleAndUpdate,
   createExpenseRequest,
   createExpenseRequestLink,
+  createCheck,
   findExpenseRequests,
   findExpenseRequestById,
   updateExpenseRequest,
