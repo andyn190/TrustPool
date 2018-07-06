@@ -1,5 +1,6 @@
 const percent = require('percent');
 let mailgun = require('mailgun-js');
+const CheckbookAPI = require('checkbook-api');
 
 const {
   sequelize,
@@ -19,6 +20,16 @@ const { MAILGUN } = require('../server/config');
 const { apiKey, domain } = MAILGUN;
 mailgun = mailgun({ apiKey, domain });
 
+const { CHECKBOOK } = require('./config');
+
+const { CHECKBOOKKEY, CHECKBOOKSECRET, CHECKBOOKENV } = CHECKBOOK;
+console.log(CHECKBOOKKEY, typeof CHECKBOOKKEY, 'KEY', CHECKBOOKSECRET, CHECKBOOKSECRET === 'DyWhofarNkCvjaPACAE2VGphtsos9V', 'SECRET');
+const Checkbook = new CheckbookAPI({
+  api_key: 'c9c683b4de3940999e387b8f4c64a334',
+  api_secret: 'DyWhofarNkCvjaPACAE2VGphtsos9V',
+  env: 'sandbox'
+});
+
 const models = {
   Users,
   Pools,
@@ -35,19 +46,60 @@ const models = {
 const deliveryServices = {
   Checks: (checkInfo) => {
     console.log(checkInfo, 'CHECK INFO');
+    const {
+      amount,
+      name,
+      email,
+      description,
+      physical_address } = checkInfo;
+    // send check CHECKBOOKTESTURL
+    // if check is digital post /v3/check/digital
+    console.log(physical_address, description, amount,
+      name,
+      email, typeof email);
+    if (!physical_address) {
+      return new Promise((resolve, reject) => {
+        Checkbook.checks.sendDigitalCheck({
+          name,
+          recipient: email,
+          description,
+          amount
+        }, (error, response) => {
+          if (error) {
+            console.log('Error:', error);
+            reject(error);
+          } else {
+            console.log('Response:', response);
+            checkInfo.destroy();
+            resolve(response);
+          }
+        });
+      });
+    }
+    // if check is physical post /v3/check/physical
+    // Checkbook.checks.sendPhysicalCheck({
+    //   name: 'Widgets Inc.',
+    //   recipient: {
+    //     'line_1': '1234 N. 1st Street',
+    //     'line_2': '#56',
+    //     'city': 'San Francisco',
+    //     'state': 'CA',
+    //     'zip': '78901'
+    //   },
+    //   description: 'Test Send Check',
+    //   amount: 10.00
+    // }, function (error, response) {
+    //   if (error) {
+    //     console.log('Error:', error);
+    //   } else {
+    //     console.log('Response:', response);
+    //   }
+    // });
     return Promise.resolve('Delivered');
   }
 };
 
-const findOne = (model, where) => new Promise((resolve, reject) => {
-  models[model].find(where)
-    .then((item) => {
-      resolve(item);
-    })
-    .catch((err) => {
-      reject(err);
-    });
-});
+const findOne = (model, where) => models[model].find(where);
 
 const findUserById = id => findOne('Users', { where: { id } });
 
@@ -71,6 +123,8 @@ const findPoolById = id => findOne('Pools', { where: { id } });
 const findLinkById = id => findOne('ExpenseRequestLink', { where: { id } });
 
 const findExpenseRequestById = id => findOne('ExpenseRequest', { where: { id } });
+
+const findExpenseRequestByLink = method => findOne('ExpenseRequest', { where: { method } });
 
 const findAll = (model, where) => {
   if (where) {
@@ -191,14 +245,27 @@ const updatePool = (id, key, value) => findPoolById(id)
       .tap(() => console.log(`POOL ${id} ${key} UPDATED ${value}!!`));
   });
 
-const updateExpenseRequest = (id, key, value) => findExpenseRequestById(id)
-  .then((request) => {
-    if (key === 'voter_count' || key === 'vote_up' || key === 'vote_down') {
-      request[key] += value;
-    } else { request[key] = value; }
-    return request.save()
-      .tap(() => console.log(`Request ${id} ${key} UPDATED ${value}!!`));
-  });
+const updateExpenseRequest = (id, key, value, link_id) => {
+  if (link_id) {
+    return findExpenseRequestByLink(link_id)
+      .then((request) => {
+        if (key === 'voter_count' || key === 'vote_up' || key === 'vote_down') {
+          request[key] += value;
+        } else { request[key] = value; }
+        return request.save()
+          .tap(() => console.log(`Request ${id} ${key} UPDATED ${value}!!`));
+      });
+  }
+
+  return findExpenseRequestById(id)
+    .then((request) => {
+      if (key === 'voter_count' || key === 'vote_up' || key === 'vote_down') {
+        request[key] += value;
+      } else { request[key] = value; }
+      return request.save()
+        .tap(() => console.log(`Request ${id} ${key} UPDATED ${value}!!`));
+    });
+};
 
 const updatePoolMember = (
   memberId,
@@ -314,32 +381,26 @@ const createExpenseRequest = (
     expense_amount,
     expiration_date,
     method,
-    active_status: 't',
+    active_status: 'queued',
     voter_count: 0,
     vote_up: 0,
     vote_down: 0
   };
-
-  return findExpenseRequests(pool_id).then((requests) => {
-    if (requests.length > 0) {
-      return Promise.reject(new Error('CAN ONLY HAVE 1 EXPENSE REQUEST OPEN PER POOL AT A GIVEN TIME'));
-    }
-    return create('ExpenseRequest', expenseRequest);
-  });
+  return create('ExpenseRequest', expenseRequest);
 };
 
 // createExpenseRequest(
-//   8,
+//   1,
 //   1,
 //   'yoo lets pay my rent',
 //   'description',
 //   1150,
 //   new Date(),
-//   1
+//   2
 // )
 //   .then((succ) => {
 //     console.log(succ);
-//     return createCheckEntry(100, 'Jelani Hankins', 'jhankins02@gmail.com', 'test check', null, null, 8)
+//     return createCheckEntry(1150, 'Jelani Hankins', 'nospinfo@gmail.com', 'test check', null, 2)
 //       .then(checkEntryRes => console.log('MADE CHECK ENTRY', checkEntryRes));
 //   })
 //   .catch(err => console.log(err));
@@ -400,8 +461,8 @@ const executeDeliveryMethod = link_id => findLinkById(link_id)
   // get method type string
     const { method } = link;
     return findOne(method, { where: { link_id } })
-      .then(methodTypeInfo => deliveryServices[method](methodTypeInfo));
-  // execute deliver method type with method type info
+      .then(methodTypeInfo => deliveryServices[method](methodTypeInfo))
+      .then(() => updateExpenseRequest(null, 'active_status', 'false', link_id));
   });
 
 
@@ -436,5 +497,6 @@ module.exports = {
   createExpenseRequestLink,
   findExpenseRequests,
   findExpenseRequestById,
-  updateExpenseRequest
+  updateExpenseRequest,
+  createCheckEntry
 };

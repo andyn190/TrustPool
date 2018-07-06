@@ -109,7 +109,7 @@ const ExpenseRequest = sequelize.define('Expense_Request', {
     type: Sequelize.TEXT
   },
   active_status: {
-    type: Sequelize.CHAR
+    type: Sequelize.STRING
   },
   voter_count: {
     type: Sequelize.INTEGER
@@ -302,16 +302,16 @@ const Checks = sequelize.define('Checks', {
     type: Sequelize.INTEGER
   },
   name: {
-    type: Sequelize.CHAR
+    type: Sequelize.STRING
   },
   email: {
-    type: Sequelize.CHAR
+    type: Sequelize.STRING
   },
   description: {
-    type: Sequelize.TEXT
+    type: Sequelize.STRING
   },
   physical_address: {
-    type: Sequelize.TEXT
+    type: Sequelize.STRING
   },
   link_id: {
     type: Sequelize.INTEGER,
