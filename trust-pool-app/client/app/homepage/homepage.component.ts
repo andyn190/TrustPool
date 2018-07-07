@@ -7,9 +7,16 @@ import { Router } from '@angular/router';
   styleUrls: ['./homepage.component.css']
 })
 export class HomepageComponent implements OnInit {
-
+  clicked:boolean = false;
   constructor(private _router: Router) { }
 
   ngOnInit() {
+  }
+  showJumboTronText() {
+    if(!this.clicked) {
+      this.clicked = true;
+    } else {
+      this.clicked = false;
+    }
   }
 }

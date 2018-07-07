@@ -15,6 +15,7 @@ import { Router, ActivatedRoute, Routes } from '@angular/router';
 import { NgForm } from '@angular/forms';
 import { ArrayType } from '@angular/compiler/src/output/output_ast';
 import { NgbModal, ModalDismissReasons } from '@ng-bootstrap/ng-bootstrap';
+import { DateFormatPipe } from 'angular2-moment';
 
 @Directive({ selector: 'cardinfo' })
 export class CardInfo { 
@@ -106,6 +107,8 @@ export class GrouppageComponent implements OnInit, AfterViewInit, OnDestroy {
         const { pool, error } = res;
         if(pool){
           this.pool = pool;
+          const readable = (new DateFormatPipe()).transform(pool['createdAt'], 'LL');
+          pool['createdAt'] = readable;
         }
         console.log(error);
       },

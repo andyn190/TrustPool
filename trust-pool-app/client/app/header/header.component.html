@@ -3,16 +3,16 @@
     <div class="col-md-12">
       <ul class="nav nav-tabs">
         <li class="nav-item" *ngIf="loggedIn">
-          <a class="nav-link active" routerLink="/home">Home</a>
+          <a class="nav-link" routerLink="/home">Home</a>
         </li>
         <li class="nav-item" *ngIf="loggedIn">
           <a class="nav-link" routerLink="/account">Account</a>
         </li>
         <li class="nav-item" *ngIf="loggedIn">
-          <a class="nav-link disabled" routerLink="/groups">Groups</a>
+          <a class="nav-link" routerLink="/groups">Groups</a>
         </li>
         <li class="nav-item" *ngIf="loggedIn">
-          <a class="nav-link active" routerLink="/mypools">My Groups</a>
+          <a class="nav-link" routerLink="/mypools">My Groups</a>
         </li>
         <li class="nav-item" *ngIf="loggedIn">
           <a class="nav-link" href="/logout" (click)="handleLogout()">Logout</a>
