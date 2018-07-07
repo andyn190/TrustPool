@@ -148,14 +148,11 @@ pools.get('/:poolId/expenserequests', (req, res) => {
   findExpenseRequests(poolId)
     .then((pool) => {
       if (pool) {
-        res.status(200).send(pool);
-      } else {
-        res.status(200).send({ error: 'Pool Not Found' });
+        return Promise.resolve(res.status(200).send(pool));
       }
+      return Promise.resolve(res.status(200).send({ error: 'Pool Not Found' }));
     })
-    .catch((err) => {
-      res.status(500).send(err);
-    });
+    .catch(err => res.status(500).send(err));
   // this will respond with the pool requested
 });
 
@@ -274,14 +271,14 @@ pools.post('/create', (req, res) => {
               });
           });
       })
-      .catch(promiseErr => console.log(promiseErr));
+      .catch(promiseErr => res.status(500).json({ promiseErr }));
   });
 });
 
 pools.post('/expenselink', (req, res) => {
   const { method } = req.body;
   createExpenseRequestLink(method)
-    .then(link => res.status(200).json({ link }))
+    .then(link => Promise.resolve(res.status(200).json({ link })))
     .catch(err => res.status(200).json({ err }));
 });
 
@@ -309,7 +306,7 @@ pools.post('/expense', (req, res) => {
         expiration_date,
         method
       )
-        .then(expenseRequestEntry => res.status(200).json({ expenseRequestEntry }))
+        .then(expenseRequestEntry => Promise.resolve(res.status(200).json({ expenseRequestEntry })))
         .then(() => updateCurrentRequest(pool_id));
     })
     .catch(err => res.status(400).json({ err }));
@@ -326,7 +323,7 @@ pools.post('/check', (req, res) => {
       methodId
     } = req.body;
     createCheck(amount, name, email, description, methodId, address)
-      .then(check => res.status(200).send(check))
+      .then(check => Promise.resolve(res.status(200).send(check)))
       .catch(err => res.status(400).send(err));
   }
   const {
@@ -337,7 +334,7 @@ pools.post('/check', (req, res) => {
     methodId
   } = req.body;
   return createCheck(amount, name, email, description, methodId)
-    .then(check => res.status(200).send(check))
+    .then(check => Promise.resolve(res.status(200).send(check)))
     .catch(err => res.status(400).send(err));
 });
 
@@ -382,21 +379,20 @@ pools.post('/contribute', (req, res) => {
     source: 'tok_visa' || token
   }, (err, charge) => {
     if (err && err.type === 'StripeCardError') {
-      res.status(400).json({ error: 'CARD DECLINED' });
+      return res.status(400).json({ error: 'CARD DECLINED' });
     }
     if (err) {
-      res.status(400).json({ err });
-    } else {
-      findUserByGoogle(googleID)
-        .then((resUser) => {
-          const { id } = resUser;
-          // create contribution entry
-          return createContribution(poolId, id, amount);
-        })
-        .then(contribution => Promise
-          .resolve(res.status(200).json({ success: { charge, contribution } })))
-        .catch(dberr => res.status(200).json({ dberr }));
+      return res.status(400).json({ err });
     }
+    return findUserByGoogle(googleID)
+      .then((resUser) => {
+        const { id } = resUser;
+        // create contribution entry
+        return createContribution(poolId, id, amount);
+      })
+      .then(contribution => Promise
+        .resolve(res.status(200).json({ success: { charge, contribution } })))
+      .catch(dberr => res.status(200).json({ dberr }));
   });
 });
 
@@ -465,9 +461,7 @@ pools.get('/:poolid/join', authenticated, (req, res) => {
             });
         });
     })
-    .catch((err) => {
-      console.log(err);
-    });
+    .catch(err => res.status(500).json({ err }));
 });
 
 pools.post('/chat', (req, res) => {
@@ -480,7 +474,7 @@ pools.get('/member/poolsOfMember', (req, res) => {
   findPoolByMember(user.googleID)
     .then((data) => {
       res.status(200).send(data);
-    }).catch(err => console.log(err));
+    }).catch(err => res.status(500).json({ err }));
 });
 
 module.exports = pools;
