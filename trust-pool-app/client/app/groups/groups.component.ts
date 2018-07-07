@@ -45,7 +45,6 @@ export class GroupsComponent implements OnInit {
       this._router.navigate(['group/', poolid]);
   }
   updateMemberCountView(poolid){
-    console.log('CALLED');
     this.pools.forEach((pool) => {
       if (pool.id === poolid) {
         pool.members_count += 1;

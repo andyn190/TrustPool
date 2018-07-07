@@ -309,6 +309,14 @@ const updatePoolMember = (
       .tap(() => console.log(`POOL MEMBER ${memberId || poolMemberId} in pool ${poolId} ${key} UPDATED ${value}!!`));
   });
 
+const updateAllPoolMembers = (poolId, key, value) => findAllPoolMembers(poolId)
+  .then((poolMembers) => {
+    poolMembers.forEach((member) => {
+      member[key] = value;
+      member.save().then(() => console.log('USER UPDATED')).catch(err => console.log(err));
+    });
+    return Promise.resolve('ALL USERS UPDATED');
+  });
 
 const createContribution = (pool_id, pool_member_id, contribution_amount) => {
   const contribution = { pool_id, pool_member_id, contribution_amount };
@@ -551,5 +559,6 @@ module.exports = {
   findExpenseRequestById,
   updateExpenseRequest,
   createCheckEntry,
-  updateCurrentRequest
+  updateCurrentRequest,
+  updateAllPoolMembers
 };
