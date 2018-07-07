@@ -1,17 +1,51 @@
-# TrustPool
+# Project Name
+
+> TrustPool
 
 https://marvelapp.com/dfih649
 
+## Team
 
-Welcome to TrustPool where you can join with friends or acquaintances to up each other's respective spending power by pooling some money together, and then utilizing the services that we provide like sending checks, buying off of Ebay, or even booking a flight and hotel.
+  - __Development Team Members__: Jelani Hankins, Andy Nguyen, Elijah Vasquez
+
+## Table of Contents
+
+1. [Usage](#Usage)
+1. [Requirements](#requirements)
+1. [Development](#development)
+    1. [Installing Dependencies](#installing-dependencies)
+    1. [Tasks](#tasks)
+1. [Team](#team)
+1. [Contributing](#contributing)
+
+## Usage
+
+> TrustPool allows friends and acquaintances to come together and pool money to build up their purchasing power.
+
+## Requirements
+
+- Node 10.5.x
+- Postgresql 10
+- Angular 6
+
+## Development
+
+### Installing Dependencies and Startup
+
+From within the root directory:
+
+```sh
+cd trust-pool-app
+npm install
+npm run build
+npm start
+```
+
+### Roadmap
+
+View the project roadmap [here](https://waffle.io/15-percent/TrustPool)
 
 
-If you would like to install a local version and get it running all you have to do is run all the commands in order inside your bash terminal:
+## Contributing
 
-1.Open the app and run the command "cd trust-pool-app"
-
-2.Once you have done that you can then run the command "npm install"
-
-3.Now that you have that out of the way run the command "npm run build" and try to run this one in a different terminal as this command will run continuously
-
-4.Lastly you need to run the command "npm start" and the same thing with step 3 try and run this one in a different terminal as well since it will also run continuously
+See [CONTRIBUTING.md](CONTRIBUTING.md) for contribution guidelines.
