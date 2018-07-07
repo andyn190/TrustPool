@@ -13,7 +13,7 @@
   },
   "private": true,
   "dependencies": {
-    "@angular/animations": "^6.0.3",
+    "@angular/animations": "^6.0.7",
     "@angular/cdk": "^6.3.1",
     "@angular/common": "^6.0.3",
     "@angular/compiler": "^6.0.3",
@@ -46,6 +46,7 @@
     "morgan": "^1.9.0",
     "ngx-cookie-service": "^1.0.10",
     "ngx-stripe": "^6.0.0-rc.0",
+    "ngx-toastr": "^8.8.0",
     "nodemon": "^1.17.5",
     "passport": "^0.4.0",
     "passport-google-oauth20": "^1.0.0",

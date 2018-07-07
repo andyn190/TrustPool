@@ -306,6 +306,6 @@ export class GrouppageComponent implements OnInit, AfterViewInit, OnDestroy {
     );
   }
   goToExpenseRequestForm(poolid) {
-    this._router.navigate(['expenseForm'], { queryParams: { poolid: poolid } });
+    this._router.navigate(['expenseForm'], { queryParams: { poolid: poolid, value: this.pool.pool_value } });
   }
 }

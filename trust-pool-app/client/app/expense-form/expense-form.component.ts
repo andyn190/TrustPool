@@ -1,12 +1,22 @@
-import { Component, OnInit, Optional } from '@angular/core';
+import { Component, OnInit, Optional, Input, ViewContainerRef } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { FormGroup, FormBuilder, Validators, NgForm } from "@angular/forms";
+import { ToastrService } from 'ngx-toastr';
 
 import { OwnAuthService } from '../services/auth/auth.service';
 import { PoolsService } from '../services/pools/pools.service'
 import { CheckFormComponent } from '../check-form/check-form.component';
-import { NgbModal } from '../../../node_modules/@ng-bootstrap/ng-bootstrap';
+import { NgbModal, NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 
+
+export class NgbdModalContent {
+  @Input() name;
+
+  constructor(public activeModal: NgbActiveModal) { }
+  closeCheckModal(checkFormModal) {
+    this.activeModal.close();
+  }
+}
 @Component({
   selector: 'app-expense-form',
   templateUrl: './expense-form.component.html',
@@ -19,8 +29,11 @@ export class ExpenseFormComponent implements OnInit {
     private route: ActivatedRoute,
     private auth: OwnAuthService,
     private poolService: PoolsService,
-    private modalService: NgbModal
-  ) { }
+    private modalService: NgbModal,
+    private toastr: ToastrService
+  ) { 
+    
+  }
   public poolid: number;
   private sub: any;
   private user: any;
@@ -37,11 +50,13 @@ export class ExpenseFormComponent implements OnInit {
   recipientCity: string;
   recipientState: string;
   recipientZip: string;
+  poolValue: any;
 
   ngOnInit() {
     this.route.queryParams
       .subscribe(params => {
         this.poolid = params.poolid;
+        this.poolValue = params.value / 100;
       });
     this.auth.checkLogin().subscribe(({ user }: any) => {
       this.user = user;
@@ -63,7 +78,6 @@ export class ExpenseFormComponent implements OnInit {
         expense_amount: this.amount
       };
       this.poolService.sendExpenseRequest(options).subscribe(({ expenseRequestEntry }: any) => {
-        console.log(expenseRequestEntry.id);
         let checkInfo;
         if (this.recipientStreet) {
           checkInfo = {
@@ -76,33 +90,40 @@ export class ExpenseFormComponent implements OnInit {
           }
         }
         this.poolService.sendCheckInfo(checkInfo).subscribe((check) => {
-          console.log(check);
+          this.toastr.success('Successfully sent Expense Request', check.toString());
         })
       }, err => {
         console.log(err);
+        this.toastr.error('Failed to send Expense Request', err);
       });
     }, (err) => {
-      this.modalService.open(err, { centered: true });
+      console.log(err);
     });
   }
   receiveName($event) {
     this.recipientName = $event;
+    console.log(this.recipientName);
   }
   receiveEmail($event) {
     this.recipientEmail = $event;
+    console.log(this.recipientEmail);
   }
   receiveStreet($event) {
     this.recipientStreet = $event;
+    console.log(this.recipientStreet);
   }
   receiveCity($event) {
     this.recipientCity = $event;
+    console.log(this.recipientCity);
   }
   receiveState($event) {
     this.recipientState = $event;
+    console.log(this.recipientState);
 
   }
   receiveZip($event) {
     this.recipientZip = $event;
+    console.log(this.recipientZip);
   }
   receiveAmount($event) {
     this.amount = $event;
@@ -113,6 +134,7 @@ export class ExpenseFormComponent implements OnInit {
     this.method = 'Checks';
   }
   openCheckModal(checkFormModal) {
-    this.modalService.open(checkFormModal, { centered: true });
+    this.modalService.open(checkFormModal, { size: 'lg' });
+    this.method = 'Checks';
   }
 }
