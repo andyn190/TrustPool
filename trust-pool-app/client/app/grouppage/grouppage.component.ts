@@ -103,12 +103,14 @@ export class GrouppageComponent implements OnInit, AfterViewInit, OnDestroy {
   }
   getPool(poolid) {
     this._poolsService.getPool(poolid).subscribe(
-      pool => {
-        this.pool = pool;
-        console.log(typeof pool['createdAt']);
-        const readable = (new DateFormatPipe()).transform(pool['createdAt'], 'LL');
-        console.log(readable);
-        pool['createdAt'] = readable;
+      (res: {pool:object, error: string}) => {
+        const { pool, error } = res;
+        if(pool){
+          this.pool = pool;
+          const readable = (new DateFormatPipe()).transform(pool['createdAt'], 'LL');
+          pool['createdAt'] = readable;
+        }
+        console.log(error);
       },
       err => console.log(err),
       () => console.log('done loading pool')

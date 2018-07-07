@@ -25,6 +25,7 @@ const {
   findExpenseRequests,
   executeDeliveryMethod,
   updateExpenseRequest,
+  updateAllPoolMembers,
   updatePoolMember
 } = require('./../../database/helpers');
 const { STRIPEKEY } = require('../config');
@@ -39,10 +40,8 @@ stripe = stripe(STRIPEKEY);
 
 pools.get('/', (req, res) => {
   findPublicPools()
-    .then(poolsArr => res.status(200).json(poolsArr))
-    .catch((err) => {
-      res.status(500).send(err);
-    });
+    .then(poolsArr => Promise.resolve(res.status(200).json(poolsArr)))
+    .catch(err => res.status(500).send(err));
   // this will respond with all public pools
 });
 
@@ -76,13 +75,12 @@ pools.post('/mailinvite', (req, res) => {
       mailgun.messages().send(notification, (err, resBody) => {
         console.log(err, resBody);
         if (err) {
-          res.status(200).json({ err });
-        } else {
-          res.status(200).json({ success: resBody });
+          return res.status(200).json({ err });
         }
+        return res.status(200).json({ success: resBody });
       });
     })
-    .catch(err => console.log(`error: ${err}`));
+    .catch(err => res.status(400).json({ err }));
 });
 
 pools.get('/:poolid/ismember', (req, res) => {
@@ -92,17 +90,15 @@ pools.get('/:poolid/ismember', (req, res) => {
   findUserByGoogle(googleID)
     .then((resUser) => {
       const { id } = resUser;
-      findPoolMember(id, poolid)
+      return findPoolMember(id, poolid)
         .then((member) => {
           if (member) {
-            res.status(200).json({ member });
-          } else {
-            res.status(200).json({ member: false });
+            return Promise.resolve(res.status(200).json({ member }));
           }
-        })
-        .catch(err => console.log(err));
+          return Promise.resolve(res.status(200).json({ member: false }));
+        });
     })
-    .catch(err => console.log(err));
+    .catch(err => res.status(400).json({ err }));
   // find poolmembers where poolid and userid
 });
 
@@ -110,10 +106,8 @@ pools.get('/:poolid/joinrequests', (req, res) => {
   const { params } = req;
   const { poolid } = params;
   getJoinRequests(poolid)
-    .then((requests) => {
-      res.status(200).json({ requests });
-    })
-    .catch(err => console.log(err));
+    .then(requests => Promise.resolve(res.status(200).json({ requests })))
+    .catch(err => res.status(200).json({ err }));
   // find poolmembers where poolid and userid
 });
 
@@ -121,20 +115,17 @@ pools.post('/joinrequests', (req, res) => {
   const { body } = req;
   const { status, pool_id, user_id } = body.joinRequest;
   if (status === 'accepted') {
-    getJoinRequests(pool_id, user_id)
+    return getJoinRequests(pool_id, user_id)
       .then(request => request[0].destroy())
-      .then(() => {
-        createPoolMember(pool_id, user_id)
-          .then(() => {
-            updatePool(pool_id, 'members_count', 1);
-            res.status(200).json({ message: `${socialUser || googleID} SUCCESSFULLY ADDED MEMBER TO POOl ${pool_id}` });
-          })
-          .catch(err => console.log(err));
-      })
-      .catch(err => console.log(err));
-  } else {
-    res.status(200).json({ success: 'request declined!' });
+      .then(() => createPoolMember(pool_id, user_id)
+        .then(() => updatePool(pool_id, 'members_count', 1)))
+      .then(() => Promise.resolve(res.status(200).json({ message: `${user_id} SUCCESSFULLY ADDED MEMBER TO POOl ${pool_id}` })))
+      .catch(err => res.status(400).json({ err }));
   }
+  return getJoinRequests(pool_id, user_id)
+    .then(request => request[0].destroy())
+    .then(() => Promise.resolve(res.status(200).json({ success: 'request declined!' })))
+    .catch(err => res.status(400).json({ err }));
   // find poolmembers where poolid and userid
 });
 
@@ -143,14 +134,11 @@ pools.get('/:poolId', (req, res) => {
   findPoolById(poolId)
     .then((pool) => {
       if (pool) {
-        res.status(200).send(pool);
-      } else {
-        res.status(200).send({ error: 'Pool Not Found' });
+        return Promise.resolve(res.status(200).json({ pool }));
       }
+      return Promise.resolve(res.status(200).json({ error: 'Pool Not Found' }));
     })
-    .catch((err) => {
-      res.status(500).send(err);
-    });
+    .catch(err => res.status(500).send(err));
   // this will respond with the pool requested
 });
 
@@ -159,14 +147,11 @@ pools.get('/:poolId/expenserequests', (req, res) => {
   findExpenseRequests(poolId)
     .then((pool) => {
       if (pool) {
-        res.status(200).send(pool);
-      } else {
-        res.status(200).send({ error: 'Pool Not Found' });
+        return Promise.resolve(res.status(200).send(pool));
       }
+      return Promise.resolve(res.status(200).send({ error: 'Pool Not Found' }));
     })
-    .catch((err) => {
-      res.status(500).send(err);
-    });
+    .catch(err => res.status(500).send(err));
   // this will respond with the pool requested
 });
 
@@ -194,13 +179,13 @@ pools.post('/:requestId/accept', (req, res) => {
           .then(updatedRequest => res.status(200).json({ success: { concluded: 'VOTE PASSED', updatedRequest } }))
           .then(() => updateExpenseRequest(requestId, 'active_status', 'passed'))
           .then(() => updateCurrentRequest(poolId))
-          .then(() => updatePoolMember(null, null, 'has_voted', null, memberId))
+          .then(() => updateAllPoolMembers(poolId, 'has_voted', null))
           .catch(deliveryErr => console.log(deliveryErr));
       }
       if (voter_count === poolMembersCount) {
         return updateExpenseRequest(requestId, 'active_status', 'failed')
           .then(() => updateCurrentRequest(poolId))
-          .then(() => updatePoolMember(null, null, 'has_voted', null, memberId))
+          .then(() => updateAllPoolMembers(poolId, 'has_voted', null))
           .then(() => Promise.resolve(res.status(200).json({ success: { concluded: 'VOTE POWER NOT MET' } })));
       }
       return updatePoolMember(null, null, 'has_voted', 't', memberId)
@@ -231,13 +216,13 @@ pools.post('/:requestId/decline', (req, res) => {
         // request entry active status === failed
         return updateExpenseRequest(requestId, 'active_status', 'failed')
           .then(() => updateCurrentRequest(poolId))
-          .then(() => updatePoolMember(null, null, 'has_voted', null, memberId))
+          .then(() => updateAllPoolMembers(poolId, 'has_voted', null))
           .then(() => Promise.resolve(res.status(200).json({ success: { concluded: 'VOTE NOT PASSED' } })));
       }
       if (voter_count === poolMembersCount) {
         return updateExpenseRequest(requestId, 'active_status', 'failed')
           .then(() => updateCurrentRequest(poolId))
-          .then(() => updatePoolMember(null, null, 'has_voted', null, memberId))
+          .then(() => updateAllPoolMembers(poolId, 'has_voted', null))
           .then(() => Promise.resolve(res.status(200).json({ success: { concluded: 'VOTE POWER NOT MET' } })));
       }
       return updatePoolMember(null, null, 'has_voted', 't', memberId)
@@ -265,33 +250,34 @@ pools.post('/create', (req, res) => {
   };
   cloudinary.v2.uploader.upload(imgUrl64, options, (err, response) => {
     if (err) {
-      console.log(err, 'this is that cloud error');
-    } else {
-      const imgUrl = response.url;
-      const { googleID } = user;
-      findUserByGoogle(googleID)
-        .then((resUser) => {
-          const { id } = resUser;
-          return findPoolByName(name)
-            .then((pool) => {
-              if (pool) {
-                return res.status(200).send({ error: 'POOL ALREADY EXISTS' });
-              }
-              return createPool(name, imgUrl, desc, voteConfig, id, publicOpt)
-                .then((result) => {
-                  res.status(200).send(result);
-                });
-            });
-        })
-        .catch(() => { });
+      return res.status(400).json({ err, type: 'CLOUD' });
     }
+    const imgURL = response.url;
+    const { googleID } = user;
+    return findUserByGoogle(googleID)
+      .then((resUser) => {
+        const { id } = resUser;
+        return findPoolByName(name)
+          .then((pool) => {
+            if (pool) {
+              res.status(400).json({ error: 'POOL ALREADY EXISTS' });
+              return Promise.reject(new Error('POOL AREADY EXISTS'));
+            }
+            return createPool(name, imgURL, desc, voteConfig, id, publicOpt)
+              .then((result) => {
+                res.status(200).json(result);
+                Promise.resolve('POOL');
+              });
+          });
+      })
+      .catch(promiseErr => res.status(500).json({ promiseErr }));
   });
 });
 
 pools.post('/expenselink', (req, res) => {
   const { method } = req.body;
   createExpenseRequestLink(method)
-    .then(link => res.status(200).json({ link }))
+    .then(link => Promise.resolve(res.status(200).json({ link })))
     .catch(err => res.status(200).json({ err }));
 });
 
@@ -319,7 +305,7 @@ pools.post('/expense', (req, res) => {
         expiration_date,
         method
       )
-        .then(expenseRequestEntry => res.status(200).json({ expenseRequestEntry }))
+        .then(expenseRequestEntry => Promise.resolve(res.status(200).json({ expenseRequestEntry })))
         .then(() => updateCurrentRequest(pool_id));
     })
     .catch(err => res.status(400).json({ err }));
@@ -336,7 +322,7 @@ pools.post('/check', (req, res) => {
       methodId
     } = req.body;
     createCheck(amount, name, email, description, methodId, address)
-      .then(check => res.status(200).send(check))
+      .then(check => Promise.resolve(res.status(200).send(check)))
       .catch(err => res.status(400).send(err));
   }
   const {
@@ -347,13 +333,8 @@ pools.post('/check', (req, res) => {
     methodId
   } = req.body;
   return createCheck(amount, name, email, description, methodId)
-    .then(check => res.status(200).send(check))
+    .then(check => Promise.resolve(res.status(200).send(check)))
     .catch(err => res.status(400).send(err));
-});
-
-pools.post('/vote', (req, res) => {
-  const { poolId, memberId, vote } = req.body;
-  res.status(200).send(`recieved request for member ${memberId} to vote ${vote} in pool ${poolId}`);
 });
 
 pools.post('/contribute', (req, res) => {
@@ -397,22 +378,20 @@ pools.post('/contribute', (req, res) => {
     source: 'tok_visa' || token
   }, (err, charge) => {
     if (err && err.type === 'StripeCardError') {
-      res.status(200).json({ error: 'CARD DECLINED' });
+      return res.status(400).json({ error: 'CARD DECLINED' });
     }
     if (err) {
-      res.status(200).json({ err });
-    } else {
-      findUserByGoogle(googleID)
-        .then((resUser) => {
-          const { id } = resUser;
-          // create contribution entry
-          return createContribution(poolId, id, amount);
-        })
-        .then((contribution) => {
-          res.status(200).json({ success: { charge, contribution } });
-        })
-        .catch(dberr => res.status(200).json({ dberr }));
+      return res.status(400).json({ err });
     }
+    return findUserByGoogle(googleID)
+      .then((resUser) => {
+        const { id } = resUser;
+        // create contribution entry
+        return createContribution(poolId, id, amount);
+      })
+      .then(contribution => Promise
+        .resolve(res.status(200).json({ success: { charge, contribution } })))
+      .catch(dberr => res.status(200).json({ dberr }));
   });
 });
 
@@ -424,7 +403,7 @@ pools.post('/join', (req, res) => {
   findUserByGoogle(googleID)
     .then((resUser) => {
       const { id } = resUser;
-      findAllPoolMembers(poolid)
+      return findAllPoolMembers(poolid)
         .then((poolMembers) => {
           poolMembers.forEach((member) => {
             const { dataValues } = member;
@@ -434,30 +413,19 @@ pools.post('/join', (req, res) => {
             }
           });
           if (isMemberCheck) {
-            res.status(409).send(`${socialUser || googleID} is already a member of pool ${poolid}`);
-          } else {
-            // create join pool request
-            // check if existing join pool request
-            getJoinRequests(poolid, id)
-              .then((requests) => {
-                if (requests[0]) {
-                  res.status(200).json({ error: 'YOU HAVE ALREADY SUBMITTED A JOIN REQUEST' });
-                } else {
-                  createJoinRequest(id, poolid)
-                    .then(() => res.status(200).json({ message: 'SUCCESSFULLY CREATED JOIN POOL REQUEST' }))
-                    .catch(err => console.log(err));
-                }
-              })
-              .catch(err => console.log(err));
+            return Promise.reject(res.status(409).send(`${socialUser || googleID} is already a member of pool ${poolid}`));
           }
-        })
-        .catch((err) => {
-          console.log(err);
+          return getJoinRequests(poolid, id)
+            .then((requests) => {
+              if (requests[0]) {
+                return Promise.reject(res.status(400).json({ error: 'YOU HAVE ALREADY SUBMITTED A JOIN REQUEST' }));
+              }
+              return createJoinRequest(id, poolid)
+                .then(() => Promise.resolve(res.status(200).json({ message: 'SUCCESSFULLY CREATED JOIN POOL REQUEST' })));
+            });
         });
     })
-    .catch((err) => {
-      console.log(err);
-    });
+    .catch(err => res.status(500).json({ err }));
 });
 
 pools.get('/:poolid/join', authenticated, (req, res) => {
@@ -468,7 +436,7 @@ pools.get('/:poolid/join', authenticated, (req, res) => {
   findUserByGoogle(googleID)
     .then((resUser) => {
       const { id } = resUser;
-      findAllPoolMembers(poolid)
+      return findAllPoolMembers(poolid)
         .then((poolMembers) => {
           poolMembers.forEach((member) => {
             const { dataValues } = member;
@@ -478,30 +446,21 @@ pools.get('/:poolid/join', authenticated, (req, res) => {
             }
           });
           if (isMemberCheck) {
-            res.status(409).send(`${googleID} is already a member of pool ${poolid}`);
-          } else {
-            // create join pool request
-            // check if existing join pool request
-            getJoinRequests(poolid, id)
-              .then((requests) => {
-                if (requests[0]) {
-                  res.status(200).json({ error: 'YOU HAVE ALREADY SUBMITTED A JOIN REQUEST' });
-                } else {
-                  createJoinRequest(id, poolid)
-                    .then(() => res.status(200).json({ message: 'SUCCESSFULLY CREATED JOIN POOL REQUEST' }))
-                    .catch(err => console.log(err));
-                }
-              })
-              .catch(err => console.log(err));
+            return Promise.reject(res.status(409).send(`${googleID} is already a member of pool ${poolid}`));
           }
-        })
-        .catch((err) => {
-          console.log(err);
+          // create join pool request
+          // check if existing join pool request
+          return getJoinRequests(poolid, id)
+            .then((requests) => {
+              if (requests[0]) {
+                return Promise.reject(res.status(400).json({ error: 'YOU HAVE ALREADY SUBMITTED A JOIN REQUEST' }));
+              }
+              return createJoinRequest(id, poolid)
+                .then(() => Promise.resolve(res.status(200).json({ message: 'SUCCESSFULLY CREATED JOIN POOL REQUEST' })));
+            });
         });
     })
-    .catch((err) => {
-      console.log(err);
-    });
+    .catch(err => res.status(500).json({ err }));
 });
 
 pools.post('/chat', (req, res) => {
@@ -514,7 +473,7 @@ pools.get('/member/poolsOfMember', (req, res) => {
   findPoolByMember(user.googleID)
     .then((data) => {
       res.status(200).send(data);
-    }).catch(err => console.log(err));
+    }).catch(err => res.status(500).json({ err }));
 });
 
 module.exports = pools;
