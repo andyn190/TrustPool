@@ -90,7 +90,7 @@ export class ExpenseFormComponent implements OnInit {
           }
         }
         this.poolService.sendCheckInfo(checkInfo).subscribe((check) => {
-          this.toastr.success('Successfully sent Expense Request', check.toString());
+          this.toastr.success('Successfully sent Expense Request');
         })
       }, err => {
         console.log(err);
@@ -98,6 +98,7 @@ export class ExpenseFormComponent implements OnInit {
       });
     }, (err) => {
       console.log(err);
+      this.toastr.error('Failed to send Expense Request', err);
     });
   }
   receiveName($event) {
