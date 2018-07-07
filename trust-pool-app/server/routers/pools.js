@@ -25,6 +25,7 @@ const {
   findExpenseRequests,
   executeDeliveryMethod,
   updateExpenseRequest,
+  updateAllPoolMembers,
   updatePoolMember
 } = require('./../../database/helpers');
 const { STRIPEKEY } = require('../config');
@@ -117,10 +118,8 @@ pools.post('/joinrequests', (req, res) => {
     return getJoinRequests(pool_id, user_id)
       .then(request => request[0].destroy())
       .then(() => createPoolMember(pool_id, user_id)
-        .then(() => {
-          res.status(200).json({ message: `${socialUser || googleID} SUCCESSFULLY ADDED MEMBER TO POOl ${pool_id}` });
-          return updatePool(pool_id, 'members_count', 1);
-        }))
+        .then(() => updatePool(pool_id, 'members_count', 1)))
+      .then(() => Promise.resolve(res.status(200).json({ message: `${user_id} SUCCESSFULLY ADDED MEMBER TO POOl ${pool_id}` })))
       .catch(err => res.status(400).json({ err }));
   }
   return getJoinRequests(pool_id, user_id)
@@ -135,9 +134,9 @@ pools.get('/:poolId', (req, res) => {
   findPoolById(poolId)
     .then((pool) => {
       if (pool) {
-        return Promise.resolve(res.status(200).send(pool));
+        return Promise.resolve(res.status(200).json({ pool }));
       }
-      return Promise.resolve(res.status(200).send({ error: 'Pool Not Found' }));
+      return Promise.resolve(res.status(200).json({ error: 'Pool Not Found' }));
     })
     .catch(err => res.status(500).send(err));
   // this will respond with the pool requested
@@ -180,13 +179,13 @@ pools.post('/:requestId/accept', (req, res) => {
           .then(updatedRequest => res.status(200).json({ success: { concluded: 'VOTE PASSED', updatedRequest } }))
           .then(() => updateExpenseRequest(requestId, 'active_status', 'passed'))
           .then(() => updateCurrentRequest(poolId))
-          .then(() => updatePoolMember(null, null, 'has_voted', null, memberId))
+          .then(() => updateAllPoolMembers(poolId, 'has_voted', null))
           .catch(deliveryErr => console.log(deliveryErr));
       }
       if (voter_count === poolMembersCount) {
         return updateExpenseRequest(requestId, 'active_status', 'failed')
           .then(() => updateCurrentRequest(poolId))
-          .then(() => updatePoolMember(null, null, 'has_voted', null, memberId))
+          .then(() => updateAllPoolMembers(poolId, 'has_voted', null))
           .then(() => Promise.resolve(res.status(200).json({ success: { concluded: 'VOTE POWER NOT MET' } })));
       }
       return updatePoolMember(null, null, 'has_voted', 't', memberId)
@@ -217,13 +216,13 @@ pools.post('/:requestId/decline', (req, res) => {
         // request entry active status === failed
         return updateExpenseRequest(requestId, 'active_status', 'failed')
           .then(() => updateCurrentRequest(poolId))
-          .then(() => updatePoolMember(null, null, 'has_voted', null, memberId))
+          .then(() => updateAllPoolMembers(poolId, 'has_voted', null))
           .then(() => Promise.resolve(res.status(200).json({ success: { concluded: 'VOTE NOT PASSED' } })));
       }
       if (voter_count === poolMembersCount) {
         return updateExpenseRequest(requestId, 'active_status', 'failed')
           .then(() => updateCurrentRequest(poolId))
-          .then(() => updatePoolMember(null, null, 'has_voted', null, memberId))
+          .then(() => updateAllPoolMembers(poolId, 'has_voted', null))
           .then(() => Promise.resolve(res.status(200).json({ success: { concluded: 'VOTE POWER NOT MET' } })));
       }
       return updatePoolMember(null, null, 'has_voted', 't', memberId)
