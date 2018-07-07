@@ -4,7 +4,6 @@ const { findUserByGoogleAndUpdate } = require('./../../database/helpers');
 
 user.get('/', (req, res) => {
   const userCookie = req.user;
-  console.log(user);
   const { googleID } = userCookie;
   findUserByGoogle(googleID)
     .then(resUser => res.status(200).json({ user: resUser }))
@@ -12,10 +11,11 @@ user.get('/', (req, res) => {
 });
 
 user.post('/update', (req, res) => {
-  const { body, user } = req;
-  findUserByGoogleAndUpdate(user.googleID, body);
-  res.status(200).send('okay');
-  // console.log(user);
+  const { body } = req;
+  const { googleID } = req.user;
+  findUserByGoogleAndUpdate(googleID, body)
+    .then(() => res.status(200).json({ success: 'UPDATED USER' }))
+    .catch(err => res.send(500).json({ err }));
 });
 
 module.exports = user;
