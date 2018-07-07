@@ -265,26 +265,27 @@ pools.post('/create', (req, res) => {
   };
   cloudinary.v2.uploader.upload(imgUrl, options, (err, response) => {
     if (err) {
-      console.log(err, 'this is that cloud error');
-    } else {
-      const imgURL = response.url;
-      const { googleID } = user;
-      findUserByGoogle(googleID)
-        .then((resUser) => {
-          const { id } = resUser;
-          return findPoolByName(name)
-            .then((pool) => {
-              if (pool) {
-                return res.status(200).send({ error: 'POOL ALREADY EXISTS' });
-              }
-              return createPool(name, imgUrl, desc, voteConfig, id, publicOpt)
-                .then((result) => {
-                  res.status(200).send(result);
-                });
-            });
-        })
-        .catch(() => { });
+      return res.status(400).json({ err, type: 'CLOUD' });
     }
+    const imgURL = response.url;
+    const { googleID } = user;
+    return findUserByGoogle(googleID)
+      .then((resUser) => {
+        const { id } = resUser;
+        return findPoolByName(name)
+          .then((pool) => {
+            if (pool) {
+              res.status(400).json({ error: 'POOL ALREADY EXISTS' });
+              return Promise.reject(new Error('POOL AREADY EXISTS'));
+            }
+            return createPool(name, imgUrl, desc, voteConfig, id, publicOpt)
+              .then((result) => {
+                res.status(200).json(result);
+                Promise.resolve('POOL');
+              });
+          });
+      })
+      .catch(promiseErr => console.log(promiseErr));
   });
 });
 
@@ -351,11 +352,6 @@ pools.post('/check', (req, res) => {
     .catch(err => res.status(400).send(err));
 });
 
-pools.post('/vote', (req, res) => {
-  const { poolId, memberId, vote } = req.body;
-  res.status(200).send(`recieved request for member ${memberId} to vote ${vote} in pool ${poolId}`);
-});
-
 pools.post('/contribute', (req, res) => {
   const { body, user } = req;
   const {
@@ -397,10 +393,10 @@ pools.post('/contribute', (req, res) => {
     source: 'tok_visa' || token
   }, (err, charge) => {
     if (err && err.type === 'StripeCardError') {
-      res.status(200).json({ error: 'CARD DECLINED' });
+      res.status(400).json({ error: 'CARD DECLINED' });
     }
     if (err) {
-      res.status(200).json({ err });
+      res.status(400).json({ err });
     } else {
       findUserByGoogle(googleID)
         .then((resUser) => {
@@ -408,9 +404,8 @@ pools.post('/contribute', (req, res) => {
           // create contribution entry
           return createContribution(poolId, id, amount);
         })
-        .then((contribution) => {
-          res.status(200).json({ success: { charge, contribution } });
-        })
+        .then(contribution => Promise
+          .resolve(res.status(200).json({ success: { charge, contribution } })))
         .catch(dberr => res.status(200).json({ dberr }));
     }
   });
@@ -424,7 +419,7 @@ pools.post('/join', (req, res) => {
   findUserByGoogle(googleID)
     .then((resUser) => {
       const { id } = resUser;
-      findAllPoolMembers(poolid)
+      return findAllPoolMembers(poolid)
         .then((poolMembers) => {
           poolMembers.forEach((member) => {
             const { dataValues } = member;
@@ -434,30 +429,19 @@ pools.post('/join', (req, res) => {
             }
           });
           if (isMemberCheck) {
-            res.status(409).send(`${socialUser || googleID} is already a member of pool ${poolid}`);
-          } else {
-            // create join pool request
-            // check if existing join pool request
-            getJoinRequests(poolid, id)
-              .then((requests) => {
-                if (requests[0]) {
-                  res.status(200).json({ error: 'YOU HAVE ALREADY SUBMITTED A JOIN REQUEST' });
-                } else {
-                  createJoinRequest(id, poolid)
-                    .then(() => res.status(200).json({ message: 'SUCCESSFULLY CREATED JOIN POOL REQUEST' }))
-                    .catch(err => console.log(err));
-                }
-              })
-              .catch(err => console.log(err));
+            return Promise.reject(res.status(409).send(`${socialUser || googleID} is already a member of pool ${poolid}`));
           }
-        })
-        .catch((err) => {
-          console.log(err);
+          return getJoinRequests(poolid, id)
+            .then((requests) => {
+              if (requests[0]) {
+                return Promise.reject(res.status(400).json({ error: 'YOU HAVE ALREADY SUBMITTED A JOIN REQUEST' }));
+              }
+              return createJoinRequest(id, poolid)
+                .then(() => Promise.resolve(res.status(200).json({ message: 'SUCCESSFULLY CREATED JOIN POOL REQUEST' })));
+            });
         });
     })
-    .catch((err) => {
-      console.log(err);
-    });
+    .catch(err => res.status(500).json({ err }));
 });
 
 pools.get('/:poolid/join', authenticated, (req, res) => {
@@ -468,7 +452,7 @@ pools.get('/:poolid/join', authenticated, (req, res) => {
   findUserByGoogle(googleID)
     .then((resUser) => {
       const { id } = resUser;
-      findAllPoolMembers(poolid)
+      return findAllPoolMembers(poolid)
         .then((poolMembers) => {
           poolMembers.forEach((member) => {
             const { dataValues } = member;
@@ -478,25 +462,18 @@ pools.get('/:poolid/join', authenticated, (req, res) => {
             }
           });
           if (isMemberCheck) {
-            res.status(409).send(`${googleID} is already a member of pool ${poolid}`);
-          } else {
-            // create join pool request
-            // check if existing join pool request
-            getJoinRequests(poolid, id)
-              .then((requests) => {
-                if (requests[0]) {
-                  res.status(200).json({ error: 'YOU HAVE ALREADY SUBMITTED A JOIN REQUEST' });
-                } else {
-                  createJoinRequest(id, poolid)
-                    .then(() => res.status(200).json({ message: 'SUCCESSFULLY CREATED JOIN POOL REQUEST' }))
-                    .catch(err => console.log(err));
-                }
-              })
-              .catch(err => console.log(err));
+            return Promise.reject(res.status(409).send(`${googleID} is already a member of pool ${poolid}`));
           }
-        })
-        .catch((err) => {
-          console.log(err);
+          // create join pool request
+          // check if existing join pool request
+          return getJoinRequests(poolid, id)
+            .then((requests) => {
+              if (requests[0]) {
+                return Promise.reject(res.status(400).json({ error: 'YOU HAVE ALREADY SUBMITTED A JOIN REQUEST' }));
+              }
+              return createJoinRequest(id, poolid)
+                .then(() => Promise.resolve(res.status(200).json({ message: 'SUCCESSFULLY CREATED JOIN POOL REQUEST' })));
+            });
         });
     })
     .catch((err) => {
