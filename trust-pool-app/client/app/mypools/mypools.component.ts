@@ -29,15 +29,37 @@ export class MypoolsComponent implements OnInit{
     this._poolsService.getPoolsOfMember().subscribe(pools => {
       this.userPools = pools;
       this.userPools.forEach((pool) =>{
-        const poolsJoin = {};
-        poolsJoin['contribution_amount'] = pool.contrubution_amount
-        poolsJoin['id'] = pool.id;
-        this._poolsService.getPool(pool.pool_id).subscribe(userPool => {
-          poolsJoin['name'] = userPool['name'];
-          poolsJoin['description'] = userPool['description'];
-          poolsJoin['imageURL'] = userPool['imageURL'];
+        const poolsJoin: {
+          contribution_amount: number;
+          id: number; 
+          name: string;
+          description: string;
+          imageURL: string;
+        } = {
+          contribution_amount: pool.contrubution_amount,
+          id: null,
+          name: null,
+          description: null,
+          imageURL: null
+        };
+        this._poolsService.getPool(pool.pool_id).subscribe((
+          res: { pool: {
+            id: number;
+            name: string;
+            description: string;
+            imageURL: string;
+          },
+          error: string
+        }) => {
+          const { pool, error } = res;
+          if(error){
+            return console.log(error);
+          }
+          poolsJoin.id = pool.id;
+          poolsJoin.name = pool.name;
+          poolsJoin.description = pool.description;
+          poolsJoin.imageURL = pool.imageURL;
           this.pools.push(poolsJoin);
-          console.log(this.pools);
         });
       });
     })

@@ -19,7 +19,7 @@ app.use(require('cookie-parser')());
 
 app.use(logger('dev'));
 
-app.use(bodyParser.json());
+app.use(bodyParser.json({ limit: 1024102420, type: 'application/json' }));
 app.use(bodyParser.urlencoded({ extended: true }));
 
 setupPassport(app);

@@ -104,8 +104,12 @@ export class GrouppageComponent implements OnInit, AfterViewInit, OnDestroy {
   }
   getPool(poolid) {
     this._poolsService.getPool(poolid).subscribe(
-      pool => {
-        this.pool = pool;
+      (res: {pool:object, error: string}) => {
+        const { pool, error } = res;
+        if(pool){
+          this.pool = pool;
+        }
+        console.log(error);
       },
       err => this.toastrService.error(err),
       () => this.toastrService.info('done loading pool')

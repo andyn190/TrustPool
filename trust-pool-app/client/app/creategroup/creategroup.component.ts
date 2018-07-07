@@ -21,7 +21,6 @@ export class CreategroupComponent implements OnInit {
   }
   
   createGroup(form){
-    console.log(form.value);
     let name = form.value['group-name'];
     let imgUrl64 = this.file;
     let desc = form.value['group-description'];
