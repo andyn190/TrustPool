@@ -1,4 +1,5 @@
 import { Component, OnInit, Output, EventEmitter, Input } from '@angular/core';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-check-form',
@@ -8,9 +9,7 @@ import { Component, OnInit, Output, EventEmitter, Input } from '@angular/core';
 
 export class CheckFormComponent implements OnInit {
   private physical: boolean;
-  constructor() { }
-  ngOnInit() {
-  }
+  constructor(private toastrService: ToastrService) { }
   recipientName: string;
   recipientEmail: string;
   streetAddress: string;
@@ -18,7 +17,7 @@ export class CheckFormComponent implements OnInit {
   state: string;
   inputZip: string;
   amount: number;
-  @Input() poolValue: string;
+  @Input() poolValue: number;
   @Output() nameEvent = new EventEmitter<string>();
   @Output() emailEvent = new EventEmitter<string>();
   @Output() streetEvent = new EventEmitter<string>();
@@ -26,6 +25,8 @@ export class CheckFormComponent implements OnInit {
   @Output() stateEvent = new EventEmitter<string>();
   @Output() zipEvent = new EventEmitter<string>();
   @Output() amountEvent = new EventEmitter<number>();
+  ngOnInit() {
+  }
 
   checkedPhysical() {
     this.physical = !this.physical;

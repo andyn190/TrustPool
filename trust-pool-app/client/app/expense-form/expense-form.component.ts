@@ -31,8 +31,8 @@ export class ExpenseFormComponent implements OnInit {
     private poolService: PoolsService,
     private modalService: NgbModal,
     private toastr: ToastrService
-  ) { 
-    
+  ) {
+
   }
   public poolid: number;
   private sub: any;
@@ -56,7 +56,7 @@ export class ExpenseFormComponent implements OnInit {
     this.route.queryParams
       .subscribe(params => {
         this.poolid = params.poolid;
-        this.poolValue = params.value / 100;
+        this.poolValue = (params.value / 100);
       });
     this.auth.checkLogin().subscribe(({ user }: any) => {
       this.user = user;
@@ -64,42 +64,48 @@ export class ExpenseFormComponent implements OnInit {
   }
   handleExpenseSubmit(form) {
     const { title, description, expirationDate } = form.value;
-    this.title = title;
-    this.desc = description;
-    this.expDate = expirationDate;
-    this.poolService.sendExpenseRequestMethod({ method: this.method }).subscribe(({ link }: any) => {
-      this.link = link
-      const options = {
-        request_title: title,
-        description,
-        expiration_date: this.expDate,
-        pool_id: this.poolid,
-        method: this.link.id,
-        expense_amount: this.amount
-      };
-      this.poolService.sendExpenseRequest(options).subscribe(({ expenseRequestEntry }: any) => {
-        let checkInfo;
-        if (this.recipientStreet) {
-          checkInfo = {
-            name: this.recipientName,
-            email: this.recipientEmail,
-            address: `${this.recipientStreet} ${this.recipientCity} ${this.recipientState} ${this.recipientZip}`,
-            description: this.desc,
-            methodId: this.link.id,
-            amount: this.amount
+    this.title = title || this.toastr.error('A title must be given to this request');
+    this.desc = description || this.toastr.error('A description is needed');
+    this.expDate = expirationDate || this.toastr.error('An expiration date is needed');
+    console.log(this.amount, this.poolValue);
+    if (this.amount > this.poolValue && !this.title && !this.desc && !this.expDate) {
+      this.toastr.error('The Amount requested is higher than the Pool Value')
+    } else {
+      console.log('why is this fucking working?');
+      this.poolService.sendExpenseRequestMethod({ method: this.method }).subscribe(({ link }: any) => {
+        this.link = link
+        const options = {
+          request_title: title,
+          description,
+          expiration_date: this.expDate,
+          pool_id: this.poolid,
+          method: this.link.id,
+          expense_amount: this.amount
+        };
+        this.poolService.sendExpenseRequest(options).subscribe(({ expenseRequestEntry }: any) => {
+          let checkInfo;
+          if (this.recipientStreet) {
+            checkInfo = {
+              name: this.recipientName,
+              email: this.recipientEmail,
+              address: `${this.recipientStreet} ${this.recipientCity} ${this.recipientState} ${this.recipientZip}`,
+              description: this.desc,
+              methodId: this.link.id,
+              amount: this.amount
+            }
           }
-        }
-        this.poolService.sendCheckInfo(checkInfo).subscribe((check) => {
-          this.toastr.success('Successfully sent Expense Request');
-        })
-      }, err => {
+          this.poolService.sendCheckInfo(checkInfo).subscribe((check) => {
+            this.toastr.success('Successfully sent Expense Request');
+          })
+        }, err => {
+          console.log(err);
+          this.toastr.error('Failed to send Expense Request', err);
+        });
+      }, (err) => {
         console.log(err);
         this.toastr.error('Failed to send Expense Request', err);
       });
-    }, (err) => {
-      console.log(err);
-      this.toastr.error('Failed to send Expense Request', err);
-    });
+    }
   }
   receiveName($event) {
     this.recipientName = $event;

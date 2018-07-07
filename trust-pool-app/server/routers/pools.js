@@ -291,6 +291,11 @@ pools.post('/expense', (req, res) => {
     expiration_date,
     method
   } = body;
+
+  findPoolById(pool_id)
+    .then((pool) => {
+      console.log(pool);
+    });
   const { googleID } = user;
 
   findUserByGoogle(googleID)
