@@ -6,11 +6,17 @@
             TrustPool.
           </h2>
           <p>
-            Get out there and build up some buying power!
+            TrustPool is the place to be when you need to up your buying power!
           </p>
           <p>
-            <a class="btn btn-primary btn-large" routerLink="/login">Get Started</a>
+            <a class="btn btn-primary btn-large" (click)="showJumboTronText();">Learn More</a>
           </p>
+          <ul *ngIf="clicked">
+            <li>TrustPool will give you complete transparency when it comes to the money in your group and how it's spent.</li>
+            <li>TrustPool will give you democratic approach to spending money.</li>
+            <li>TrustPool will give you the power to join with others and give a helping hand.</li>
+            <p>So, Get out there and build up some buying power!</p>
+          </ul>
         </div>
         <div class="row">
           <div class="col-md-4">
