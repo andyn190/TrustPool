@@ -237,7 +237,7 @@ pools.post('/create', (req, res) => {
   const { user, body } = req;
   const {
     name,
-    imgUrl,
+    imgUrl64,
     desc,
     voteConfig,
     publicOpt
@@ -248,7 +248,7 @@ pools.post('/create', (req, res) => {
     cloud_name: CLOUDINARY.cloud_name,
     api_secret: CLOUDINARY.api_secret
   };
-  cloudinary.v2.uploader.upload(imgUrl, options, (err, response) => {
+  cloudinary.v2.uploader.upload(imgUrl64, options, (err, response) => {
     if (err) {
       return res.status(400).json({ err, type: 'CLOUD' });
     }
@@ -263,7 +263,7 @@ pools.post('/create', (req, res) => {
               res.status(400).json({ error: 'POOL ALREADY EXISTS' });
               return Promise.reject(new Error('POOL AREADY EXISTS'));
             }
-            return createPool(name, imgUrl, desc, voteConfig, id, publicOpt)
+            return createPool(name, imgURL, desc, voteConfig, id, publicOpt)
               .then((result) => {
                 res.status(200).json(result);
                 Promise.resolve('POOL');
