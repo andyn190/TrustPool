@@ -1,4 +1,4 @@
-import { Component, OnInit, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter, Input } from '@angular/core';
 
 @Component({
   selector: 'app-check-form',
@@ -18,7 +18,7 @@ export class CheckFormComponent implements OnInit {
   state: string;
   inputZip: string;
   amount: number;
-
+  @Input() poolValue: string;
   @Output() nameEvent = new EventEmitter<string>();
   @Output() emailEvent = new EventEmitter<string>();
   @Output() streetEvent = new EventEmitter<string>();
