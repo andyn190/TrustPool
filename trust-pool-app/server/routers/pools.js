@@ -39,10 +39,8 @@ stripe = stripe(STRIPEKEY);
 
 pools.get('/', (req, res) => {
   findPublicPools()
-    .then(poolsArr => res.status(200).json(poolsArr))
-    .catch((err) => {
-      res.status(500).send(err);
-    });
+    .then(poolsArr => Promise.resolve(res.status(200).json(poolsArr)))
+    .catch(err => res.status(500).send(err));
   // this will respond with all public pools
 });
 
@@ -76,13 +74,12 @@ pools.post('/mailinvite', (req, res) => {
       mailgun.messages().send(notification, (err, resBody) => {
         console.log(err, resBody);
         if (err) {
-          res.status(200).json({ err });
-        } else {
-          res.status(200).json({ success: resBody });
+          return res.status(200).json({ err });
         }
+        return res.status(200).json({ success: resBody });
       });
     })
-    .catch(err => console.log(`error: ${err}`));
+    .catch(err => res.status(400).json({ err }));
 });
 
 pools.get('/:poolid/ismember', (req, res) => {
@@ -92,17 +89,15 @@ pools.get('/:poolid/ismember', (req, res) => {
   findUserByGoogle(googleID)
     .then((resUser) => {
       const { id } = resUser;
-      findPoolMember(id, poolid)
+      return findPoolMember(id, poolid)
         .then((member) => {
           if (member) {
-            res.status(200).json({ member });
-          } else {
-            res.status(200).json({ member: false });
+            return Promise.resolve(res.status(200).json({ member }));
           }
-        })
-        .catch(err => console.log(err));
+          return Promise.resolve(res.status(200).json({ member: false }));
+        });
     })
-    .catch(err => console.log(err));
+    .catch(err => res.status(400).json({ err }));
   // find poolmembers where poolid and userid
 });
 
@@ -110,10 +105,8 @@ pools.get('/:poolid/joinrequests', (req, res) => {
   const { params } = req;
   const { poolid } = params;
   getJoinRequests(poolid)
-    .then((requests) => {
-      res.status(200).json({ requests });
-    })
-    .catch(err => console.log(err));
+    .then(requests => Promise.resolve(res.status(200).json({ requests })))
+    .catch(err => res.status(200).json({ err }));
   // find poolmembers where poolid and userid
 });
 
@@ -121,20 +114,19 @@ pools.post('/joinrequests', (req, res) => {
   const { body } = req;
   const { status, pool_id, user_id } = body.joinRequest;
   if (status === 'accepted') {
-    getJoinRequests(pool_id, user_id)
+    return getJoinRequests(pool_id, user_id)
       .then(request => request[0].destroy())
-      .then(() => {
-        createPoolMember(pool_id, user_id)
-          .then(() => {
-            updatePool(pool_id, 'members_count', 1);
-            res.status(200).json({ message: `${socialUser || googleID} SUCCESSFULLY ADDED MEMBER TO POOl ${pool_id}` });
-          })
-          .catch(err => console.log(err));
-      })
-      .catch(err => console.log(err));
-  } else {
-    res.status(200).json({ success: 'request declined!' });
+      .then(() => createPoolMember(pool_id, user_id)
+        .then(() => {
+          res.status(200).json({ message: `${socialUser || googleID} SUCCESSFULLY ADDED MEMBER TO POOl ${pool_id}` });
+          return updatePool(pool_id, 'members_count', 1);
+        }))
+      .catch(err => res.status(400).json({ err }));
   }
+  return getJoinRequests(pool_id, user_id)
+    .then(request => request[0].destroy())
+    .then(() => Promise.resolve(res.status(200).json({ success: 'request declined!' })))
+    .catch(err => res.status(400).json({ err }));
   // find poolmembers where poolid and userid
 });
 
@@ -143,14 +135,11 @@ pools.get('/:poolId', (req, res) => {
   findPoolById(poolId)
     .then((pool) => {
       if (pool) {
-        res.status(200).send(pool);
-      } else {
-        res.status(200).send({ error: 'Pool Not Found' });
+        return Promise.resolve(res.status(200).send(pool));
       }
+      return Promise.resolve(res.status(200).send({ error: 'Pool Not Found' }));
     })
-    .catch((err) => {
-      res.status(500).send(err);
-    });
+    .catch(err => res.status(500).send(err));
   // this will respond with the pool requested
 });
 
