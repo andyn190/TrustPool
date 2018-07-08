@@ -414,9 +414,7 @@ const createCheck = (amount, name, email, description, methodId, address = null)
       link_id: methodId
     };
   }
-  return Checks.create(check)
-    .then(createdCheck => createdCheck)
-    .catch(err => err);
+  return Checks.create(check);
 };
 
 const createExpenseRequest = (

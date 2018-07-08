@@ -40,6 +40,7 @@ import { UserService } from './services/user/user.service';
 import { MypoolsComponent} from './mypools/mypools.component';
 import { ExpenseFormComponent } from './expense-form/expense-form.component';
 import { CheckFormComponent } from './check-form/check-form.component';
+import { MomentModule } from 'angular2-moment';
 
 
 const appRoutes: Routes = [
@@ -116,7 +117,8 @@ export function getAuthServiceConfigs() {
     MatListModule,
     MatIconModule,
     NgbModule.forRoot(),
-    ToastrModule.forRoot()
+    ToastrModule.forRoot(),
+    MomentModule
   ],
     providers: [OwnAuthService, UserService, PoolsService, CookieService, {
     provide: AuthServiceConfig,

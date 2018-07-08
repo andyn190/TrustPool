@@ -16,6 +16,7 @@ import { NgForm } from '@angular/forms';
 import { ArrayType } from '@angular/compiler/src/output/output_ast';
 import { NgbModal, ModalDismissReasons } from '@ng-bootstrap/ng-bootstrap';
 import { ToastrService, Toast } from 'ngx-toastr';
+import { DateFormatPipe } from 'angular2-moment';
 
 @Directive({ selector: 'cardinfo' })
 export class CardInfo {
@@ -108,11 +109,13 @@ export class GrouppageComponent implements OnInit, AfterViewInit, OnDestroy {
         const { pool, error } = res;
         if(pool){
           this.pool = pool;
+          const readable = (new DateFormatPipe()).transform(pool['createdAt'], 'LL');
+          pool['createdAt'] = readable;
         }
         console.log(error);
       },
       err => this.toastrService.error(err),
-      () => this.toastrService.info('done loading pool')
+      () => console.log('done loading pool')
     );
   }
 
@@ -293,8 +296,8 @@ export class GrouppageComponent implements OnInit, AfterViewInit, OnDestroy {
         success => {
           groupPage.checkIsMember(poolid);
         },
-        err => console.log(err, 'ERROR'),
-        () => console.log('done joining pool')
+        err => this.toastrService.error(err, 'ERROR'),
+        () => this.toastrService.success('done joining pool')
       );
     }
   }

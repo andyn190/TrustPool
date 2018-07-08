@@ -289,15 +289,14 @@ pools.post('/expense', (req, res) => {
     description,
     expense_amount,
     expiration_date,
-    method
+    method,
+    poolValue
   } = body;
 
-  findPoolById(pool_id)
-    .then((pool) => {
-      console.log(pool);
-    });
   const { googleID } = user;
-
+  if (poolValue < expense_amount) {
+    return res.status(400).json({ error: 'The request amount is larger than the Pool Value' });
+  }
   findUserByGoogle(googleID)
     .then((resUser) => {
       const { id } = resUser;
@@ -327,8 +326,8 @@ pools.post('/check', (req, res) => {
       methodId
     } = req.body;
     createCheck(amount, name, email, description, methodId, address)
-      .then(check => Promise.resolve(res.status(200).send(check)))
-      .catch(err => res.status(400).send(err));
+      .then(check => Promise.resolve(res.status(200).json(check)))
+      .catch(err => res.status(400).json(err));
   }
   const {
     amount,

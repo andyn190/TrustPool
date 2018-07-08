@@ -11,6 +11,7 @@ import { Router, ActivatedRoute, Routes } from '@angular/router';
 export class AppComponent { 
   title = 'TrustPool App';
   clicked:boolean = true;
+  jumbo:boolean = false;
   headerHide:boolean = false;
   loggedIn:boolean;
   user: any
@@ -32,5 +33,13 @@ export class AppComponent {
   }
   showHeader() {
     this.headerHide = true;
+  }
+
+  showJumboTronText() {
+    if(!this.jumbo) {
+      this.jumbo = true;
+    } else {
+      this.jumbo = false;
+    }
   }
 }
