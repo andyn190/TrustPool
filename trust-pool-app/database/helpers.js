@@ -503,13 +503,15 @@ const findPoolByMember = googleID => Users.findOne({
   .catch(error => console.log(error));
 
 const findUserByGoogleAndUpdate = (googleID, newInfo) => {
-  Users.findOne({ where: { googleID } }).then((user) => {
-    user.first_name = newInfo.name;
-    user.last_name = newInfo.lastName;
-    user.email = newInfo.email;
-    return user.save()
-      .tap(() => console.log('User info updated'));
-  });
+  return Users.findOne({ where: { googleID } })
+    .then((user) => {
+      user.first_name = newInfo.name;
+      user.last_name = newInfo.lastName;
+      user.email = newInfo.email;
+      return user.save()
+        .tap(updatedUser => updatedUser);
+    })
+    .catch(err => err);
 };
 
 // find method link by id

@@ -174,7 +174,7 @@ export class GrouppageComponent implements OnInit, AfterViewInit, OnDestroy {
         isMember.has_voted = 't';
       },
       err => console.log(err),
-      () => this.toastrService.info('done loading pool')
+      () => console.log('done loading pool')
     );
 
   }

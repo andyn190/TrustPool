@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { UserService } from '../services/user/user.service';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-accountpage',
@@ -13,7 +14,11 @@ export class AccountpageComponent implements OnInit {
   lastName:string
   email:string
   clicked:boolean = false;
-  constructor(private route: ActivatedRoute, private _userService: UserService) {
+  constructor(
+    private route: ActivatedRoute,
+    private _userService: UserService,
+    private toastr: ToastrService
+  ) {
   }
 
   ngOnInit() {
@@ -44,8 +49,8 @@ export class AccountpageComponent implements OnInit {
     let newEmail = form.value['user-email'];
     let body = { name: nameFirst, lastName: nameLast, email: newEmail };
     this._userService.updateUserInfo(body).subscribe(
-      success => { console.log(success, 'Success!'); },
-      err => console.log(err, 'ERROR'),
+      (success : any) => { this.toastr.success(`Successfully updated ${success.email}`); },
+      err => this.toastr.error(err, 'Error updating your account'),
       () => console.log('done updating user info')
     );
   }

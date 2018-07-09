@@ -13,8 +13,13 @@ user.get('/', (req, res) => {
 
 user.post('/update', (req, res) => {
   const { body, user } = req;
-  findUserByGoogleAndUpdate(user.googleID, body);
-  res.status(200).send('okay');
+  findUserByGoogleAndUpdate(user.googleID, body)
+    .then((updatedUser) => {
+      res.status(200).send(updatedUser);
+    })
+    .catch((err) => {
+      res.status(400).send(err);
+    });
   // console.log(user);
 });
 

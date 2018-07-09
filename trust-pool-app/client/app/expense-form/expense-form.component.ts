@@ -18,7 +18,8 @@ export class ExpenseFormComponent implements OnInit {
     private auth: OwnAuthService,
     private poolService: PoolsService,
     private modalService: NgbModal,
-    private toastr: ToastrService
+    private toastr: ToastrService,
+    private _router: Router
   ) {
 
   }
@@ -93,6 +94,7 @@ export class ExpenseFormComponent implements OnInit {
         }
         this.poolService.sendCheckInfo(checkInfo).subscribe((check) => {
           this.toastr.success('Successfully sent Expense Request');
+          this._router.navigate(['group/', this.poolid]);
         })
       }, err => {
         console.log(err);
