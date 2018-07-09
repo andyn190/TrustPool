@@ -13,7 +13,8 @@ const {
   ChatMessages,
   EbayWishlistEntry,
   Checks,
-  JoinRequests
+  JoinRequests,
+  ChatRoom
 } = require('.');
 const { MAILGUN } = require('../server/config');
 
@@ -39,7 +40,8 @@ const models = {
   ChatMessages,
   EbayWishlistEntry,
   Checks,
-  JoinRequests
+  JoinRequests,
+  ChatRoom
 };
 
 const deliveryServices = {
@@ -394,6 +396,8 @@ const createPool = (name, imageURL, description, voteConfig, creator, publicOpt)
 
 const createExpenseRequestLink = method => create('ExpenseRequestLink', { method });
 
+const createChatRoom = type => create('ChatRoom', { type });
+
 const createCheck = (amount, name, email, description, methodId, address = null) => {
   let check;
   if (address) {
@@ -427,22 +431,26 @@ const createExpenseRequest = (
   expense_amount,
   expiration_date,
   method
-) => {
-  const expenseRequest = {
-    pool_id,
-    creator,
-    request_title,
-    description,
-    expense_amount,
-    expiration_date,
-    method,
-    active_status: 'queued',
-    voter_count: 0,
-    vote_up: 0,
-    vote_down: 0
-  };
-  return create('ExpenseRequest', expenseRequest);
-};
+) => createChatRoom('expense')
+  .then((newRoom) => {
+    const expenseRequest = {
+      pool_id,
+      creator,
+      request_title,
+      description,
+      expense_amount,
+      expiration_date,
+      method,
+      active_status: 'queued',
+      voter_count: 0,
+      vote_up: 0,
+      vote_down: 0,
+      chat_id: newRoom.id
+    };
+    return create('ExpenseRequest', expenseRequest);
+  })
+  .catch(err => console.log(err));
+
 
 // createExpenseRequest(
 //   3,
