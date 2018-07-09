@@ -143,10 +143,22 @@ export class GrouppageComponent implements OnInit, AfterViewInit, OnDestroy {
         this.passedExpenseRequests = [];
         res.forEach((request)=>{
           if(request.active_status === 'current'){
+            const readable = (new DateFormatPipe()).transform(request['createdAt'], 'LL');
+            const readable2 = (new DateFormatPipe()).transform(request['expiration_date'], 'LL');
+            request['createdAt'] = readable;
+            request['expiration_date'] = readable2;
             this.currentExpenseRequest = request;
           } else if (request.active_status === 'failed'){
+            const readable = (new DateFormatPipe()).transform(request['createdAt'], 'LL');
+            const readable2 = (new DateFormatPipe()).transform(request['expiration_date'], 'LL');
+            request['createdAt'] = readable;
+            request['expiration_date'] = readable2;
             this.failedExpenseRequests.push(request);
           } else if (request.active_status === 'passed') {
+            const readable = (new DateFormatPipe()).transform(request['createdAt'], 'LL');
+            const readable2 = (new DateFormatPipe()).transform(request['expiration_date'], 'LL');
+            request['createdAt'] = readable;
+            request['expiration_date'] = readable2;
             this.passedExpenseRequests.push(request);
           }
         });
@@ -255,6 +267,8 @@ export class GrouppageComponent implements OnInit, AfterViewInit, OnDestroy {
               const { contribution, charge  } = success;
               const { contributionEntry, updatedPool } = contribution;
               const { contribution_amount } = contributionEntry;
+              const readable = (new DateFormatPipe()).transform(updatedPool['createdAt'], 'LL');
+              updatedPool.createdAt = readable;
               this.pool = updatedPool;
               this.isMember.contrubution_amount += contribution_amount;
               // get vote power back, / get new isMember
