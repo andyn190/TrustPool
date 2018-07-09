@@ -58,6 +58,7 @@ export class GrouppageComponent implements OnInit, AfterViewInit, OnDestroy {
   chatMessages: Array<{ userName: String, message: String }> = [];
   messageToSend: string;
   chatError: string;
+  currentChatId: number;
 
   constructor(
     private cd: ChangeDetectorRef,
@@ -69,6 +70,8 @@ export class GrouppageComponent implements OnInit, AfterViewInit, OnDestroy {
     private _chatService: ChatService
   ) { 
     this._chatService.newUserJoined()
+      .subscribe(data => this.chatMessages.push(data));
+    this._chatService.userHasLeft()
       .subscribe(data => this.chatMessages.push(data));
   }
 
@@ -121,8 +124,15 @@ export class GrouppageComponent implements OnInit, AfterViewInit, OnDestroy {
     console.log(this.messageToSend);
   }
 
+  leaveChat() {
+    const joinInfo = { chatId: this.currentChatId, userId: this.isMember.pool_member_id };
+    this._chatService.leaveChat(joinInfo);
+    this.fnToggleChat();
+  }
+
   joinRequestChat(chatId){
     const joinInfo = { chatId, userId: this.isMember.pool_member_id };
+    this.currentChatId = chatId;
     this._chatService.joinRequestChat(joinInfo);
     this.fnToggleChat();
   }
