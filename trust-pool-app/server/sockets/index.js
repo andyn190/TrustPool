@@ -1,0 +1,17 @@
+const { findUserById } = require('./../../database/helpers');
+
+module.exports = (socket) => {
+  // add listeners
+  socket.on('join', (data) => {
+    const { chatId, userId } = data;
+    // get user id/name, chatId (for room)
+    socket.join(data.chatId);
+    findUserById(userId)
+      .then((user) => {
+        const userName = `${user.first_name} ${user.last_name}`;
+        console.log(`${user.first_name} ${user.last_name} joined the room : ${chatId}`);
+        socket.broadcast.to(chatId).emit('userHasJoined', { userName, message: 'has joined the room!' });
+      })
+      .then(err => console.log(err));
+  });
+};
