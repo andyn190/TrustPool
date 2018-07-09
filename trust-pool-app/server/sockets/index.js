@@ -14,4 +14,17 @@ module.exports = (socket) => {
       })
       .then(err => console.log(err));
   });
+
+  socket.on('leave', (data) => {
+    const { chatId, userId } = data;
+    // get user id/name, chatId (for room)
+    socket.leave(data.chatId);
+    findUserById(userId)
+      .then((user) => {
+        const userName = `${user.first_name} ${user.last_name}`;
+        console.log(`${user.first_name} ${user.last_name} is leaving room : ${chatId}`);
+        socket.broadcast.to(chatId).emit('userHasLeft', { userName, message: 'has left the room!' });
+      })
+      .then(err => console.log(err));
+  });
 };
