@@ -502,6 +502,7 @@ const findPoolByMember = googleID => Users.findOne({
 }).then(user => findPoolMember(user.id)).then(arr => arr)
   .catch(error => console.log(error));
 
+
 const findUserByGoogleAndUpdate = (googleID, newInfo) => {
   return Users.findOne({ where: { googleID } })
     .then((user) => {

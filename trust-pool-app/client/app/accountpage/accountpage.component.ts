@@ -49,6 +49,7 @@ export class AccountpageComponent implements OnInit {
     let newEmail = form.value['user-email'];
     let body = { name: nameFirst, lastName: nameLast, email: newEmail };
     this._userService.updateUserInfo(body).subscribe(
+
       (success : any) => { this.toastr.success(`Successfully updated ${success.email}`); },
       err => this.toastr.error(err, 'Error updating your account'),
       () => console.log('done updating user info')
