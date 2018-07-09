@@ -15,9 +15,23 @@ export class ChatService {
     this.socket.emit('join', data);
   }
 
+  leaveChat(data) {
+    this.socket.emit('leave', data);
+  }
+
   newUserJoined(){
     let observable = new Observable < { userName: String, message: String }>(observer =>{
       this.socket.on('userHasJoined', (data) => {
+        observer.next(data);
+      });
+      return () => this.socket.disconnect();
+    });
+    return observable;
+  }
+
+  userHasLeft() {
+    let observable = new Observable<{ userName: String, message: String }>(observer => {
+      this.socket.on('userHasLeft', (data) => {
         observer.next(data);
       });
       return () => this.socket.disconnect();
