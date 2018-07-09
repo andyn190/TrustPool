@@ -1,6 +1,7 @@
 const user = require('express').Router();
 const { findUserByGoogle } = require('./../../database/helpers');
 const { findUserByGoogleAndUpdate } = require('./../../database/helpers');
+const { findUserById } = require('./../../database/helpers');
 
 user.get('/', (req, res) => {
   const userCookie = req.user;

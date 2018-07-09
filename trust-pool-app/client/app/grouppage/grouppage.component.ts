@@ -16,6 +16,7 @@ import { NgForm } from '@angular/forms';
 import { ArrayType } from '@angular/compiler/src/output/output_ast';
 import { NgbModal, ModalDismissReasons } from '@ng-bootstrap/ng-bootstrap';
 import { DateFormatPipe } from 'angular2-moment';
+import { UserService } from '../services/user/user.service';
 
 @Directive({ selector: 'cardinfo' })
 export class CardInfo { 
@@ -59,7 +60,8 @@ export class GrouppageComponent implements OnInit, AfterViewInit, OnDestroy {
     private _cookieService: CookieService,
     private _router: Router,
     private route: ActivatedRoute,
-    private modalService: NgbModal
+    private modalService: NgbModal,
+    private _userService: UserService,
   ) { }
 
   ngAfterViewInit() {
@@ -127,7 +129,10 @@ export class GrouppageComponent implements OnInit, AfterViewInit, OnDestroy {
 
   getJoinRequests(poolid) {
     this._poolsService.getJoinRequests(poolid).subscribe(
-      (res: {requests: ArrayType}) => {
+      (res: any) => {
+        res.requests.forEach(((request) => {
+          
+        }))
         this.joinRequests = res.requests;
       }
     );
