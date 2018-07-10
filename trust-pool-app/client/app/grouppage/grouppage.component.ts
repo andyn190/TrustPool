@@ -71,9 +71,7 @@ export class GrouppageComponent implements OnInit, AfterViewInit, OnDestroy {
   ) { 
     this._chatService.getPrevMessages()
       .subscribe((data) => {
-        data.messages.forEach((message) => {
-          this.chatMessages.push(message);
-        });
+        this.chatMessages = data.messages;
       });
     this._chatService.newUserJoined()
       .subscribe(data => this.chatMessages.push(data));
