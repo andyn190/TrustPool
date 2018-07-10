@@ -154,6 +154,9 @@ const ExpenseRequest = sequelize.define('Expense_Request', {
   active_status: {
     type: Sequelize.STRING
   },
+  member_vote_percent: {
+    type: Sequelize.INTEGER
+  },
   voter_count: {
     type: Sequelize.INTEGER
   },
