@@ -69,9 +69,17 @@ export class GrouppageComponent implements OnInit, AfterViewInit, OnDestroy {
     private modalService: NgbModal,
     private _chatService: ChatService
   ) { 
+    this._chatService.getPrevMessages()
+      .subscribe((data) => {
+        data.messages.forEach((message) => {
+          this.chatMessages.push(message);
+        });
+      });
     this._chatService.newUserJoined()
       .subscribe(data => this.chatMessages.push(data));
     this._chatService.userHasLeft()
+      .subscribe(data => this.chatMessages.push(data));
+    this._chatService.receiveMessages()
       .subscribe(data => this.chatMessages.push(data));
   }
 
@@ -121,7 +129,9 @@ export class GrouppageComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   sendChatMessage(){
-    console.log(this.messageToSend);
+    const { currentChatId, isMember, messageToSend } = this;
+    const messageData = { chatId: currentChatId, userId: isMember.pool_member_id, message: messageToSend };
+    this._chatService.sendMessage(messageData);
   }
 
   leaveChat() {
