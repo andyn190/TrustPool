@@ -508,10 +508,8 @@ const findUserByGoogleAndUpdate = (googleID, newInfo) => {
       user.first_name = newInfo.name;
       user.last_name = newInfo.lastName;
       user.email = newInfo.email;
-      return user.save()
-        .tap(updatedUser => updatedUser);
-    })
-    .catch(err => err);
+      return user.save();
+    });
 };
 
 // find method link by id
