@@ -107,8 +107,8 @@ pools.get('/:poolid/joinrequests', (req, res) => {
   const { params } = req;
   const { poolid } = params;
   getJoinRequests(poolid)
-    .then(requests => Promise.resolve(res.status(200).json({ requests })))
-    .catch(err => res.status(200).json({ err }));
+    .then(joinRequests => Promise.resolve(res.status(200).json({ joinRequests })))
+    .catch(err => res.status(500).json({ err }));
   // find poolmembers where poolid and userid
 });
 
@@ -415,7 +415,7 @@ pools.post('/join', (req, res) => {
   const { googleID } = user;
   findUserByGoogle(googleID)
     .then((resUser) => {
-      const { id } = resUser;
+      const { id, first_name, last_name } = resUser;
       return findAllPoolMembers(poolid)
         .then((poolMembers) => {
           poolMembers.forEach((member) => {
@@ -433,7 +433,7 @@ pools.post('/join', (req, res) => {
               if (requests[0]) {
                 return Promise.reject(res.status(400).json({ error: 'YOU HAVE ALREADY SUBMITTED A JOIN REQUEST' }));
               }
-              return createJoinRequest(id, poolid)
+              return createJoinRequest(id, poolid, `${first_name} ${last_name}`)
                 .then(() => Promise.resolve(res.status(200).json({ message: 'SUCCESSFULLY CREATED JOIN POOL REQUEST' })));
             });
         });
