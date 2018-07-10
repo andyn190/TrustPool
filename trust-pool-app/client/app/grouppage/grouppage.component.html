@@ -81,8 +81,6 @@
                         <div> Number of Votes: {{request.voter_count}}</div>
                         <div>Vote Power: {{request.vote_up}} Up / {{request.vote_down}} Down</div>
                         <div class='row justify-content-center'>
-                          <button (click)='approveExpenseRequest(request)'> Approve </button>
-                          <button (click)='declineExpenseRequest(request)'> Decline </button>
                           <button *ngIf="!toggleChat" class="btn btn-primary" align='right' (click)="joinRequestChat(request.chat_id)">
                             Chat </button>
                         </div>
@@ -101,8 +99,6 @@
                         <div> Number of Votes: {{request.voter_count}}</div>
                         <div>Vote Power: {{request.vote_up}} Up / {{request.vote_down}} Down</div>
                         <div class='row justify-content-center'>
-                          <button (click)='approveExpenseRequest(request)'> Approve </button>
-                          <button (click)='declineExpenseRequest(request)'> Decline </button>
                           <button *ngIf="!toggleChat" class="btn btn-primary" align='right' (click)="joinRequestChat(currentExpenseRequest.chat_id)">
                             Chat </button>
                         </div>
