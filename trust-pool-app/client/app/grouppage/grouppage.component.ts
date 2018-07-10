@@ -45,7 +45,7 @@ export class GrouppageComponent implements OnInit, AfterViewInit, OnDestroy {
   card: any;
   cardHandler = this.onChange.bind(this);
   error: string;
-  joinRequests: any;
+  joinRequests: any = [];
   currentExpenseRequest: any;
   failedExpenseRequests: any;
   passedExpenseRequests: any;
@@ -166,12 +166,14 @@ export class GrouppageComponent implements OnInit, AfterViewInit, OnDestroy {
     this._poolsService.getPool(poolid).subscribe(
       (res: {pool:object, error: string}) => {
         const { pool, error } = res;
-        if(pool){
-          this.pool = pool;
-          const readable = (new DateFormatPipe()).transform(pool['createdAt'], 'LL');
-          pool['createdAt'] = readable;
+        if(error){
+          console.log(error);
+          return this.toastrService.error(error);
         }
-        console.log(error);
+        this.pool = pool;
+        const readable = (new DateFormatPipe()).transform(pool['createdAt'], 'LL');
+        pool['createdAt'] = readable;
+        
       },
       err => this.toastrService.error(err),
       () => console.log('done loading pool')
@@ -188,8 +190,8 @@ export class GrouppageComponent implements OnInit, AfterViewInit, OnDestroy {
 
   getJoinRequests(poolid) {
     this._poolsService.getJoinRequests(poolid).subscribe(
-      (res: { requests: ArrayType }) => {
-        this.joinRequests = res.requests;
+      (res: any) => {
+        this.joinRequests = res.joinRequests;
       }
     );
   }
