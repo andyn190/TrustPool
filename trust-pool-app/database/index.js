@@ -126,7 +126,10 @@ const ChatMessages = sequelize.define('Chat_Messages', {
     }
   },
   message: {
-    type: Sequelize.TEXT
+    type: Sequelize.STRING
+  },
+  userName: {
+    type: Sequelize.STRING
   }
 });
 
