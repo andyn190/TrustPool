@@ -10,6 +10,7 @@ import {
   ViewEncapsulation
 } from '@angular/core';
 import { CookieService } from 'ngx-cookie-service';
+import { NgxChartsModule } from '@swimlane/ngx-charts'
 import { PoolsService } from '../services/pools/pools.service';
 import { ChatService } from '../services/chat/chat.service';
 import { Router, ActivatedRoute, Routes } from '@angular/router';
@@ -18,7 +19,6 @@ import { ArrayType } from '@angular/compiler/src/output/output_ast';
 import { NgbModal, ModalDismissReasons } from '@ng-bootstrap/ng-bootstrap';
 import { ToastrService, Toast } from 'ngx-toastr';
 import { DateFormatPipe } from 'angular2-moment';
-import { UserService } from '../services/user/user.service';
 
 @Directive({ selector: 'cardinfo' })
 export class CardInfo {
@@ -61,6 +61,14 @@ export class GrouppageComponent implements OnInit, AfterViewInit, OnDestroy {
   messageToSend: string;
   chatError: string;
   currentChatId: number;
+  currentExpenseVote: any[];
+  multi: any[];
+
+  view: any[] = [700, 400];
+
+  colorScheme = {
+    domain: ['#5AA454', '#A10A28', '#C7B42C', '#AAAAAA']
+  };
 
   constructor(
     private cd: ChangeDetectorRef,
@@ -70,8 +78,7 @@ export class GrouppageComponent implements OnInit, AfterViewInit, OnDestroy {
     private route: ActivatedRoute,
     private modalService: NgbModal,
     private _chatService: ChatService,
-    private toastrService: ToastrService,
-    private _userService: UserService,
+    private toastrService: ToastrService
   ) { 
     this._chatService.getPrevMessages()
       .subscribe((data) => {
@@ -83,6 +90,7 @@ export class GrouppageComponent implements OnInit, AfterViewInit, OnDestroy {
       .subscribe(data => this.chatMessages.push(data));
     this._chatService.receiveMessages()
       .subscribe(data => this.chatMessages.push(data));
+    Object.assign(this, { currentExpenseVote: this.currentExpenseVote, multi: this.multi })
   }
 
 
@@ -150,21 +158,22 @@ export class GrouppageComponent implements OnInit, AfterViewInit, OnDestroy {
     this.fnToggleChat();
   }
 
+  onSelect(event) {
+    console.log(event);
+  }
+
   getPool(poolid) {
     this._poolsService.getPool(poolid).subscribe(
       (res: {pool:object, error: string}) => {
         const { pool, error } = res;
-        if(pool){
-          this._userService.getUserById(pool['creator']).subscribe(
-            (creator) => {
-              pool['creator'] = `${creator['user']['first_name']} ${creator['user']['last_name']}`
-            }
-          )
-          this.pool = pool;
-          const readable = (new DateFormatPipe()).transform(pool['createdAt'], 'LL');
-          pool['createdAt'] = readable;
+        if(error){
+          console.log(error);
+          return this.toastrService.error(error);
         }
-        console.log(error);
+        this.pool = pool;
+        const readable = (new DateFormatPipe()).transform(pool['createdAt'], 'LL');
+        pool['createdAt'] = readable;
+        
       },
       err => this.toastrService.error(err),
       () => console.log('done loading pool')
@@ -182,17 +191,9 @@ export class GrouppageComponent implements OnInit, AfterViewInit, OnDestroy {
   getJoinRequests(poolid) {
     this._poolsService.getJoinRequests(poolid).subscribe(
       (res: any) => {
-        res.requests.forEach(((request) => {
-          const userId = request.user_id;
-          this._userService.getUserById(userId).subscribe(
-            (response: object) => {
-              this.joinRequests.push(response['user']);
-            }
-          )
-        }))
+        this.joinRequests = res.joinRequests;
       }
     );
-    console.log(this.joinRequests);
   }
 
   getExpenseRequests(poolid) {
@@ -208,6 +209,7 @@ export class GrouppageComponent implements OnInit, AfterViewInit, OnDestroy {
             request['createdAt'] = readable;
             request['expiration_date'] = readable2;
             this.currentExpenseRequest = request;
+            this.currentExpenseVote = [{ name: 'Vote Power to Pass', value: request.vote_up }, { name: 'Vote Power to Fail', value: request.vote_down }]
           } else if (request.active_status === 'failed'){
             const readable = (new DateFormatPipe()).transform(request['createdAt'], 'LL');
             const readable2 = (new DateFormatPipe()).transform(request['expiration_date'], 'LL');
@@ -228,9 +230,9 @@ export class GrouppageComponent implements OnInit, AfterViewInit, OnDestroy {
 
   approveExpenseRequest(request) {
     const { isMember, _poolsService, pool } = this;
-    const { id } = request;
+    const { id, voter_count } = request;
     const { vote_power } = isMember;
-    const { members_count, voteConfig, voter_count } = pool;
+    const { members_count, voteConfig} = pool;
     if (voter_count >= members_count) {
       this.toastrService.info('EVERYONE HAS VOTED ALREADY')
       return 'EVERYONE HAS VOTED ALREADY';
@@ -253,9 +255,13 @@ export class GrouppageComponent implements OnInit, AfterViewInit, OnDestroy {
 
   declineExpenseRequest(request) {
     const { isMember, _poolsService, pool } = this;
-    const { id } = request;
+    const { id, voter_count } = request;
     const { vote_power } = isMember;
     const { voteConfig, members_count } = pool;
+    if (voter_count >= members_count) {
+      this.toastrService.info('EVERYONE HAS VOTED ALREADY')
+      return 'EVERYONE HAS VOTED ALREADY';
+    }
     if (this.isMember.has_voted) {
       this.toastrService.info('YOU HAVE ALREADY VOTED');
       return 'YOU HAVE ALREADY VOTED';
