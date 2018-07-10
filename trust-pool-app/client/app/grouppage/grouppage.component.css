@@ -49,6 +49,20 @@ form.checkout button:active {
   background-color: #fefde5 !important;
 }
 
+.chatWindow {
+  height: 400px;
+  overflow: auto;
+  background: #f9f9f9;
+}
+
+.chatContainer {
+  max-width: 600px;
+  margin: 30px auto;
+  border: 1px solid #ddd;
+  box-shadow: 1px 3px 5px rgba(0,0,0,0.05);
+  border-radius: 2px;
+}
+
 :host /deep/ dt {
   font-size: large
 }

@@ -27,6 +27,7 @@ import { CreaterequestComponent } from './createrequest/createrequest.component'
 import { EbaypageComponent } from './ebaypage/ebaypage.component'
 import { OwnAuthService } from './services/auth/auth.service';
 import { PoolsService } from './services/pools/pools.service';
+import { ChatService } from './services/chat/chat.service';
 import { ContributeComponent } from './contribute/contribute.component';
 import { AccountpageComponent } from './accountpage/accountpage.component';
 import { GrouppageComponent, CardInfo } from './grouppage/grouppage.component';
@@ -120,7 +121,7 @@ export function getAuthServiceConfigs() {
     ToastrModule.forRoot(),
     MomentModule
   ],
-    providers: [OwnAuthService, UserService, PoolsService, CookieService, {
+    providers: [OwnAuthService, UserService, PoolsService, CookieService, ChatService, {
     provide: AuthServiceConfig,
     useFactory: getAuthServiceConfigs
   }],

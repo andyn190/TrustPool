@@ -11,6 +11,7 @@ import {
 } from '@angular/core';
 import { CookieService } from 'ngx-cookie-service';
 import { PoolsService } from '../services/pools/pools.service';
+import { ChatService } from '../services/chat/chat.service';
 import { Router, ActivatedRoute, Routes } from '@angular/router';
 import { NgForm } from '@angular/forms';
 import { ArrayType } from '@angular/compiler/src/output/output_ast';
@@ -53,6 +54,12 @@ export class GrouppageComponent implements OnInit, AfterViewInit, OnDestroy {
   private sub: any;
   closeResult: string;
   expenseRequests: any;
+  toggleChat: boolean = false;
+  chatName: string;
+  chatMessages: Array<{ userName: String, message: String }> = [];
+  messageToSend: string;
+  chatError: string;
+  currentChatId: number;
 
   constructor(
     private cd: ChangeDetectorRef,
@@ -61,8 +68,21 @@ export class GrouppageComponent implements OnInit, AfterViewInit, OnDestroy {
     private _router: Router,
     private route: ActivatedRoute,
     private modalService: NgbModal,
+    private _chatService: ChatService,
     private toastrService: ToastrService,
-  ) { }
+  ) { 
+    this._chatService.getPrevMessages()
+      .subscribe((data) => {
+        this.chatMessages = data.messages;
+      });
+    this._chatService.newUserJoined()
+      .subscribe(data => this.chatMessages.push(data));
+    this._chatService.userHasLeft()
+      .subscribe(data => this.chatMessages.push(data));
+    this._chatService.receiveMessages()
+      .subscribe(data => this.chatMessages.push(data));
+  }
+
 
   ngAfterViewInit() {
     const style = {
@@ -100,9 +120,34 @@ export class GrouppageComponent implements OnInit, AfterViewInit, OnDestroy {
       getExpenseRequests.call(this, poolid);
     });
   }
+
   viewGroups() {
     this._router.navigate(['groups']);
   }
+
+  fnToggleChat(){
+    this.toggleChat = !this.toggleChat;
+  }
+
+  sendChatMessage(){
+    const { currentChatId, isMember, messageToSend } = this;
+    const messageData = { chatId: currentChatId, userId: isMember.pool_member_id, message: messageToSend };
+    this._chatService.sendMessage(messageData);
+  }
+
+  leaveChat() {
+    const joinInfo = { chatId: this.currentChatId, userId: this.isMember.pool_member_id };
+    this._chatService.leaveChat(joinInfo);
+    this.fnToggleChat();
+  }
+
+  joinRequestChat(chatId){
+    const joinInfo = { chatId, userId: this.isMember.pool_member_id };
+    this.currentChatId = chatId;
+    this._chatService.joinRequestChat(joinInfo);
+    this.fnToggleChat();
+  }
+
   getPool(poolid) {
     this._poolsService.getPool(poolid).subscribe(
       (res: {pool:object, error: string}) => {
