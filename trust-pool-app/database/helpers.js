@@ -276,7 +276,7 @@ const updateExpenseRequest = (id, key, value, link_id) => {
   if (link_id) {
     return findExpenseRequestByLink(link_id)
       .then((request) => {
-        if (key === 'voter_count' || key === 'vote_up' || key === 'vote_down') {
+        if (key === 'voter_count' || key === 'vote_up' || key === 'vote_down' || key === 'member_vote_percent') {
           request[key] += value;
         } else { request[key] = value; }
         return request.save()
@@ -286,7 +286,7 @@ const updateExpenseRequest = (id, key, value, link_id) => {
 
   return findExpenseRequestById(id)
     .then((request) => {
-      if (key === 'voter_count' || key === 'vote_up' || key === 'vote_down') {
+      if (key === 'voter_count' || key === 'vote_up' || key === 'vote_down' || key === 'member_vote_percent') {
         request[key] += value;
       } else { request[key] = value; }
       return request.save()
@@ -445,7 +445,8 @@ const createExpenseRequest = (
       voter_count: 0,
       vote_up: 0,
       vote_down: 0,
-      chat_id: newRoom.id
+      chat_id: newRoom.id,
+      member_vote_percent: 0
     };
     return create('ExpenseRequest', expenseRequest);
   })
