@@ -48,8 +48,18 @@
                   <h3 class='row justify-content-center'>${{currentExpenseRequest.expense_amount}}</h3>
                   <p class='row justify-content-center'>{{currentExpenseRequest.description}}</p>
                   <h4 class='row justify-content-center'> Expires: {{currentExpenseRequest.expiration_date}}</h4>
-                  <div class='row justify-content-center'> Number of Votes: {{currentExpenseRequest.voter_count}}</div>
-                  <div class='row justify-content-center'>Vote Power: {{currentExpenseRequest.vote_up}} Up / {{currentExpenseRequest.vote_down}} Down</div>
+                  <div class='row justify-content-center'> Number of Votes: {{currentExpenseRequest.voter_count}} ({{currentExpenseRequest.member_vote_percent}}% of the group)</div>
+                  <div class='row justify-content-center'>Vote Power needed to pass: {{pool.voteConfig}}%</div>
+                  <ngx-charts-advanced-pie-chart 
+                    class='row justify-content-center'
+                    [view]="view"
+                    [scheme]="colorScheme"
+                    [results]="currentExpenseVote"
+                    [gradient]="gradient"
+                    (select)="onSelect($event)"
+                    
+                  >
+                  </ngx-charts-advanced-pie-chart>
                   <div class='row justify-content-center'>
                     <button class="btn btn-primary" (click)='approveExpenseRequest(currentExpenseRequest)'> Approve </button>
                     <button class="btn btn-primary" (click)='declineExpenseRequest(currentExpenseRequest)'> Decline </button>
@@ -71,8 +81,6 @@
                         <div> Number of Votes: {{request.voter_count}}</div>
                         <div>Vote Power: {{request.vote_up}} Up / {{request.vote_down}} Down</div>
                         <div class='row justify-content-center'>
-                          <button (click)='approveExpenseRequest(request)'> Approve </button>
-                          <button (click)='declineExpenseRequest(request)'> Decline </button>
                           <button *ngIf="!toggleChat" class="btn btn-primary" align='right' (click)="joinRequestChat(request.chat_id)">
                             Chat </button>
                         </div>
@@ -91,8 +99,6 @@
                         <div> Number of Votes: {{request.voter_count}}</div>
                         <div>Vote Power: {{request.vote_up}} Up / {{request.vote_down}} Down</div>
                         <div class='row justify-content-center'>
-                          <button (click)='approveExpenseRequest(request)'> Approve </button>
-                          <button (click)='declineExpenseRequest(request)'> Decline </button>
                           <button *ngIf="!toggleChat" class="btn btn-primary" align='right' (click)="joinRequestChat(currentExpenseRequest.chat_id)">
                             Chat </button>
                         </div>
@@ -161,19 +167,20 @@
             </div>
             <div *ngIf="isMember.is_creator">
               <h4  class='row justify-content-center'> You are the creator of this group!</h4>
-              <div class='row'>
-                <h5>Join Requests</h5>
-                <div class='row justify-content-center'>
-                  <ul>
-                    <li *ngFor="let request of joinRequests">
-                      <h3 class='row justify-content-center'>{{request.first_name}}{{request.last_name}} Wants to join the pool</h3>
-                        <button (click)='acceptRequest(request)'> Accept </button>
-                        <button (click)='declineRequest(request)'> Decline </button>
-                      <br />
-                    </li>
-                  </ul>
-                </div>
+              <div class="col-md-6">
+                <h4 class='row justify-content-center'>Join Requests</h4>
+                <ul class='row justify-content-center'>
+                  <li *ngFor="let request of joinRequests">
+                    <h5>{{request.name}} Wants to join the pool</h5>
+                    <div class='row justify-content-center'>
+                      <button (click)='acceptRequest(request)'> Accept </button>
+                      <button (click)='declineRequest(request)'> Decline </button>
+                    </div>
+                    <br />
+                  </li>
+                </ul>
               </div>
+              <div class="col-md-6"></div>
             </div>
             <h5 class="row justify-content-center">Your Contribution</h5>
             <div class="row justify-content-center">

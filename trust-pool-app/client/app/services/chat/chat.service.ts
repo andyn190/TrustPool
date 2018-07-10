@@ -7,7 +7,7 @@ import { Observable } from 'rxjs';
 })
 export class ChatService {
   
-  private socket = io("http://localhost:8080");
+  private socket = io(window.location.origin);
   constructor() { }
 
 

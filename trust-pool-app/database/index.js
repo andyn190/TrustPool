@@ -154,6 +154,9 @@ const ExpenseRequest = sequelize.define('Expense_Request', {
   active_status: {
     type: Sequelize.STRING
   },
+  member_vote_percent: {
+    type: Sequelize.INTEGER
+  },
   voter_count: {
     type: Sequelize.INTEGER
   },
@@ -308,6 +311,9 @@ const JoinRequests = sequelize.define('Join_Requests', {
       key: 'id',
       deferrable: Sequelize.Deferrable.INITIALLY_IMMEDIATE
     }
+  },
+  name: {
+    type: Sequelize.STRING
   }
 });
 
