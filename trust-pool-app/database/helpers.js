@@ -163,6 +163,8 @@ const findPublicPools = () => findAll('Pools')
 
 const findAllUsers = () => findAll('Users');
 
+const findMessagesByChatId = room_id => findAll('ChatMessages', { where: { room_id } });
+
 const findExpenseRequests = pool_id => findAll('ExpenseRequest', { where: { pool_id } });
 
 const findAllPoolMembers = pool_id => findAll('PoolMembers', { where: { pool_id } });
@@ -451,26 +453,15 @@ const createExpenseRequest = (
   })
   .catch(err => console.log(err));
 
-
-// createExpenseRequest(
-//   3,
-//   1,
-//   'request 1',
-//   'description',
-//   1150,
-//   new Date(),
-//   4
-// )
-//   .then((succ) => {
-//     console.log(succ);
-//     return createCheckEntry(1150, 'Jelani Hankins', 'nospinfo@gmail.com', 'test check', null, 4)
-//       .then(checkEntryRes => console.log('MADE CHECK ENTRY', checkEntryRes));
-//   })
-//   .catch(err => console.log(err));
-
-// updateCurrentRequest(3)
-//   .then(current => console.log(current))
-//   .catch(err => console.log(err));
+const createChatMessage = (room_id, user_id, message, userName) => {
+  const newMessage = {
+    room_id,
+    user_id,
+    message,
+    userName
+  };
+  return create('ChatMessages', newMessage);
+};
 
 const createJoinRequest = (user_id, pool_id) => {
   const joinRequest = {
@@ -567,5 +558,7 @@ module.exports = {
   updateExpenseRequest,
   createCheckEntry,
   updateCurrentRequest,
-  updateAllPoolMembers
+  updateAllPoolMembers,
+  createChatMessage,
+  findMessagesByChatId
 };
