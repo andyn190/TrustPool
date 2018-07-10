@@ -1,6 +1,6 @@
-import { Component, OnInit } from '@angular/core';
-import { CookieService } from 'ngx-cookie-service';
+import { Component, OnInit, Input } from '@angular/core';
 import { OwnAuthService } from '../services/auth/auth.service';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-header',
@@ -9,18 +9,19 @@ import { OwnAuthService } from '../services/auth/auth.service';
 })
 export class HeaderComponent implements OnInit {
   constructor(
-    private auth: OwnAuthService
+    private auth: OwnAuthService,
+    private toastr: ToastrService
   ) { }
+  @Input () loggedIn: boolean
   user: {};
-  loggedIn: boolean;
   ngOnInit() {
     this.auth.checkLogin().subscribe(({ user }: any) => {
-      console.log(user);
+      this.toastr.success(`${user.first_name.trim()} ${user.last_name.trim()} has successfully logged in`);
       if (user) {
         this.user = user;
         this.loggedIn = true;
       }
-    });
+    }, (err) => { this.toastr.error('Please log in', err)});
   }
   handleLogout() {
     this.loggedIn = false;

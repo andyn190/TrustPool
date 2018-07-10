@@ -26,6 +26,7 @@ export class AppComponent {
         this.headerHide = true;
         this.router.navigate(['home']);
       }
+      this.router.navigate(['home']);
     });
   }
   isClicked() {

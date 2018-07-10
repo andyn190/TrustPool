@@ -19,7 +19,7 @@
           </ul>
         </div>
         <div class="row">
-          <div class="col-md-4">
+          <div class="col-md-4" *ngIf="loggedIn">
             <h2>
               Creation
             </h2>
@@ -30,7 +30,7 @@
               <a class="btn" routerLink="/creategroup">Create A Group</a>
             </p>
           </div>
-          <div class="col-md-4">
+          <div class="col-md-4" *ngIf="loggedIn">
             <h2>
               Join
             </h2>

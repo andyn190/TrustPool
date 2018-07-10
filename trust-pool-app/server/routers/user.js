@@ -19,7 +19,6 @@ user.post('/update', (req, res) => {
     .catch((err) => {
       res.status(400).send(err);
     });
-  // console.log(user);
 });
 
 module.exports = user;
