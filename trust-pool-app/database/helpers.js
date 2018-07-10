@@ -462,10 +462,11 @@ const createChatMessage = (room_id, user_id, message, userName) => {
   return create('ChatMessages', newMessage);
 };
 
-const createJoinRequest = (user_id, pool_id) => {
+const createJoinRequest = (user_id, pool_id, name) => {
   const joinRequest = {
     user_id,
-    pool_id
+    pool_id,
+    name
   };
   let poolName;
   findPoolById(pool_id)
