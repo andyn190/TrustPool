@@ -16,10 +16,11 @@ import { Router, ActivatedRoute, Routes } from '@angular/router';
 import { NgForm } from '@angular/forms';
 import { ArrayType } from '@angular/compiler/src/output/output_ast';
 import { NgbModal, ModalDismissReasons } from '@ng-bootstrap/ng-bootstrap';
+import { ToastrService, Toast } from 'ngx-toastr';
 import { DateFormatPipe } from 'angular2-moment';
 
 @Directive({ selector: 'cardinfo' })
-export class CardInfo { 
+export class CardInfo {
 }
 
 @Component({
@@ -34,7 +35,7 @@ export class GrouppageComponent implements OnInit, AfterViewInit, OnDestroy {
     const groupPage = this;
     setTimeout(() => {
       groupPage.cardInfo = cardInfo;
-      if(groupPage.cardInfo){
+      if (groupPage.cardInfo) {
         groupPage.card.mount(groupPage.cardInfo.nativeElement);
       }
     }, 0);
@@ -67,7 +68,8 @@ export class GrouppageComponent implements OnInit, AfterViewInit, OnDestroy {
     private _router: Router,
     private route: ActivatedRoute,
     private modalService: NgbModal,
-    private _chatService: ChatService
+    private _chatService: ChatService,
+    private toastrService: ToastrService,
   ) { 
     this._chatService.getPrevMessages()
       .subscribe((data) => {
@@ -80,6 +82,7 @@ export class GrouppageComponent implements OnInit, AfterViewInit, OnDestroy {
     this._chatService.receiveMessages()
       .subscribe(data => this.chatMessages.push(data));
   }
+
 
   ngAfterViewInit() {
     const style = {
@@ -156,22 +159,22 @@ export class GrouppageComponent implements OnInit, AfterViewInit, OnDestroy {
         }
         console.log(error);
       },
-      err => console.log(err),
+      err => this.toastrService.error(err),
       () => console.log('done loading pool')
     );
   }
 
-  inviteFriend(poolName, email, message, poolId){
+  inviteFriend(poolName, email, message, poolId) {
     this._poolsService.inviteFriend(email, message, poolName, poolId, window.location.origin).subscribe(
       res => console.log(res),
       err => console.log(err),
-      () => console.log('done inviting friend')
+      () => this.toastrService.success('You\'ve Successfully invited a friend!')
     );
   }
 
   getJoinRequests(poolid) {
     this._poolsService.getJoinRequests(poolid).subscribe(
-      (res: {requests: ArrayType}) => {
+      (res: { requests: ArrayType }) => {
         this.joinRequests = res.requests;
       }
     );
@@ -179,16 +182,28 @@ export class GrouppageComponent implements OnInit, AfterViewInit, OnDestroy {
 
   getExpenseRequests(poolid) {
     this._poolsService.getExpenseRequests(poolid).subscribe(
-      (res:any) => { 
+      (res: any) => {
         this.expenseRequests = res;
         this.failedExpenseRequests = [];
         this.passedExpenseRequests = [];
         res.forEach((request)=>{
           if(request.active_status === 'current'){
+            const readable = (new DateFormatPipe()).transform(request['createdAt'], 'LL');
+            const readable2 = (new DateFormatPipe()).transform(request['expiration_date'], 'LL');
+            request['createdAt'] = readable;
+            request['expiration_date'] = readable2;
             this.currentExpenseRequest = request;
           } else if (request.active_status === 'failed'){
+            const readable = (new DateFormatPipe()).transform(request['createdAt'], 'LL');
+            const readable2 = (new DateFormatPipe()).transform(request['expiration_date'], 'LL');
+            request['createdAt'] = readable;
+            request['expiration_date'] = readable2;
             this.failedExpenseRequests.push(request);
           } else if (request.active_status === 'passed') {
+            const readable = (new DateFormatPipe()).transform(request['createdAt'], 'LL');
+            const readable2 = (new DateFormatPipe()).transform(request['expiration_date'], 'LL');
+            request['createdAt'] = readable;
+            request['expiration_date'] = readable2;
             this.passedExpenseRequests.push(request);
           }
         });
@@ -199,13 +214,14 @@ export class GrouppageComponent implements OnInit, AfterViewInit, OnDestroy {
   approveExpenseRequest(request) {
     const { isMember, _poolsService, pool } = this;
     const { id } = request;
-    const { vote_power } = isMember; 
+    const { vote_power } = isMember;
     const { members_count, voteConfig, voter_count } = pool;
-    if (voter_count >= members_count){
+    if (voter_count >= members_count) {
+      this.toastrService.info('EVERYONE HAS VOTED ALREADY')
       return 'EVERYONE HAS VOTED ALREADY';
     }
-    if (isMember.has_voted){
-      console.log('YOU HAVE ALREADY VOTED');
+    if (isMember.has_voted) {
+      this.toastrService.info('YOU HAVE ALREADY VOTED');
       return 'YOU HAVE ALREADY VOTED';
     }
     _poolsService.approveExpenseRequest(id, vote_power, isMember.id, members_count, voteConfig, pool.id).subscribe(
@@ -221,12 +237,12 @@ export class GrouppageComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   declineExpenseRequest(request) {
-    const { isMember, _poolsService, pool} = this;
+    const { isMember, _poolsService, pool } = this;
     const { id } = request;
     const { vote_power } = isMember;
     const { voteConfig, members_count } = pool;
     if (this.isMember.has_voted) {
-      console.log('YOU HAVE ALREADY VOTED');
+      this.toastrService.info('YOU HAVE ALREADY VOTED');
       return 'YOU HAVE ALREADY VOTED';
     }
     _poolsService.declineExpenseRequest(id, vote_power, isMember.id, members_count, voteConfig, pool.id).subscribe(
@@ -275,14 +291,14 @@ export class GrouppageComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   async onSubmit(form: NgForm, poolId) {
-    const { isMember, _poolsService, card, pool} = this
+    const { isMember, _poolsService, card, pool } = this
     const { amount } = form.value;
     const { token, error } = await stripe.createToken(card);
     if (!isMember) {
-      console.log('YOU ARE NOT A MEMBER OF THIS GROUP');
+      this.toastrService.info('YOU ARE NOT A MEMBER OF THIS GROUP');
     }
     if (error) {
-      console.log('Something is wrong:', error);
+      this.toastrService.error('Something is wrong:', error);
     } else {
       const amountArr = amount.toString().split('.');
       let decimalStr = amountArr[1];
@@ -296,12 +312,14 @@ export class GrouppageComponent implements OnInit, AfterViewInit, OnDestroy {
               const { contribution, charge  } = success;
               const { contributionEntry, updatedPool } = contribution;
               const { contribution_amount } = contributionEntry;
+              const readable = (new DateFormatPipe()).transform(updatedPool['createdAt'], 'LL');
+              updatedPool.createdAt = readable;
               this.pool = updatedPool;
               this.isMember.contrubution_amount += contribution_amount;
               // get vote power back, / get new isMember
             },
-            err => console.log(err, 'ERROR'),
-            () => console.log('done contributing to pool')
+            err => this.toastrService.error(err, 'ERROR'),
+            () => this.toastrService.success('done contributing to pool', 'Successfully contributed to the pool')
           );
       } else {
         if (decimalStr.length === 1) {
@@ -309,8 +327,8 @@ export class GrouppageComponent implements OnInit, AfterViewInit, OnDestroy {
         }
         _poolsService.sendContrib(token, poolId, amountArr.join(''), isMember.id)
           .subscribe(
-            success => { console.log(success, 'SUCCESS') },
-            err => console.log(err, 'ERROR'),
+            success => { this.toastrService.success(success.toString(), 'SUCCESS') },
+            err => this.toastrService.error(err, 'ERROR'),
             () => console.log('done contributing to pool')
           );
       }
@@ -326,10 +344,10 @@ export class GrouppageComponent implements OnInit, AfterViewInit, OnDestroy {
         .subscribe(
           success => {
             groupPage.checkIsMember(poolid);
-            console.log(success, 'Success!!!');
+            this.toastrService.success(success.toString(), 'Success!!!');
           },
-          err => console.log(err, 'ERROR'),
-          () => console.log('done joining pool')
+          err => this.toastrService.error(err, 'ERROR'),
+          () => this.toastrService.success('done joining pool')
         );
     } else {
       // send post request with just poolId in body
@@ -337,8 +355,8 @@ export class GrouppageComponent implements OnInit, AfterViewInit, OnDestroy {
         success => {
           groupPage.checkIsMember(poolid);
         },
-        err => console.log(err, 'ERROR'),
-        () => console.log('done joining pool')
+        err => this.toastrService.error(err, 'ERROR'),
+        () => this.toastrService.success('done joining pool')
       );
     }
   }
@@ -352,11 +370,11 @@ export class GrouppageComponent implements OnInit, AfterViewInit, OnDestroy {
         this.isMember = false;
       }
     },
-      err => console.log('CHECK FILWS',err),
+      err => console.log('CHECK FILWS', err),
       () => console.log('done checking is member')
     );
   }
   goToExpenseRequestForm(poolid) {
-    this._router.navigate(['expenseForm'], { queryParams: { poolid: poolid }});
+    this._router.navigate(['expenseForm'], { queryParams: { poolid: poolid, value: this.pool.pool_value } });
   }
 }

@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { UserService } from '../services/user/user.service';
+import { ToastrService } from 'ngx-toastr';
+import { DateFormatPipe } from 'angular2-moment';
 
 @Component({
   selector: 'app-accountpage',
@@ -8,12 +10,17 @@ import { UserService } from '../services/user/user.service';
   styleUrls: ['./accountpage.component.css']
 })
 export class AccountpageComponent implements OnInit {
-  user:any;
+  user:any = {};
   firstName:string
   lastName:string
   email:string
+  createdAt:string
   clicked:boolean = false;
-  constructor(private route: ActivatedRoute, private _userService: UserService) {
+  constructor(
+    private route: ActivatedRoute,
+    private _userService: UserService,
+    private toastr: ToastrService
+  ) {
   }
 
   ngOnInit() {
@@ -23,6 +30,7 @@ export class AccountpageComponent implements OnInit {
           this.user = res.user
           this.firstName = res.user.first_name.trim();
           this.lastName = res.user.last_name.trim();
+          this.createdAt = (new DateFormatPipe()).transform(res.user.createdAt, 'LL');
           if(res.user.email) {
             this.email = res.user.email.trim();
           }
@@ -44,8 +52,8 @@ export class AccountpageComponent implements OnInit {
     let newEmail = form.value['user-email'];
     let body = { name: nameFirst, lastName: nameLast, email: newEmail };
     this._userService.updateUserInfo(body).subscribe(
-      success => console.log(success),
-      err => console.log(err, 'ERROR'),
+      (success : any) => { this.toastr.success(`Successfully updated ${success.email}`); },
+      err => this.toastr.error(err, 'Error updating your account'),
       () => console.log('done updating user info')
     );
   }

@@ -420,9 +420,7 @@ const createCheck = (amount, name, email, description, methodId, address = null)
       link_id: methodId
     };
   }
-  return Checks.create(check)
-    .then(createdCheck => createdCheck)
-    .catch(err => err);
+  return Checks.create(check);
 };
 
 const createExpenseRequest = (
@@ -503,14 +501,15 @@ const findPoolByMember = googleID => Users.findOne({
 }).then(user => findPoolMember(user.id)).then(arr => arr)
   .catch(error => console.log(error));
 
-const findUserByGoogleAndUpdate = (googleID, newInfo) => Users.findOne({ where: { googleID } })
-  .then((user) => {
-    user.first_name = newInfo.name;
-    user.last_name = newInfo.lastName;
-    user.email = newInfo.email;
-    return user.save();
-  });
-
+const findUserByGoogleAndUpdate = (googleID, newInfo) => {
+  return Users.findOne({ where: { googleID } })
+    .then((user) => {
+      user.first_name = newInfo.name;
+      user.last_name = newInfo.lastName;
+      user.email = newInfo.email;
+      return user.save();
+    });
+};
 
 // find method link by id
 const executeDeliveryMethod = link_id => findLinkById(link_id)

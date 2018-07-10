@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { GroupCreateService } from '../service/group-create.service';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-creategroup',
@@ -15,7 +16,11 @@ export class CreategroupComponent implements OnInit {
   public voteConfig: number;
   public publicOpt: boolean;
   constructor(
-    private http: HttpClient, private groupService:GroupCreateService , private router: Router) { }
+    private http: HttpClient,
+    private groupService:GroupCreateService,
+    private router: Router,
+    private toastr: ToastrService
+  ) { }
 
   ngOnInit() {
   }
@@ -28,8 +33,11 @@ export class CreategroupComponent implements OnInit {
     let publicOpt = form.value['group-publicOpt'];
     const pool = { name, imgUrl64, desc, voteConfig, publicOpt};
     this.groupService.createGroup(pool).subscribe(
-      success => { console.log(success, 'Success!'); },
-      err => console.log(err, 'ERROR'),
+      success => {
+        this.toastr.success('Success!, You\'ve made a Pool!');
+        console.log(success);
+    },
+      err => this.toastr.error(err, 'ERROR'),
       () => console.log('done creating pool')
     );
     form.reset();

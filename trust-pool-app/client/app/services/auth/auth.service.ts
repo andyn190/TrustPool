@@ -3,8 +3,6 @@ import { Observable, of } from 'rxjs';
 import { map, filter, catchError, mergeMap, tap } from 'rxjs/operators';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 
-import { User } from '../../user';
-
 const httpOptions = {
   headers: new HttpHeaders({
     'Content-Type': 'application/json'
@@ -34,12 +32,6 @@ export class OwnAuthService {
   googleLogin() {
     console.log(googleAuthHeaders);
     return this.http.get(this.googleUrl);
-  }
-  login (user: User): Observable<User> {
-    return this.http.post<User>(this.loginUrl, user, httpOptions).pipe(
-      tap((user: User) => console.log('this worked', user.email, user.password)),
-      catchError(this.handleError<User>('login'))
-    );
   }
   private handleError<T> (operation = 'operation', result? : T) {
     return (error: any): Observable<T> => {

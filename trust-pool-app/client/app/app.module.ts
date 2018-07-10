@@ -8,6 +8,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations'
 import { MatButtonModule } from '@angular/material/button';
 import { CookieService } from 'ngx-cookie-service';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { ToastrModule } from 'ngx-toastr';
 import {
   SocialLoginModule,
   AuthServiceConfig,
@@ -96,10 +97,11 @@ export function getAuthServiceConfigs() {
     MypoolsComponent,
     SignupFormComponent,
     ExpenseFormComponent,
-    CheckFormComponent
+    CheckFormComponent,
   ],
   imports: [
     BrowserModule,
+    BrowserAnimationsModule,
     HttpClientModule,
     MatSidenavModule,
     BrowserAnimationsModule,
@@ -116,6 +118,7 @@ export function getAuthServiceConfigs() {
     MatListModule,
     MatIconModule,
     NgbModule.forRoot(),
+    ToastrModule.forRoot(),
     MomentModule
   ],
     providers: [OwnAuthService, UserService, PoolsService, CookieService, ChatService, {
