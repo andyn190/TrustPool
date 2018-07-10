@@ -311,6 +311,9 @@ const JoinRequests = sequelize.define('Join_Requests', {
       key: 'id',
       deferrable: Sequelize.Deferrable.INITIALLY_IMMEDIATE
     }
+  },
+  name: {
+    type: Sequelize.STRING
   }
 });
 
