@@ -155,6 +155,11 @@ export class GrouppageComponent implements OnInit, AfterViewInit, OnDestroy {
       (res: {pool:object, error: string}) => {
         const { pool, error } = res;
         if(pool){
+          this._userService.getUserById(pool['creator']).subscribe(
+            (creator) => {
+              pool['creator'] = `${creator['user']['first_name']} ${creator['user']['last_name']}`
+            }
+          )
           this.pool = pool;
           const readable = (new DateFormatPipe()).transform(pool['createdAt'], 'LL');
           pool['createdAt'] = readable;
