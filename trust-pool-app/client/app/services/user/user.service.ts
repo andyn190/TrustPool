@@ -11,7 +11,6 @@ const httpOptions = {
 export class UserService {
 
   constructor(private http: HttpClient) { 
-    console.log('USER SERVICE INIT!!!!!');
   }
 
   getUser() {
@@ -20,6 +19,9 @@ export class UserService {
 
   updateUserInfo(body) {
     return this.http.post('/user/update', body, httpOptions);
+  }
+  getUserById(userId) {
+    return this.http.get(`/user/${userId}`);
   }
 
 }
