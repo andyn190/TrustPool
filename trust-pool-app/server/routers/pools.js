@@ -2,6 +2,7 @@ const pools = require('express').Router();
 let stripe = require('stripe');
 let mailgun = require('mailgun-js');
 const cloudinary = require('cloudinary');
+const percent = require('percent');
 
 const {
   createPool,
@@ -170,6 +171,10 @@ pools.post('/:requestId/accept', (req, res) => {
       const { id } = request;
       return updateExpenseRequest(id, 'voter_count', 1);
     })
+    .then((request)=>{
+      const { id, voter_count } = request;
+      return updateExpenseRequest(id, 'member_vote_percent', percent.calc(voter_count, poolMembersCount, 0));
+    })
     .then((requestEntry) => {
       const { voter_count, vote_up, method } = requestEntry;
       const methodLink = method;
@@ -209,6 +214,10 @@ pools.post('/:requestId/decline', (req, res) => {
     .then((request) => {
       const { id } = request;
       return updateExpenseRequest(id, 'voter_count', 1);
+    })
+    .then((request) => {
+      const { id, voter_count } = request;
+      return updateExpenseRequest(id, 'member_vote_percent', percent.calc(voter_count, poolMembersCount, 0));
     })
     .then((requestEntry) => {
       const { voter_count, vote_down } = requestEntry;
