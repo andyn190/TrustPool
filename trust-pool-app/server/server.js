@@ -19,7 +19,7 @@ const server = http.Server(app);
 io = io.listen(server);
 io.on('connection', (socket) => {
   console.log('NEW CONNECTION MADE');
-  setupListeners(socket);
+  setupListeners(socket, io);
 });
 app.use(cors());
 app.use(require('cookie-parser')());
