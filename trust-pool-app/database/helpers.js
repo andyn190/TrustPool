@@ -13,7 +13,8 @@ const {
   ChatMessages,
   EbayWishlistEntry,
   Checks,
-  JoinRequests
+  JoinRequests,
+  ChatRoom
 } = require('.');
 const { MAILGUN } = require('../server/config');
 
@@ -39,7 +40,8 @@ const models = {
   ChatMessages,
   EbayWishlistEntry,
   Checks,
-  JoinRequests
+  JoinRequests,
+  ChatRoom
 };
 
 const deliveryServices = {
@@ -160,6 +162,8 @@ const findPublicPools = () => findAll('Pools')
 
 
 const findAllUsers = () => findAll('Users');
+
+const findMessagesByChatId = room_id => findAll('ChatMessages', { where: { room_id } });
 
 const findExpenseRequests = pool_id => findAll('ExpenseRequest', { where: { pool_id } });
 
@@ -394,6 +398,8 @@ const createPool = (name, imageURL, description, voteConfig, creator, publicOpt)
 
 const createExpenseRequestLink = method => create('ExpenseRequestLink', { method });
 
+const createChatRoom = type => create('ChatRoom', { type });
+
 const createCheck = (amount, name, email, description, methodId, address = null) => {
   let check;
   if (address) {
@@ -414,9 +420,7 @@ const createCheck = (amount, name, email, description, methodId, address = null)
       link_id: methodId
     };
   }
-  return Checks.create(check)
-    .then(createdCheck => createdCheck)
-    .catch(err => err);
+  return Checks.create(check);
 };
 
 const createExpenseRequest = (
@@ -427,42 +431,35 @@ const createExpenseRequest = (
   expense_amount,
   expiration_date,
   method
-) => {
-  const expenseRequest = {
-    pool_id,
-    creator,
-    request_title,
-    description,
-    expense_amount,
-    expiration_date,
-    method,
-    active_status: 'queued',
-    voter_count: 0,
-    vote_up: 0,
-    vote_down: 0
+) => createChatRoom('expense')
+  .then((newRoom) => {
+    const expenseRequest = {
+      pool_id,
+      creator,
+      request_title,
+      description,
+      expense_amount,
+      expiration_date,
+      method,
+      active_status: 'queued',
+      voter_count: 0,
+      vote_up: 0,
+      vote_down: 0,
+      chat_id: newRoom.id
+    };
+    return create('ExpenseRequest', expenseRequest);
+  })
+  .catch(err => console.log(err));
+
+const createChatMessage = (room_id, user_id, message, userName) => {
+  const newMessage = {
+    room_id,
+    user_id,
+    message,
+    userName
   };
-  return create('ExpenseRequest', expenseRequest);
+  return create('ChatMessages', newMessage);
 };
-
-// createExpenseRequest(
-//   3,
-//   1,
-//   'request 1',
-//   'description',
-//   1150,
-//   new Date(),
-//   4
-// )
-//   .then((succ) => {
-//     console.log(succ);
-//     return createCheckEntry(1150, 'Jelani Hankins', 'nospinfo@gmail.com', 'test check', null, 4)
-//       .then(checkEntryRes => console.log('MADE CHECK ENTRY', checkEntryRes));
-//   })
-//   .catch(err => console.log(err));
-
-// updateCurrentRequest(3)
-//   .then(current => console.log(current))
-//   .catch(err => console.log(err));
 
 const createJoinRequest = (user_id, pool_id) => {
   const joinRequest = {
@@ -504,14 +501,15 @@ const findPoolByMember = googleID => Users.findOne({
 }).then(user => findPoolMember(user.id)).then(arr => arr)
   .catch(error => console.log(error));
 
-const findUserByGoogleAndUpdate = (googleID, newInfo) => Users.findOne({ where: { googleID } })
-  .then((user) => {
-    user.first_name = newInfo.name;
-    user.last_name = newInfo.lastName;
-    user.email = newInfo.email;
-    return user.save();
-  });
-
+const findUserByGoogleAndUpdate = (googleID, newInfo) => {
+  return Users.findOne({ where: { googleID } })
+    .then((user) => {
+      user.first_name = newInfo.name;
+      user.last_name = newInfo.lastName;
+      user.email = newInfo.email;
+      return user.save();
+    });
+};
 
 // find method link by id
 const executeDeliveryMethod = link_id => findLinkById(link_id)
@@ -559,5 +557,7 @@ module.exports = {
   updateExpenseRequest,
   createCheckEntry,
   updateCurrentRequest,
-  updateAllPoolMembers
+  updateAllPoolMembers,
+  createChatMessage,
+  findMessagesByChatId
 };

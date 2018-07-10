@@ -41,55 +41,84 @@
             </div>
             <div class="modal-body">
               <button *ngIf="isMember" class="btn btn-primary" align='right' (click)="goToExpenseRequestForm(pool.id)"> Create Expense Request</button>
-              <div *ngIf=currentExpenseRequest>
-                <h3 class="row justify-content-center"> Current Expense Request </h3>
-                <h3 class='row justify-content-center'>{{currentExpenseRequest.request_title}}</h3>
-                <h3 class='row justify-content-center'>${{currentExpenseRequest.expense_amount}}</h3>
-                <p class='row justify-content-center'>{{currentExpenseRequest.description}}</p>
-                <h4 class='row justify-content-center'> Expires: {{currentExpenseRequest.expiration_date}}</h4>
-                <div class='row justify-content-center'> Number of Votes: {{currentExpenseRequest.voter_count}}</div>
-                <div class='row justify-content-center'>Vote Power: {{currentExpenseRequest.vote_up}} Up / {{currentExpenseRequest.vote_down}} Down</div>
-                <div class='row justify-content-center'>
-                  <button (click)='approveExpenseRequest(currentExpenseRequest)'> Approve </button>
-                  <button (click)='declineExpenseRequest(currentExpenseRequest)'> Decline </button>
+              <div *ngIf=!toggleChat>
+                <div *ngIf=currentExpenseRequest>
+                  <h3 class="row justify-content-center"> Current Expense Request </h3>
+                  <h3 class='row justify-content-center'>{{currentExpenseRequest.request_title}}</h3>
+                  <h3 class='row justify-content-center'>${{currentExpenseRequest.expense_amount}}</h3>
+                  <p class='row justify-content-center'>{{currentExpenseRequest.description}}</p>
+                  <h4 class='row justify-content-center'> Expires: {{currentExpenseRequest.expiration_date}}</h4>
+                  <div class='row justify-content-center'> Number of Votes: {{currentExpenseRequest.voter_count}}</div>
+                  <div class='row justify-content-center'>Vote Power: {{currentExpenseRequest.vote_up}} Up / {{currentExpenseRequest.vote_down}} Down</div>
+                  <div class='row justify-content-center'>
+                    <button class="btn btn-primary" (click)='approveExpenseRequest(currentExpenseRequest)'> Approve </button>
+                    <button class="btn btn-primary" (click)='declineExpenseRequest(currentExpenseRequest)'> Decline </button>
+                    <button *ngIf="!toggleChat" class="btn btn-primary" align='right' (click)="joinRequestChat(currentExpenseRequest.chat_id)">
+                    Chat </button>
+                  </div>
+                  <br />
                 </div>
                 <br />
-              </div>
-              <br />
-              <div class="row">
-                <div class="col-md-6">
-                  <ul>
-                    <h3> Passed Expense Requests </h3>
-                    <li *ngFor="let request of passedExpenseRequests">
-                      <h3 class='row justify-content-center'>{{request.request_title}}</h3>
-                      <h3 class='row justify-content-center'>${{request.expense_amount}}</h3>
-                      <p>{{request.description}}</p>
-                      <h4> Expires: {{request.expiration_date}}</h4>
-                      <div> Number of Votes: {{request.voter_count}}</div>
-                      <div>Vote Power: {{request.vote_up}} Up / {{request.vote_down}} Down</div>
-                      <button (click)='approveExpenseRequest(request)'> Approve </button>
-                      <button (click)='declineExpenseRequest(request)'> Decline </button>
-                      <br />
-                    </li>
-                  </ul>
+                <div class="row">
+                  <div class="col-md-6">
+                    <ul>
+                      <h3> Passed Expense Requests </h3>
+                      <li *ngFor="let request of passedExpenseRequests">
+                        <h3 class='row justify-content-center'>{{request.request_title}}</h3>
+                        <h3 class='row justify-content-center'>${{request.expense_amount}}</h3>
+                        <p>{{request.description}}</p>
+                        <h4> Expires: {{request.expiration_date}}</h4>
+                        <div> Number of Votes: {{request.voter_count}}</div>
+                        <div>Vote Power: {{request.vote_up}} Up / {{request.vote_down}} Down</div>
+                        <div class='row justify-content-center'>
+                          <button (click)='approveExpenseRequest(request)'> Approve </button>
+                          <button (click)='declineExpenseRequest(request)'> Decline </button>
+                          <button *ngIf="!toggleChat" class="btn btn-primary" align='right' (click)="joinRequestChat(request.chat_id)">
+                            Chat </button>
+                        </div>
+                        <br />
+                      </li>
+                    </ul>
+                  </div>
+                  <div class="col-md-6">
+                    <ul>
+                      <h3> Failed Expense Requests </h3>
+                      <li *ngFor="let request of failedExpenseRequests">
+                        <h3 class='row justify-content-center'>{{request.request_title}}</h3>
+                        <h3 class='row justify-content-center'>${{request.expense_amount}}</h3>
+                        <p>{{request.description}}</p>
+                        <h4> Expires: {{request.expiration_date}}</h4>
+                        <div> Number of Votes: {{request.voter_count}}</div>
+                        <div>Vote Power: {{request.vote_up}} Up / {{request.vote_down}} Down</div>
+                        <div class='row justify-content-center'>
+                          <button (click)='approveExpenseRequest(request)'> Approve </button>
+                          <button (click)='declineExpenseRequest(request)'> Decline </button>
+                          <button *ngIf="!toggleChat" class="btn btn-primary" align='right' (click)="joinRequestChat(currentExpenseRequest.chat_id)">
+                            Chat </button>
+                        </div>
+                        <br />
+                      </li>
+                    </ul>
+                  </div>
                 </div>
-                <div class="col-md-6">
-                  <ul>
-                    <h3> Failed Expense Requests </h3>
-                    <li *ngFor="let request of failedExpenseRequests">
-                      <h3 class='row justify-content-center'>{{request.request_title}}</h3>
-                      <h3 class='row justify-content-center'>${{request.expense_amount}}</h3>
-                      <p>{{request.description}}</p>
-                      <h4> Expires: {{request.expiration_date}}</h4>
-                      <div> Number of Votes: {{request.voter_count}}</div>
-                      <div>Vote Power: {{request.vote_up}} Up / {{request.vote_down}} Down</div>
-                      <button (click)='approveExpenseRequest(request)'> Approve </button>
-                      <button (click)='declineExpenseRequest(request)'> Decline </button>
-                      <br />
-                    </li>
-                  </ul>
-                </div>
               </div>
+              <div *ngIf=toggleChat>
+                <div class='chatContainer'>
+                  <div class='chatWindow'>
+                    <ul>
+                      <li *ngFor="let message of chatMessages">
+                        <b>{{message.userName}}:</b>
+                        <p>{{message.message}}</p>
+                      </li>
+                    </ul>
+                  </div>
+                  <input ngModel [(ngModel)]="messageToSend" #nameField="ngModel" placeholder="Type a message!" type="text">
+                  <button (click)="sendChatMessage()">Send!</button>
+                  <p *ngIf=chatError>{{chatError}}</p>
+                  </div>
+                <button class="btn btn-primary" align='right' (click)="leaveChat()"> Back To Expense Requests </button>
+              </div>
+              
             </div>
             <div class="modal-footer">
               <button type="button" class="btn btn-light" (click)="c('Close click')">Close</button>
@@ -107,7 +136,7 @@
                 </button>
               </div>
               <div class="modal-body">
-                <form *ngIf="isMember" #inviteForm="ngForm" (ngSubmit)="inviteFriend(pool.name, inviteEmail.value, inviteMessage.value, pool.id)">
+                <form *ngIf="isMember" #inviteForm="ngForm" id="inviteFriend" (ngSubmit)="inviteFriend(pool.name, inviteEmail.value, inviteMessage.value, pool.id)">
                   <div class="form-group">
                     <br />
                     <label for="inviteFormInput">Enter your friend's email address</label>
@@ -117,7 +146,7 @@
                     <label for="inviteFormTextarea">Enter a Message</label>
                     <textarea class="form-control" name='inviteMessage' id="inviteFormTextarea" rows="3" ngModel required #inviteMessage="ngModel"></textarea>
                   </div>
-                  <button type="submit" class="btn btn-primary">Submit</button>
+                  <button type="submit" class="btn btn-primary" form="inviteFriend">Submit</button>
                 </form>
               </div>
               <div class="modal-footer">

@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { CookieService } from 'ngx-cookie-service';
 import { PoolsService } from '../services/pools/pools.service';
 import { Router } from '@angular/router';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-groups',
@@ -10,7 +11,12 @@ import { Router } from '@angular/router';
 })
 export class GroupsComponent implements OnInit {
   public pools;
-  constructor(private _poolsService: PoolsService, private _cookieService: CookieService, private _router: Router) { }
+  constructor(
+    private _poolsService: PoolsService,
+    private _cookieService: CookieService,
+    private _router: Router,
+    private toastr: ToastrService
+  ) { }
 
   ngOnInit() {
     this.getPools();
@@ -23,9 +29,9 @@ export class GroupsComponent implements OnInit {
         .subscribe(
           success => {
             this.updateMemberCountView(poolid);
-            console.log(success, 'Success!!!');
+            this.toastr.success('You\'ve successfully joined the group');
           },
-          err => console.log(err, 'ERROR'),
+          err => this.toastr.error(err, 'ERROR'),
           () => console.log('done joining pool')
         );
     } else {
@@ -33,9 +39,9 @@ export class GroupsComponent implements OnInit {
       this._poolsService.joinPool(poolid, null).subscribe(
         success => {
           this.updateMemberCountView(poolid);
-          console.log(success, 'Success!');
+          this.toastr.success('You\'ve successfully joined the group');
         },
-        err => console.log(err, 'ERROR'),
+        err => this.toastr.error(err, 'ERROR'),
         () => console.log('done joining pool')
       );
     }

@@ -12,11 +12,15 @@ user.get('/', (req, res) => {
 });
 
 user.post('/update', (req, res) => {
-  const { body } = req;
-  const { googleID } = req.user;
-  findUserByGoogleAndUpdate(googleID, body)
-    .then(() => res.status(200).json({ success: 'UPDATED USER' }))
-    .catch(err => res.send(500).json({ err }));
+  const { body, user } = req;
+  findUserByGoogleAndUpdate(user.googleID, body)
+    .then((updatedUser) => {
+      res.status(200).send(updatedUser);
+    })
+    .catch((err) => {
+      res.status(400).send(err);
+    });
+  // console.log(user);
 });
 
 user.get('/:id', (req, res) => {

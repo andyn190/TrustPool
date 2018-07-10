@@ -1,4 +1,5 @@
-import { Component, OnInit, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter, Input } from '@angular/core';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-check-form',
@@ -8,22 +9,24 @@ import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 
 export class CheckFormComponent implements OnInit {
   private physical: boolean;
-  constructor() { }
-  ngOnInit() {
-  }
+  constructor(private toastrService: ToastrService) { }
   recipientName: string;
   recipientEmail: string;
   streetAddress: string;
   city: string;
   state: string;
   inputZip: string;
-
+  amount: number;
+  @Input() poolValue: number;
   @Output() nameEvent = new EventEmitter<string>();
   @Output() emailEvent = new EventEmitter<string>();
   @Output() streetEvent = new EventEmitter<string>();
   @Output() cityEvent = new EventEmitter<string>();
   @Output() stateEvent = new EventEmitter<string>();
   @Output() zipEvent = new EventEmitter<string>();
+  @Output() amountEvent = new EventEmitter<number>();
+  ngOnInit() {
+  }
 
   checkedPhysical() {
     this.physical = !this.physical;
@@ -51,6 +54,10 @@ export class CheckFormComponent implements OnInit {
   zipChange(event: any) {
     this.inputZip = event.target.value;
     this.zipEvent.emit(this.inputZip);
+  }
+  amountChange(event: any) {
+    this.amount = event.target.value;
+    this.amountEvent.emit(this.amount);
   }
 
 }

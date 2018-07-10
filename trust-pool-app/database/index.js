@@ -11,28 +11,28 @@ const Users = sequelize.define('Users', {
     unique: true
   },
   first_name: {
-    type: Sequelize.CHAR(30),
+    type: Sequelize.STRING,
     allowNull: true
   },
   last_name: {
-    type: Sequelize.CHAR(30),
+    type: Sequelize.STRING,
     allowNull: true
   },
   email: {
-    type: Sequelize.CHAR,
+    type: Sequelize.STRING,
     allowNull: true,
     unique: true
   },
   googleID: {
-    type: Sequelize.CHAR,
+    type: Sequelize.STRING,
     unique: true
   },
   image_url: {
-    type: Sequelize.CHAR,
+    type: Sequelize.STRING,
     allowNull: true
   },
   password: {
-    type: Sequelize.CHAR,
+    type: Sequelize.STRING,
     allowNull: true
   }
 });
@@ -90,6 +90,49 @@ const ExpenseRequestLink = sequelize.define('Expense_Request_Link', {
   }
 });
 
+const ChatRoom = sequelize.define('Chat_Rooms', {
+  id: {
+    type: Sequelize.INTEGER,
+    autoIncrement: true,
+    primaryKey: true,
+    unique: true
+  },
+  type: {
+    type: Sequelize.STRING
+  }
+});
+
+const ChatMessages = sequelize.define('Chat_Messages', {
+  id: {
+    type: Sequelize.INTEGER,
+    autoIncrement: true,
+    primaryKey: true,
+    unique: true
+  },
+  room_id: {
+    type: Sequelize.INTEGER,
+    references: {
+      model: ChatRoom,
+      key: 'id',
+      deferrable: Sequelize.Deferrable.INITIALLY_IMMEDIATE
+    }
+  },
+  user_id: {
+    type: Sequelize.INTEGER,
+    references: {
+      model: Users,
+      key: 'id',
+      deferrable: Sequelize.Deferrable.INITIALLY_IMMEDIATE
+    }
+  },
+  message: {
+    type: Sequelize.STRING
+  },
+  userName: {
+    type: Sequelize.STRING
+  }
+});
+
 const ExpenseRequest = sequelize.define('Expense_Request', {
   id: {
     type: Sequelize.INTEGER,
@@ -136,6 +179,14 @@ const ExpenseRequest = sequelize.define('Expense_Request', {
   },
   request_title: {
     type: Sequelize.TEXT
+  },
+  chat_id: {
+    type: Sequelize.INTEGER,
+    references: {
+      model: ChatRoom,
+      key: 'id',
+      deferrable: Sequelize.Deferrable.INITIALLY_IMMEDIATE
+    }
   },
   method: {
     type: Sequelize.INTEGER,
@@ -212,37 +263,6 @@ const PoolMembers = sequelize.define('Pool_Members', {
   },
   vote_power: {
     type: Sequelize.INTEGER
-  }
-});
-
-const ChatMessages = sequelize.define('Chat_Messages', {
-  id: {
-    type: Sequelize.INTEGER,
-    autoIncrement: true,
-    primaryKey: true,
-    unique: true
-  },
-  pool_id: {
-    type: Sequelize.INTEGER,
-    references: {
-      model: Pools,
-      key: 'id',
-      deferrable: Sequelize.Deferrable.INITIALLY_IMMEDIATE
-    }
-  },
-  user_id: {
-    type: Sequelize.INTEGER,
-    references: {
-      model: Users,
-      key: 'id',
-      deferrable: Sequelize.Deferrable.INITIALLY_IMMEDIATE
-    }
-  },
-  message: {
-    type: Sequelize.TEXT
-  },
-  time_stamp: {
-    type: Sequelize.DATE
   }
 });
 
@@ -357,5 +377,6 @@ module.exports = {
   ChatMessages,
   EbayWishlistEntry,
   Checks,
-  JoinRequests
+  JoinRequests,
+  ChatRoom
 };

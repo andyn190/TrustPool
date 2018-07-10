@@ -11,15 +11,17 @@ import {
 } from '@angular/core';
 import { CookieService } from 'ngx-cookie-service';
 import { PoolsService } from '../services/pools/pools.service';
+import { ChatService } from '../services/chat/chat.service';
 import { Router, ActivatedRoute, Routes } from '@angular/router';
 import { NgForm } from '@angular/forms';
 import { ArrayType } from '@angular/compiler/src/output/output_ast';
 import { NgbModal, ModalDismissReasons } from '@ng-bootstrap/ng-bootstrap';
+import { ToastrService, Toast } from 'ngx-toastr';
 import { DateFormatPipe } from 'angular2-moment';
 import { UserService } from '../services/user/user.service';
 
 @Directive({ selector: 'cardinfo' })
-export class CardInfo { 
+export class CardInfo {
 }
 
 @Component({
@@ -34,7 +36,7 @@ export class GrouppageComponent implements OnInit, AfterViewInit, OnDestroy {
     const groupPage = this;
     setTimeout(() => {
       groupPage.cardInfo = cardInfo;
-      if(groupPage.cardInfo){
+      if (groupPage.cardInfo) {
         groupPage.card.mount(groupPage.cardInfo.nativeElement);
       }
     }, 0);
@@ -53,6 +55,12 @@ export class GrouppageComponent implements OnInit, AfterViewInit, OnDestroy {
   private sub: any;
   closeResult: string;
   expenseRequests: any;
+  toggleChat: boolean = false;
+  chatName: string;
+  chatMessages: Array<{ userName: String, message: String }> = [];
+  messageToSend: string;
+  chatError: string;
+  currentChatId: number;
 
   constructor(
     private cd: ChangeDetectorRef,
@@ -61,8 +69,22 @@ export class GrouppageComponent implements OnInit, AfterViewInit, OnDestroy {
     private _router: Router,
     private route: ActivatedRoute,
     private modalService: NgbModal,
+    private _chatService: ChatService,
+    private toastrService: ToastrService,
     private _userService: UserService,
-  ) { }
+  ) { 
+    this._chatService.getPrevMessages()
+      .subscribe((data) => {
+        this.chatMessages = data.messages;
+      });
+    this._chatService.newUserJoined()
+      .subscribe(data => this.chatMessages.push(data));
+    this._chatService.userHasLeft()
+      .subscribe(data => this.chatMessages.push(data));
+    this._chatService.receiveMessages()
+      .subscribe(data => this.chatMessages.push(data));
+  }
+
 
   ngAfterViewInit() {
     const style = {
@@ -100,9 +122,34 @@ export class GrouppageComponent implements OnInit, AfterViewInit, OnDestroy {
       getExpenseRequests.call(this, poolid);
     });
   }
+
   viewGroups() {
     this._router.navigate(['groups']);
   }
+
+  fnToggleChat(){
+    this.toggleChat = !this.toggleChat;
+  }
+
+  sendChatMessage(){
+    const { currentChatId, isMember, messageToSend } = this;
+    const messageData = { chatId: currentChatId, userId: isMember.pool_member_id, message: messageToSend };
+    this._chatService.sendMessage(messageData);
+  }
+
+  leaveChat() {
+    const joinInfo = { chatId: this.currentChatId, userId: this.isMember.pool_member_id };
+    this._chatService.leaveChat(joinInfo);
+    this.fnToggleChat();
+  }
+
+  joinRequestChat(chatId){
+    const joinInfo = { chatId, userId: this.isMember.pool_member_id };
+    this.currentChatId = chatId;
+    this._chatService.joinRequestChat(joinInfo);
+    this.fnToggleChat();
+  }
+
   getPool(poolid) {
     this._poolsService.getPool(poolid).subscribe(
       (res: {pool:object, error: string}) => {
@@ -114,16 +161,16 @@ export class GrouppageComponent implements OnInit, AfterViewInit, OnDestroy {
         }
         console.log(error);
       },
-      err => console.log(err),
+      err => this.toastrService.error(err),
       () => console.log('done loading pool')
     );
   }
 
-  inviteFriend(poolName, email, message, poolId){
+  inviteFriend(poolName, email, message, poolId) {
     this._poolsService.inviteFriend(email, message, poolName, poolId, window.location.origin).subscribe(
       res => console.log(res),
       err => console.log(err),
-      () => console.log('done inviting friend')
+      () => this.toastrService.success('You\'ve Successfully invited a friend!')
     );
   }
 
@@ -145,7 +192,7 @@ export class GrouppageComponent implements OnInit, AfterViewInit, OnDestroy {
 
   getExpenseRequests(poolid) {
     this._poolsService.getExpenseRequests(poolid).subscribe(
-      (res:any) => { 
+      (res: any) => {
         this.expenseRequests = res;
         this.failedExpenseRequests = [];
         this.passedExpenseRequests = [];
@@ -177,13 +224,14 @@ export class GrouppageComponent implements OnInit, AfterViewInit, OnDestroy {
   approveExpenseRequest(request) {
     const { isMember, _poolsService, pool } = this;
     const { id } = request;
-    const { vote_power } = isMember; 
+    const { vote_power } = isMember;
     const { members_count, voteConfig, voter_count } = pool;
-    if (voter_count >= members_count){
+    if (voter_count >= members_count) {
+      this.toastrService.info('EVERYONE HAS VOTED ALREADY')
       return 'EVERYONE HAS VOTED ALREADY';
     }
-    if (isMember.has_voted){
-      console.log('YOU HAVE ALREADY VOTED');
+    if (isMember.has_voted) {
+      this.toastrService.info('YOU HAVE ALREADY VOTED');
       return 'YOU HAVE ALREADY VOTED';
     }
     _poolsService.approveExpenseRequest(id, vote_power, isMember.id, members_count, voteConfig, pool.id).subscribe(
@@ -199,12 +247,12 @@ export class GrouppageComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   declineExpenseRequest(request) {
-    const { isMember, _poolsService, pool} = this;
+    const { isMember, _poolsService, pool } = this;
     const { id } = request;
     const { vote_power } = isMember;
     const { voteConfig, members_count } = pool;
     if (this.isMember.has_voted) {
-      console.log('YOU HAVE ALREADY VOTED');
+      this.toastrService.info('YOU HAVE ALREADY VOTED');
       return 'YOU HAVE ALREADY VOTED';
     }
     _poolsService.declineExpenseRequest(id, vote_power, isMember.id, members_count, voteConfig, pool.id).subscribe(
@@ -253,14 +301,14 @@ export class GrouppageComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   async onSubmit(form: NgForm, poolId) {
-    const { isMember, _poolsService, card, pool} = this
+    const { isMember, _poolsService, card, pool } = this
     const { amount } = form.value;
     const { token, error } = await stripe.createToken(card);
     if (!isMember) {
-      console.log('YOU ARE NOT A MEMBER OF THIS GROUP');
+      this.toastrService.info('YOU ARE NOT A MEMBER OF THIS GROUP');
     }
     if (error) {
-      console.log('Something is wrong:', error);
+      this.toastrService.error('Something is wrong:', error);
     } else {
       const amountArr = amount.toString().split('.');
       let decimalStr = amountArr[1];
@@ -280,8 +328,8 @@ export class GrouppageComponent implements OnInit, AfterViewInit, OnDestroy {
               this.isMember.contrubution_amount += contribution_amount;
               // get vote power back, / get new isMember
             },
-            err => console.log(err, 'ERROR'),
-            () => console.log('done contributing to pool')
+            err => this.toastrService.error(err, 'ERROR'),
+            () => this.toastrService.success('done contributing to pool', 'Successfully contributed to the pool')
           );
       } else {
         if (decimalStr.length === 1) {
@@ -289,8 +337,8 @@ export class GrouppageComponent implements OnInit, AfterViewInit, OnDestroy {
         }
         _poolsService.sendContrib(token, poolId, amountArr.join(''), isMember.id)
           .subscribe(
-            success => { console.log(success, 'SUCCESS') },
-            err => console.log(err, 'ERROR'),
+            success => { this.toastrService.success(success.toString(), 'SUCCESS') },
+            err => this.toastrService.error(err, 'ERROR'),
             () => console.log('done contributing to pool')
           );
       }
@@ -306,10 +354,10 @@ export class GrouppageComponent implements OnInit, AfterViewInit, OnDestroy {
         .subscribe(
           success => {
             groupPage.checkIsMember(poolid);
-            console.log(success, 'Success!!!');
+            this.toastrService.success(success.toString(), 'Success!!!');
           },
-          err => console.log(err, 'ERROR'),
-          () => console.log('done joining pool')
+          err => this.toastrService.error(err, 'ERROR'),
+          () => this.toastrService.success('done joining pool')
         );
     } else {
       // send post request with just poolId in body
@@ -317,8 +365,8 @@ export class GrouppageComponent implements OnInit, AfterViewInit, OnDestroy {
         success => {
           groupPage.checkIsMember(poolid);
         },
-        err => console.log(err, 'ERROR'),
-        () => console.log('done joining pool')
+        err => this.toastrService.error(err, 'ERROR'),
+        () => this.toastrService.success('done joining pool')
       );
     }
   }
@@ -332,11 +380,11 @@ export class GrouppageComponent implements OnInit, AfterViewInit, OnDestroy {
         this.isMember = false;
       }
     },
-      err => console.log('CHECK FILWS',err),
+      err => console.log('CHECK FILWS', err),
       () => console.log('done checking is member')
     );
   }
   goToExpenseRequestForm(poolid) {
-    this._router.navigate(['expenseForm'], { queryParams: { poolid: poolid }});
+    this._router.navigate(['expenseForm'], { queryParams: { poolid: poolid, value: this.pool.pool_value } });
   }
 }
