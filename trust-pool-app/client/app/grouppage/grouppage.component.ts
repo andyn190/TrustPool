@@ -18,6 +18,7 @@ import { ArrayType } from '@angular/compiler/src/output/output_ast';
 import { NgbModal, ModalDismissReasons } from '@ng-bootstrap/ng-bootstrap';
 import { ToastrService, Toast } from 'ngx-toastr';
 import { DateFormatPipe } from 'angular2-moment';
+import { UserService } from '../services/user/user.service';
 
 @Directive({ selector: 'cardinfo' })
 export class CardInfo {
@@ -44,7 +45,7 @@ export class GrouppageComponent implements OnInit, AfterViewInit, OnDestroy {
   card: any;
   cardHandler = this.onChange.bind(this);
   error: string;
-  joinRequests: any;
+  joinRequests: any = [];
   currentExpenseRequest: any;
   failedExpenseRequests: any;
   passedExpenseRequests: any;
@@ -70,6 +71,7 @@ export class GrouppageComponent implements OnInit, AfterViewInit, OnDestroy {
     private modalService: NgbModal,
     private _chatService: ChatService,
     private toastrService: ToastrService,
+    private _userService: UserService,
   ) { 
     this._chatService.getPrevMessages()
       .subscribe((data) => {
@@ -174,10 +176,18 @@ export class GrouppageComponent implements OnInit, AfterViewInit, OnDestroy {
 
   getJoinRequests(poolid) {
     this._poolsService.getJoinRequests(poolid).subscribe(
-      (res: { requests: ArrayType }) => {
-        this.joinRequests = res.requests;
+      (res: any) => {
+        res.requests.forEach(((request) => {
+          const userId = request.user_id;
+          this._userService.getUserById(userId).subscribe(
+            (response: object) => {
+              this.joinRequests.push(response['user']);
+            }
+          )
+        }))
       }
     );
+    console.log(this.joinRequests);
   }
 
   getExpenseRequests(poolid) {

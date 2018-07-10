@@ -21,5 +21,8 @@ export class UserService {
   updateUserInfo(body) {
     return this.http.post('/user/update', body, httpOptions);
   }
+  getUserById(userId) {
+    return this.http.get(`/user/${userId}`)
+  }
 
 }
