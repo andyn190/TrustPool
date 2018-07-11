@@ -7,7 +7,7 @@ import { DateFormatPipe } from 'angular2-moment';
 @Component({
   selector: 'app-accountpage',
   templateUrl: './accountpage.component.html',
-  styleUrls: ['./accountpage.component.css']
+  styleUrls: ['./accountpage.component.scss']
 })
 export class AccountpageComponent implements OnInit {
   user:any = {};

@@ -4,7 +4,7 @@ import { ToastrService } from 'ngx-toastr';
 @Component({
   selector: 'app-check-form',
   templateUrl: './check-form.component.html',
-  styleUrls: ['./check-form.component.css']
+  styleUrls: ['./check-form.component.scss']
 })
 
 export class CheckFormComponent implements OnInit {

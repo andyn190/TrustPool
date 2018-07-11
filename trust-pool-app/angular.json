@@ -8,7 +8,11 @@
       "sourceRoot": "client",
       "projectType": "application",
       "prefix": "app",
-      "schematics": {},
+      "schematics": {
+        "@schematics/angular:component": {
+          "styleext": "scss"
+        }
+      },
       "architect": {
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
@@ -24,8 +28,9 @@
             ],
             "styles": [
               "client/styles.scss",
-              "node_modules/bootstrap/dist/css/bootstrap.min.css",
-              "client/styles.css"
+              // "node_modules/bootstrap/dist/css/bootstrap.min.css",
+              // "node_modules/bootstrap/dist/css/bootstrap-reboot.css",
+              // "node_modules/bootstrap/dist/css/bootstrap-grid.css"
             ],
             "scripts": []
           },

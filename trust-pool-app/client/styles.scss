@@ -6,6 +6,8 @@
 @import "~bootstrap/scss/variables";
 @import "~bootstrap/scss/mixins";
 @import "~ngx-toastr/toastr-bs4-alert";
+@import "~bootstrap/scss/bootstrap";
+
 $light-blue: #7290ff;
 $dark-blue: #3353ff;
 $black: #111;
@@ -15,5 +17,5 @@ html {
   background-color: $white;
 }
 body {
-  background-color: $black;
+  background-color: $gray;
 }
