@@ -509,6 +509,10 @@ const findUserByGoogleAndUpdate = (googleID, newInfo) => {
       user.first_name = newInfo.name;
       user.last_name = newInfo.lastName;
       user.email = newInfo.email;
+      user.photoID = newInfo.photoID;
+      if (newInfo.admin === true) {
+        user.admin = true;
+      }
       return user.save();
     });
 };
