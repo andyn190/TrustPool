@@ -1,19 +1,19 @@
 import { Injectable } from '@angular/core';
 import { Observable, Subject, BehaviorSubject } from 'rxjs';
-import { OwnAuthService } from './services/auth/auth.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class DataService {
-  private loggedIn = new BehaviorSubject<boolean>(false);
+  private loggedIn = new Subject<boolean>();
   loggedIn$ = this.loggedIn.asObservable();
-  constructor(private auth: OwnAuthService) { }
+  constructor() { }
 
-  userLogin(userStatus: boolean) {
-    this.loggedIn.value = userStatus;
+  userLogin() {
+    this.loggedIn.next(true);
   }
+  
   userLogout() {
-
+    this.loggedIn.next(false);
   }
 }

@@ -43,6 +43,7 @@ import { ExpenseFormComponent } from './expense-form/expense-form.component';
 import { CheckFormComponent } from './check-form/check-form.component';
 import { MomentModule } from 'angular2-moment';
 import { NgxChartsModule } from '@swimlane/ngx-charts'
+import { DataService } from './data.service';
 
 
 const appRoutes: Routes = [
@@ -127,7 +128,7 @@ export function getAuthServiceConfigs() {
     ToastrModule.forRoot(),
     MomentModule
   ],
-    providers: [OwnAuthService, UserService, PoolsService, CookieService, ChatService, {
+    providers: [DataService, OwnAuthService, UserService, PoolsService, CookieService, ChatService, {
     provide: AuthServiceConfig,
     useFactory: getAuthServiceConfigs
   }],
