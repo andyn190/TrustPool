@@ -1,5 +1,6 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { OwnAuthService } from '../services/auth/auth.service';
+import { DataService } from '../data.service';
 import { ToastrService } from 'ngx-toastr';
 
 @Component({
@@ -10,7 +11,8 @@ import { ToastrService } from 'ngx-toastr';
 export class HeaderComponent implements OnInit {
   constructor(
     private auth: OwnAuthService,
-    private toastr: ToastrService
+    private toastr: ToastrService,
+    private dataService: DataService
   ) { }
   @Input () loggedIn: boolean
   user: {};
