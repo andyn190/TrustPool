@@ -11,9 +11,9 @@ $dark-blue: #3353ff;
 $black: #111;
 $white: #fff;
 $gray: #aaa;
-:host html {
+html {
   background-color: $white;
 }
-:host body {
-  background-color: $light-blue;
+body {
+  background-color: $black;
 }

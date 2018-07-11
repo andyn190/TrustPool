@@ -125,5 +125,10 @@
       }
     }
   },
-  "defaultProject": "trust-pool-app"
+  "defaultProject": "trust-pool-app",
+  "schematics": {
+    "@schematics/angular:component": {
+      "styleext": "scss"
+    }
+  }
 }
