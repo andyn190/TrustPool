@@ -34,6 +34,18 @@ const Users = sequelize.define('Users', {
   password: {
     type: Sequelize.STRING,
     allowNull: true
+  },
+  photoID: {
+    type: Sequelize.STRING,
+    allowNull: true
+  },
+  admin: {
+    type: Sequelize.STRING,
+    allowNull: true
+  },
+  verified: {
+    type: Sequelize.STRING,
+    allowNull: true
   }
 });
 
