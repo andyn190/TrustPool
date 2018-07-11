@@ -39,6 +39,17 @@
             </label>
             <input type="text" class="form-control" name="user-email" ngModel required [(ngModel)]='email' #nameField="ngModel" minlength="10">
           </div>
+          <div class="form-group" *ngIf="!admin">
+            <label for="adminInput">
+              Enter Admin Password
+            </label>
+            <input type="text" class="form-control" name="user-admin" ngModel required #nameField="ngModel">
+          </div>
+          <div class="form-group" *ngIf="!verified">
+            <label for="inputImageUrl">Verify with PhotoID</label>
+            <input type="file" class="form-control" required id="inputImageUrl" (change)="encodeImageFileAsURL($event)" name="user-photoId"
+             ngModel #nameField="ngModel" accept=".jpg, .jpeg, .png" placeholder="ImageUrl Here">
+          </div>
           <button type="submit" class="btn btn-primary">
             Submit
           </button>
