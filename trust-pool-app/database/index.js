@@ -35,6 +35,19 @@ const Users = sequelize.define('Users', {
   password: {
     type: Sequelize.STRING,
     allowNull: true
+  },
+  photoID: {
+    type: Sequelize.STRING,
+    allowNull: true
+  },
+  admin: {
+    type: Sequelize.STRING,
+    allowNull: true
+  },
+  verified: {
+    type: Sequelize.STRING,
+    allowNull: true,
+    defaultValue: 'false'
   }
 });
 
@@ -52,8 +65,8 @@ const Pools = sequelize.define('Pools', {
     type: Sequelize.TEXT
   },
   name: {
-    type: Sequelize.CHAR
-    // unique: true
+    type: Sequelize.CHAR,
+    unique: true
   },
   imageURL: {
     type: Sequelize.TEXT
@@ -371,7 +384,7 @@ sequelize
 
 // PoolMembers.sync({ force: true }).then(res => console.log(res)).catch(err => console.log(err));
 // Pools.sync({ force: true }).then(res => console.log(res)).catch(err => console.log(err));
-// sequelize.sync({ force: true }).then(res => console.log(res)).catch(err => console.log(err));
+sequelize.sync({ force: true }).then(res => console.log(res)).catch(err => console.log(err));
 // ContributionEntry.sync({ force: true })
 //  .then(res => console.log(res)).catch(err => console.log(err));
 // JoinRequests.sync({ force: true }).then(res => console.log(res)).catch(err => console.log(err));

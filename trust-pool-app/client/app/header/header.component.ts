@@ -16,12 +16,15 @@ export class HeaderComponent implements OnInit {
   ) { }
   @Input () loggedIn: boolean
   user: {};
+  admin: boolean;
   ngOnInit() {
     this.auth.checkLogin().subscribe(({ user }: any) => {
-      this.toastr.success(`${user.first_name.trim()} ${user.last_name.trim()} has successfully logged in`);
       if (user) {
         this.user = user;
         this.loggedIn = true;
+        if(user.admin === true || user.admin === 'true') {
+          this.admin = true;
+        }
       }
     }, (err) => { this.toastr.error('Please log in', err)});
   }

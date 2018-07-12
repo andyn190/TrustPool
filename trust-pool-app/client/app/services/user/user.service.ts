@@ -20,8 +20,20 @@ export class UserService {
   updateUserInfo(body) {
     return this.http.post('/user/update', body, httpOptions);
   }
+  getPending() {
+    return this.http.get('/user/pending', httpOptions);
+  }
   getUserById(userId) {
     return this.http.get(`/user/${userId}`);
   }
 
+  approveUser(userId) {
+    const body = { id: userId };
+    return this.http.post('user/accept', body);
+  }
+
+  rejectUser(userId) {
+    const body = { id: userId };
+    return this.http.post('user/reject', body);
+  }
 }

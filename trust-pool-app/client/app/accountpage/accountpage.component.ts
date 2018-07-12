@@ -16,6 +16,10 @@ export class AccountpageComponent implements OnInit {
   email:string
   createdAt:string
   clicked:boolean = false;
+  verified: boolean = false;
+  file: string;
+  photoId: string;
+  admin: boolean;
   constructor(
     private route: ActivatedRoute,
     private _userService: UserService,
@@ -31,6 +35,9 @@ export class AccountpageComponent implements OnInit {
           this.firstName = res.user.first_name.trim();
           this.lastName = res.user.last_name.trim();
           this.createdAt = (new DateFormatPipe()).transform(res.user.createdAt, 'LL');
+          this.photoId = res.user.photoID;
+          this.admin = res.user.admin;
+          this.verifyStatus(res.user.verified);
           if(res.user.email) {
             this.email = res.user.email.trim();
           }
@@ -50,11 +57,33 @@ export class AccountpageComponent implements OnInit {
     let nameFirst = form.value['user-name'];
     let nameLast = form.value['user-lastName'];
     let newEmail = form.value['user-email'];
-    let body = { name: nameFirst, lastName: nameLast, email: newEmail };
+    let photoID = this.file
+    let admin = form.value['user-admin'];
+    let body = { name: nameFirst, lastName: nameLast, email: newEmail, photoID: photoID, admin: admin };
     this._userService.updateUserInfo(body).subscribe(
       (success : any) => { this.toastr.success(`Successfully updated ${success.email}`); },
       err => this.toastr.error(err, 'Error updating your account'),
       () => console.log('done updating user info')
     );
+  }
+
+  encodeImageFileAsURL(element) {
+    const outer = this;
+    const file = element.target.files[0];
+    const reader = new FileReader();
+    reader.onloadend = function() {
+      outer.file = reader.result;
+    }
+    reader.readAsDataURL(file);
+  }
+
+  verifyStatus(userVerification) {
+    if(userVerification === 'true') {
+      this.verified = true;
+    } else if(userVerification === 'pending') {
+      this.verified = true;
+    } else {
+      this.verified = false;
+    }
   }
 }

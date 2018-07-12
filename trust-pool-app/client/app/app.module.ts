@@ -42,8 +42,8 @@ import { MypoolsComponent} from './mypools/mypools.component';
 import { ExpenseFormComponent } from './expense-form/expense-form.component';
 import { CheckFormComponent } from './check-form/check-form.component';
 import { MomentModule } from 'angular2-moment';
-import { NgxChartsModule } from '@swimlane/ngx-charts'
-import { DataService } from './data.service';
+import { NgxChartsModule } from '@swimlane/ngx-charts';
+import { VerifypageComponent } from './verifypage/verifypage.component'
 
 
 const appRoutes: Routes = [
@@ -57,7 +57,8 @@ const appRoutes: Routes = [
   { path: 'createrequest', component: CreaterequestComponent},
   { path: 'ebay', component: EbaypageComponent},
   { path: 'mypools', component: MypoolsComponent },
-  { path: 'expenseForm', component: ExpenseFormComponent}
+  { path: 'expenseForm', component: ExpenseFormComponent},
+  { path: 'verify', component: VerifypageComponent }
 ];
 
 export function getAuthServiceConfigs() {
@@ -100,6 +101,7 @@ export function getAuthServiceConfigs() {
     SignupFormComponent,
     ExpenseFormComponent,
     CheckFormComponent,
+    VerifypageComponent,
   ],
   exports: [
     NgxChartsModule
@@ -128,7 +130,7 @@ export function getAuthServiceConfigs() {
     ToastrModule.forRoot(),
     MomentModule
   ],
-    providers: [DataService, OwnAuthService, UserService, PoolsService, CookieService, ChatService, {
+    providers: [OwnAuthService, UserService, PoolsService, CookieService, ChatService, {
     provide: AuthServiceConfig,
     useFactory: getAuthServiceConfigs
   }],
