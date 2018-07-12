@@ -45,7 +45,8 @@ const Users = sequelize.define('Users', {
   },
   verified: {
     type: Sequelize.STRING,
-    allowNull: true
+    allowNull: true,
+    defaultValue: 'false'
   }
 });
 
