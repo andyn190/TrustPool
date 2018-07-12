@@ -1,7 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { GroupCreateService } from '../service/group-create.service';
-import { HttpClient } from '@angular/common/http';
-import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 
 @Component({
@@ -16,27 +14,25 @@ export class CreategroupComponent implements OnInit {
   public voteConfig: number;
   public publicOpt: boolean;
   constructor(
-    private http: HttpClient,
-    private groupService:GroupCreateService,
-    private router: Router,
+    private groupService: GroupCreateService,
     private toastr: ToastrService
   ) { }
 
   ngOnInit() {
   }
-  
-  createGroup(form){
+
+  createGroup(form) {
     let name = form.value['group-name'];
     let imgUrl64 = this.file;
     let desc = form.value['group-description'];
     let voteConfig = form.value['group-voterConfig'];
     let publicOpt = form.value['group-publicOpt'];
-    const pool = { name, imgUrl64, desc, voteConfig, publicOpt};
+    const pool = { name, imgUrl64, desc, voteConfig, publicOpt };
     this.groupService.createGroup(pool).subscribe(
       success => {
         this.toastr.success(`${name} was Successfully created`);
         console.log(success);
-    },
+      },
       err => this.toastr.error(err, 'ERROR'),
       () => console.log(`${name} was Successfully created`)
     );
@@ -47,7 +43,7 @@ export class CreategroupComponent implements OnInit {
     const outer = this;
     const file = element.target.files[0];
     const reader = new FileReader();
-    reader.onloadend = function() {
+    reader.onloadend = function () {
       // console.log('RESULT', reader.result);
       outer.file = reader.result;
     }

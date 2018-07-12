@@ -9,6 +9,7 @@
     "lint": "ng lint",
     "test:once": "ng test --watch=false",
     "travis": "npm install && npm run test:once",
+    "prettier": "prettier {client,e2e}/**/*.{ts,json,md,scss} --write",
     "e2e": "ng e2e"
   },
   "private": true,

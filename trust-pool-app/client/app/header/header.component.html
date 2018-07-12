@@ -1,29 +1,63 @@
-<div class="container-fluid">
-  <div class="row">
-    <div class="col-md-12">
-      <ul class="nav nav-tabs">
-        <li class="nav-item" *ngIf="loggedIn">
-          <a class="nav-link" routerLink="/home">Home</a>
-        </li>
-        <li class="nav-item" *ngIf="loggedIn">
-          <a class="nav-link" routerLink="/account">Account</a>
-        </li>
-        <li class="nav-item" *ngIf="loggedIn">
-          <a class="nav-link" routerLink="/groups">Groups</a>
-        </li>
-        <li class="nav-item" *ngIf="loggedIn">
-          <a class="nav-link" routerLink="/mypools">My Groups</a>
-        </li>
-        <li class="nav-item" *ngIf="loggedIn">
-          <a class="nav-link" href="/logout" (click)="handleLogout()">Logout</a>
-        </li>
-        <li class="nav-item" *ngIf="!loggedIn">
-          <a class="nav-link" href="/login/google">Log In</a>
-        </li>
-        <li class="nav-item" *ngIf="admin">
-          <a class="nav-link" routerLink="/verify">Verify Users</a>
-        </li>
-      </ul>
-    </div>
+<mat-sidenav #sidenav mode="push">
+  <div class="branding">
+    <img src="assets/trustPoolBigCircle.png" />
+    <span>Trust Pool</span>
   </div>
+</mat-sidenav>
+
+<div class="toolbar">
+  <mat-toolbar color="primary">
+    <button mat-icon-button class="d-md-none" (click)="sidenav.open()">
+      <mat-icon fontSet="fas" fontIcon="fa-bars"></mat-icon>
+    </button>
+    <span routerLink="/home" class="branding spacer center d-inline d-sm-none">
+      <img src="assets/TrustPoolFull.png" />
+    </span>
+    <span routerLink="/home" class="branding spacer center d-none d-sm-inline d-md-none">
+      <img src="assets/TrustPoolFull.png" alt="Trust Pool"/></span>
+    <span routerLink="/home" class="branding spacer d-none d-md-inline">
+      <img src="assets/TrustPoolFull.png" alt="Trust Pool"/></span>
+
+    <span class="d-none d-md-inline" *ngIf="loggedIn">
+      <button mat-button class="nav-button" [routerLink]="['account']" routerLinkActive="active">
+        Account
+      </button>
+    </span>
+    <span class="d-none d-md-inline" *ngIf="loggedIn">
+      <button mat-button class="nav-button" [routerLink]="['groups']" routerLinkActive="active">
+        Groups
+      </button>
+    </span>
+    <span class="d-none d-md-inline" *ngIf="loggedIn">
+      <button mat-button class="nav-button" [routerLink]="['mypools']" routerLinkActive="active">
+        My Pools
+      </button>
+    </span>
+    <span class="d-none d-md-inline" *ngIf="loggedIn">
+      <a href="/logout"  (click)="handleLogout()">
+        <button mat-button class="nav-button" href="/logout" routerLinkActive="active">
+          Logout
+        </button>
+      </a>
+    </span>
+    <span class="d-none d-md-inline" *ngIf="!loggedIn">
+      <a href="/login/google">
+        <button mat-button class="nav-button" routerLinkActive="active">
+          Login
+        </button>
+      </a>
+    </span>
+    <span class="d-none d-md-inline" *ngIf="admin">
+      <button mat-button class="nav-button" [routerLink]="['verify']" routerLinkActive="active">
+        Verify
+      </button>
+    </span>
+    <!-- <a class="nav-link" routerLink="/home">Home</a>
+    <a class="nav-link" routerLink="/account">Account</a>
+    <a class="nav-link" routerLink="/groups">Groups</a>
+    <a class="nav-link" routerLink="/mypools">My Groups</a>
+    <a class="nav-link" href="/logout" (click)="handleLogout()">Logout</a>
+    <a class="nav-link" href="/login/google">Log In</a>
+    <a class="nav-link" routerLink="/verify">Verify Users</a> -->
+  </mat-toolbar>
 </div>
