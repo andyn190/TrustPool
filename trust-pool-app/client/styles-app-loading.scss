@@ -1,9 +1,9 @@
 .app-loading {
   .logo {
-    width: 100px;
-    height: 100px;
+    width: 150px;
+    height: 150px;
     
     // this way asset gets processed by webpack 
-    background: url(./assets/logo.png) center center no-repeat; 
+    background: url(./assets/TrustPoolBigCircle.png) center center no-repeat; 
   }
 }
