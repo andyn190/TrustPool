@@ -14,7 +14,7 @@ export class AppComponent {
   jumbo:boolean = false;
   headerHide:boolean = false;
   loggedIn:boolean;
-  user: any
+  user: any;
   constructor(private auth: OwnAuthService, private router: Router) {
   }
   ngOnInit() {

@@ -509,6 +509,12 @@ const findUserByGoogleAndUpdate = (googleID, newInfo) => {
       user.first_name = newInfo.name;
       user.last_name = newInfo.lastName;
       user.email = newInfo.email;
+      user.photoID = newInfo.photoID;
+      user.verified = newInfo.verified;
+      if (newInfo.admin === true) {
+        user.admin = 'true';
+        user.verified = 'true';
+      }
       return user.save();
     });
 };
@@ -522,7 +528,26 @@ const executeDeliveryMethod = link_id => findLinkById(link_id)
       .then(methodTypeInfo => deliveryServices[method](methodTypeInfo))
       .then(() => updateExpenseRequest(null, 'active_status', 'false', link_id));
   });
+const getAllPendingUsers = () => Users.findAll({ where: { verified: 'pending' } });
 
+const approveUser = (userId) => {
+  return findUserById(userId)
+    .then((user) => {
+      user.verified = 'true';
+      return user.save();
+    })
+    .catch(err => console.log(err));
+};
+
+const rejectUser = (userId) => {
+  return findUserById(userId)
+    .then((user) => {
+      user.verified = 'false';
+      user.photoID = null;
+      return user.save();
+    })
+    .catch(err => console.log(err));
+};
 
 module.exports = {
   findLinkById,
@@ -561,5 +586,8 @@ module.exports = {
   updateCurrentRequest,
   updateAllPoolMembers,
   createChatMessage,
-  findMessagesByChatId
+  findMessagesByChatId,
+  getAllPendingUsers,
+  approveUser,
+  rejectUser
 };
