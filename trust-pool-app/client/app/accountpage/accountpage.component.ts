@@ -72,19 +72,10 @@ export class AccountpageComponent implements OnInit {
     const file = element.target.files[0];
     const reader = new FileReader();
     reader.onloadend = function() {
-      // console.log('RESULT', reader.result);
       outer.file = reader.result;
     }
     reader.readAsDataURL(file);
   }
-
-  // verifyIdUpload() {
-  //   if(this.photoId) {
-  //     this.verified = true;
-  //   } else {
-  //     this.verified = false;
-  //   }
-  // }
 
   verifyStatus(userVerification) {
     if(userVerification === 'true') {
