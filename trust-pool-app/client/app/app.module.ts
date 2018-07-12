@@ -43,7 +43,7 @@ import { ExpenseFormComponent } from './expense-form/expense-form.component';
 import { CheckFormComponent } from './check-form/check-form.component';
 import { MomentModule } from 'angular2-moment';
 import { NgxChartsModule } from '@swimlane/ngx-charts';
-import { VerifypageComponent } from './verifypage/verifypage/verifypage.component'
+import { VerifypageComponent } from './verifypage/verifypage.component'
 
 
 const appRoutes: Routes = [
