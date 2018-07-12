@@ -34,11 +34,11 @@ export class CreategroupComponent implements OnInit {
     const pool = { name, imgUrl64, desc, voteConfig, publicOpt};
     this.groupService.createGroup(pool).subscribe(
       success => {
-        this.toastr.success('Success!, You\'ve made a Pool!');
+        this.toastr.success(`${name} was Successfully created`);
         console.log(success);
     },
       err => this.toastr.error(err, 'ERROR'),
-      () => console.log('done creating pool')
+      () => console.log(`${name} was Successfully created`)
     );
     form.reset();
   }

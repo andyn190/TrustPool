@@ -4,7 +4,7 @@ import { ToastrService } from 'ngx-toastr';
 @Component({
   selector: 'app-check-form',
   templateUrl: './check-form.component.html',
-  styleUrls: ['./check-form.component.css']
+  styleUrls: ['./check-form.component.scss']
 })
 
 export class CheckFormComponent implements OnInit {
@@ -17,7 +17,7 @@ export class CheckFormComponent implements OnInit {
   state: string;
   inputZip: string;
   amount: number;
-  @Input() poolValue: number;
+  @Input() poolValue: number; 
   @Output() nameEvent = new EventEmitter<string>();
   @Output() emailEvent = new EventEmitter<string>();
   @Output() streetEvent = new EventEmitter<string>();

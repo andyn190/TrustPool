@@ -1,8 +1,9 @@
 const Sequelize = require('sequelize');
+// const people = require('./MOCK_DATA (2).json');
+// const demoPools = require('./MOCK_DATA (3).json');
 const { AWSDB, LOCALDB } = require('./config');
 
 const sequelize = new Sequelize(LOCALDB || AWSDB);
-
 const Users = sequelize.define('Users', {
   id: {
     type: Sequelize.INTEGER,
@@ -368,6 +369,14 @@ sequelize
   .authenticate()
   .then(() => {
     console.log('connection has been established');
+    // Users.bulkCreate(people)
+    //   .then((users) => {
+    //     console.log(users);
+    //   }).catch(err => console.log(err));
+    // Pools.bulkCreate(demoPools)
+    //   .then((pools) => {
+    //     console.log(pools);
+    //   }).catch(err => console.log(err));
   })
   .catch((err) => {
     console.log(`unable to connect to the database: ${err}`);
@@ -375,7 +384,7 @@ sequelize
 
 // PoolMembers.sync({ force: true }).then(res => console.log(res)).catch(err => console.log(err));
 // Pools.sync({ force: true }).then(res => console.log(res)).catch(err => console.log(err));
-// sequelize.sync({ force: true }).then(res => console.log(res)).catch(err => console.log(err));
+sequelize.sync({ force: true }).then(res => console.log(res)).catch(err => console.log(err));
 // ContributionEntry.sync({ force: true })
 //  .then(res => console.log(res)).catch(err => console.log(err));
 // JoinRequests.sync({ force: true }).then(res => console.log(res)).catch(err => console.log(err));
