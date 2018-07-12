@@ -37,7 +37,7 @@ export class AccountpageComponent implements OnInit {
           this.createdAt = (new DateFormatPipe()).transform(res.user.createdAt, 'LL');
           this.photoId = res.user.photoID;
           this.admin = res.user.admin;
-          this.verifyIdUpload();
+          this.verifyStatus(res.user.verified);
           if(res.user.email) {
             this.email = res.user.email.trim();
           }
@@ -78,8 +78,18 @@ export class AccountpageComponent implements OnInit {
     reader.readAsDataURL(file);
   }
 
-  verifyIdUpload() {
-    if(this.photoId) {
+  // verifyIdUpload() {
+  //   if(this.photoId) {
+  //     this.verified = true;
+  //   } else {
+  //     this.verified = false;
+  //   }
+  // }
+
+  verifyStatus(userVerification) {
+    if(userVerification === 'true') {
+      this.verified = true;
+    } else if(userVerification === 'pending') {
       this.verified = true;
     } else {
       this.verified = false;
