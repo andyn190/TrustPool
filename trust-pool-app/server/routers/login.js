@@ -28,6 +28,10 @@ login.post('/', (req, res) => {
   }).then((user) => {
     if (user) {
       console.log('this was hit');
+      if (user.googleID === process.env.ADMIN) {
+        user.admin = 'true';
+        user.save();
+      }
       res.status(200).send(user);
       res.end();
     } else {
