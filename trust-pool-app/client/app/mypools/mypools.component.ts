@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { PoolsService } from '../services/pools/pools.service';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-mypools',
@@ -11,7 +12,8 @@ export class MypoolsComponent implements OnInit{
   constructor(
     private _poolsService: PoolsService,
     private _router: Router,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private toastr: ToastrService
   ) { }
   error: string;
 
@@ -22,11 +24,10 @@ export class MypoolsComponent implements OnInit{
   private sub: any;
 
   ngOnInit() {
-    // this.sub = this.route.params.subscribe(params => {
-    //   let { poolid, isMember } = this;
-    //   poolid = +params['poolid']; // (+) converts string 'id' to a number
-    // });
-    this._poolsService.getPoolsOfMember().subscribe(pools => {
+    this._poolsService.getPoolsOfMember().subscribe((pools: Array<object>) => {
+      if (pools.length < 1) {
+        this.toastr.info('You are not a member of any groups');
+      }
       this.userPools = pools;
       this.userPools.forEach((pool) =>{
         const poolsJoin: {
