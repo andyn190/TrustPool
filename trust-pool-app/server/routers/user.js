@@ -81,8 +81,8 @@ user.post('/reject', (req, res) => {
 });
 
 user.get('/:id', (req, res) => {
-  const { body } = req;
-  const { id } = body;
+  const { params } = req;
+  const { id } = params;
   findUserById(id)
     .then(resUser => res.status(200).json({ user: resUser }))
     .catch(err => res.status(404).json({ err }));
