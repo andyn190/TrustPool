@@ -37,7 +37,6 @@ export class AppComponent {
   showHeader() {
     this.headerHide = true;
   }
-
   showJumboTronText() {
     if(!this.jumbo) {
       this.jumbo = true;

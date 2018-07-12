@@ -27,10 +27,8 @@
               "client/assets"
             ],
             "styles": [
-              "client/styles.scss",
-              // "node_modules/bootstrap/dist/css/bootstrap.min.css",
-              // "node_modules/bootstrap/dist/css/bootstrap-reboot.css",
-              // "node_modules/bootstrap/dist/css/bootstrap-grid.css"
+              "client/styles-app-loading.scss",
+              "client/styles.scss"
             ],
             "scripts": []
           },
