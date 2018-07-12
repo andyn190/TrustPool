@@ -1,9 +1,22 @@
 /* You can add global styles to this file, and also import other style files */
+@import 'styles-variables';
 @import '~bootstrap/scss/bootstrap-reboot';
 @import '~bootstrap/scss/bootstrap-grid';
-@import "~@angular/material/prebuilt-themes/indigo-pink.css";
 @import "~ngx-toastr/toastr.css";
 @import "~bootstrap/scss/functions";
 @import "~bootstrap/scss/variables";
 @import "~bootstrap/scss/mixins";
 @import "~ngx-toastr/toastr-bs4-alert";
+@import "~bootstrap/scss/bootstrap";
+
+$light-blue: #7290ff;
+$dark-blue: #3353ff;
+$black: #111;
+$white: #fff;
+$gray: #aaa;
+html {
+  background-color: $white;
+}
+body {
+  background-color: $gray;
+}

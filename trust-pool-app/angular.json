@@ -8,7 +8,11 @@
       "sourceRoot": "client",
       "projectType": "application",
       "prefix": "app",
-      "schematics": {},
+      "schematics": {
+        "@schematics/angular:component": {
+          "styleext": "scss"
+        }
+      },
       "architect": {
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
@@ -23,8 +27,8 @@
               "client/assets"
             ],
             "styles": [
-              "client/styles.scss",
-              "node_modules/bootstrap/dist/css/bootstrap.min.css"
+              "client/styles-app-loading.scss",
+              "client/styles.scss"
             ],
             "scripts": []
           },
@@ -124,5 +128,10 @@
       }
     }
   },
-  "defaultProject": "trust-pool-app"
+  "defaultProject": "trust-pool-app",
+  "schematics": {
+    "@schematics/angular:component": {
+      "styleext": "scss"
+    }
+  }
 }
