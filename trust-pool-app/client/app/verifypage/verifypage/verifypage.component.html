@@ -1,0 +1,45 @@
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-md-12">
+      <table class="table">
+        <thead>
+          <tr>
+            <th>
+              ID
+            </th>
+            <th>
+              Name
+            </th>
+            <th>
+              Email
+            </th>
+            <th>
+              Accept/Deny
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr  class="table-active" *ngFor="let user of pendingUsers">
+            <td>
+              <img height="250" width="250" [src]="user.photoID">
+            </td>
+            <td>
+              {{user.first_name}} {{user.last_name}}
+            </td>
+            <td>
+              {{user.email}}
+            </td>
+            <td>
+              <button type="button" class="btn btn-primary" (click)="verifyUser(user.id)">
+                Accept
+              </button>
+              <button type="button" class="btn btn-danger" (click)="rejectUser(user.id)">
+                Deny
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
