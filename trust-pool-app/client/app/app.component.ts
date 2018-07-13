@@ -16,7 +16,6 @@ export class AppComponent {
   headerHide:boolean = false;
   loggedIn:boolean;
   user: any;
-  showSidenav : boolean;
   constructor(private auth: OwnAuthService, private router: Router) {
   }
   ngOnInit() {
@@ -43,11 +42,5 @@ export class AppComponent {
     } else {
       this.jumbo = false;
     }
-  }
-  closeSidenav() {
-    this.showSidenav = false;
-  }
-  openSidenav() {
-    this.showSidenav = true;
   }
 }

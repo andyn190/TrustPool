@@ -13,8 +13,6 @@ export class HeaderComponent implements OnInit {
     private toastr: ToastrService,
   ) { }
   @Input() loggedIn: boolean;
-  @Input() open = false;
-  @Output() openMenu = new EventEmitter();
   user: {};
   admin: boolean;
   ngOnInit() {
@@ -31,5 +29,5 @@ export class HeaderComponent implements OnInit {
   handleLogout() {
     this.loggedIn = false;
   }
-  
+
 }
