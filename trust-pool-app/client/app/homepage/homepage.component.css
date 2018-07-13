@@ -1,6 +1,5 @@
-:host {
-    flex-grow: 1;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+a {
+    color: aliceblue;
+    border-radius: 5px;
+    background-color: #2f8dff;
 }

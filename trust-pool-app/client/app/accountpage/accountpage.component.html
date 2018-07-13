@@ -1,57 +1,102 @@
-<div class="container-fluid">
+<div class="jumbotron d-flex justify-content-center align-items-center" style="background-image: url(assets/user-profile.jpg)">
+  <h1>Profile</h1>
+  <div class="curtain"></div>
+</div>
+<div class="ml-5 mr-5">
   <div class="row">
-    <div class="col-md-6">
-      <img alt="Bootstrap Image Preview" img [src]="user.image_url" />
-      <dl>
-        <dt>
-          {{user.first_name}} {{user.last_name}}
-        </dt>
-        <dd>
-          User Since {{createdAt}}
-        </dd>
-        <dt>
-          Email {{user.email}}
-        </dt>
-        <dt>
-          Verified: {{user.verified}}
-        </dt>
-      </dl>
-      <button type="button" class="btn btn-lg active btn-primary" (click)="userUpdateInfoButton()">
-        Update Your Information
-      </button>
+    <div class="col-md-3 profile-sidebar">
+      <div class="d-flex flex-column">
+        <div class="profile-container-img align-self-end">
+          <img alt="User Profile Picture" img [src]="user.image_url" />
+        </div>
+        <div class="m-3">  
+          <div class="mt-3"></div>
+          <h4 class="text-right">
+            {{user.first_name}} {{user.last_name}}
+          </h4>
+          <label class="text-blue-dark">
+            User Since
+        </label>
+        <h4 class="text-right">
+          {{createdAt}}
+        </h4>
+        <label class="text-blue-dark">
+          Email
+        </label>
+        <h4 class="text-right">
+          {{user.email}}
+        </h4>
+        <h4 class="text-right">
+          {{user.verified}}
+        </h4>
+        <button type="button" class="btn btn-lg active btn-primary" (click)="userUpdateInfoButton()">
+          Update Your Information
+        </button>
+      </div>
+      </div>
     </div>
-    <div class='col-md-6' *ngIf='clicked'>
-      <div class="col-md-6">
-        <form role="form" #updateUserInfoForm="ngForm" (ngSubmit)="updateUserInfo(updateUserInfoForm.form);">
-          <div class="form-group">
-            <label for="nameInput">
-              Name
-            </label>
-            <input type="text" class="form-control" name="user-name" ngModel required [(ngModel)]="firstName" #nameField="ngModel" minlength="5">
+    <div class="col-md-9 profile-main">
+      <div class='col-md-6' *ngIf='clicked'>
+        <div class="col-md-6">
+          <form role="form" #updateUserInfoForm="ngForm" (ngSubmit)="updateUserInfo(updateUserInfoForm.form);">
+            <div class="form-group">
+              <label for="nameInput">
+                Name
+              </label>
+              <input type="text" class="form-control" name="user-name" ngModel required [(ngModel)]="firstName" #nameField="ngModel" minlength="5">
+            </div>
+            <div class="form-group">
+              <label for="exampleInputPassword1">
+                Lastname
+              </label>
+              <input type="text" class="form-control" name="user-lastName" ngModel [(ngModel)]="lastName" required #nameField="ngModel"
+                minlength="5">
+            </div>
+            <div class="form-group">
+              <label for="exampleInputFile">
+                Email
+              </label>
+              <input type="text" class="form-control" name="user-email" ngModel required [(ngModel)]='email' #nameField="ngModel" minlength="10">
+            </div>
+            <div class="form-group" *ngIf="!verified">
+              <label for="inputImageUrl">Verify with PhotoID</label>
+              <input type="file" class="form-control" required id="inputImageUrl" (change)="encodeImageFileAsURL($event)" name="user-photoId"
+                ngModel #nameField="ngModel" accept=".jpg, .jpeg, .png" placeholder="ImageUrl Here">
+            </div>
+            <button type="submit" class="btn btn-primary">
+              Submit
+            </button>
+          </form>
+        </div>
+      </div>
+      <div class="d-flex flex-column align-items-center pools-container">
+        <div *ngFor="let userPool of pools" class="pool-preview">
+          <div class="row">
+            <div class="col-2">
+              <div>
+                <div class="container-img" [ngStyle]="{'background-image': 'url(' + userPool.imageURL + ')'}">
+                </div>
+                <button class="btn btn-primary btn-sm" (click)='viewGroup(userPool.id)'> View Group </button>
+              </div>
+            </div>
+            <div class="col-10">
+              <h1>{{ userPool.name }}</h1>
+              <div class="row">
+                <div class="col-6">
+                  <div>{{ userPool.description }}</div>
+                </div>
+                <div class="col-6">
+                  <label for="" class="text-blue-light">Total Pool</label>
+                  <h2>${{ userPool.contribution_amount / 100 }}</h2>
+                  <label for="" class="text-blue-light">My Contribution</label>
+                  <h2>${{ userPool.contribution_amount / 100 }}</h2>
+                </div>
+              </div>
+            </div>
           </div>
-          <div class="form-group">
-            <label for="exampleInputPassword1">
-              Lastname
-            </label>
-            <input type="text" class="form-control" name="user-lastName" ngModel [(ngModel)]="lastName" required #nameField="ngModel"
-              minlength="5">
-          </div>
-          <div class="form-group">
-            <label for="exampleInputFile">
-              Email
-            </label>
-            <input type="text" class="form-control" name="user-email" ngModel required [(ngModel)]='email' #nameField="ngModel" minlength="10">
-          </div>
-          <div class="form-group" *ngIf="!verified">
-            <label for="inputImageUrl">Verify with PhotoID</label>
-            <input type="file" class="form-control" required id="inputImageUrl" (change)="encodeImageFileAsURL($event)" name="user-photoId"
-             ngModel #nameField="ngModel" accept=".jpg, .jpeg, .png" placeholder="ImageUrl Here">
-          </div>
-          <button type="submit" class="btn btn-primary">
-            Submit
-          </button>
-        </form>
+        </div>
       </div>
     </div>
   </div>
 </div>
+<!-- </div> -->

@@ -1,19 +1,9 @@
 @import '../styles-variables';
 
-:host /deep/ h1 {
-  font-style: italic;
-  text-align: center;
-}
-:host /deep/ app-footer {
-  position: fixed;
-  height: 10px;
-  bottom: 0;
-  width: 100%;
-}
-
 mat-sidenav-container {
   height: 100%;
   width: 100%;
+  background-color: #aaaaaa;
 
   .toolbar {
     position: fixed;
@@ -43,12 +33,6 @@ mat-sidenav-container {
         height: 48px;
       }
     }
-
-    .sign-in-button {
-      line-height: 35px;
-      margin-right: 10px;
-    }
-
     .spacer {
       flex: 1 1 auto;
     }
@@ -163,7 +147,7 @@ mat-sidenav-container {
 
 mat-sidenav {
   width: 250px;
-
+  background-color: black;
   .branding {
     height: 64px;
     padding: 8px 10px;

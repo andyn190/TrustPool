@@ -8,7 +8,7 @@ import { UserService } from '../services/user/user.service';
 @Component({
   selector: 'app-groups',
   templateUrl: './groups.component.html',
-  styleUrls: ['./groups.component.css']
+  styleUrls: ['./groups.component.scss']
 })
 export class GroupsComponent implements OnInit {
   public pools;
@@ -43,7 +43,7 @@ export class GroupsComponent implements OnInit {
             this.updateMemberCountView(poolid);
             this.toastr.success('You\'ve successfully joined the group');
           },
-          err => this.toastr.error(err, 'ERROR'),
+          err => this.toastr.error('ERROR you have already joined this Pool'),
           () => console.log('done joining pool')
         );
     } else {
@@ -53,7 +53,7 @@ export class GroupsComponent implements OnInit {
           this.updateMemberCountView(poolid);
           this.toastr.success('You\'ve successfully joined the group');
         },
-        err => this.toastr.error('You are already a member of this pool!'),
+        err => this.toastr.error('ERROR you have already joined this Pool'),
         () => console.log('done joining pool')
       );
     }

@@ -3,7 +3,7 @@ import { FormsModule } from '@angular/forms';
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { HttpClientModule, HttpHeaders } from '@angular/common/http';
-import { MatSidenavModule, } from '@angular/material';
+import { MatSidenavModule, MatCheckboxModule, MatMenuModule } from '@angular/material';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations'
 import { MatButtonModule } from '@angular/material/button';
 import { CookieService } from 'ngx-cookie-service';
@@ -128,7 +128,10 @@ export function getAuthServiceConfigs() {
     NgxChartsModule,
     NgbModule.forRoot(),
     ToastrModule.forRoot(),
-    MomentModule
+    MomentModule,
+    MatButtonModule,
+    MatCheckboxModule,
+    MatMenuModule
   ],
     providers: [OwnAuthService, UserService, PoolsService, CookieService, ChatService, {
     provide: AuthServiceConfig,

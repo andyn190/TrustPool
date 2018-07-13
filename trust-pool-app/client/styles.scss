@@ -4,7 +4,6 @@
 @import '~bootstrap/scss/bootstrap-reboot';
 @import '~bootstrap/scss/bootstrap-grid';
 
-
 @import "~ngx-toastr/toastr.css";
 @import "~bootstrap/scss/functions";
 @import "~bootstrap/scss/variables";
@@ -18,10 +17,49 @@ $black: #111;
 $white: #fff;
 $gray: #aaa;
 $background: aliceblue;
+.text-blue-light {
+  color: $light-blue!important;
+}
+.text-blue-dark {
+  color: $dark-blue!important;
+}
 html {
   background-color: $white;
+  // background-image: url(./assets/backlit-bonding-casual-708392.png);
+  background-size: contain;
 }
 
 body {
   background-color: $background;
+}
+body { margin: 0; }
+
+.jumbotron {
+  height: 400px;
+  background-size: cover;
+  background-position: center;
+  margin-bottom: 0;
+  color: $white;
+  position: relative;
+  .curtain {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    opacity: 0.4;
+    background-color: black;
+    width: 100%;
+  }
+  h1 {
+    position: relative;
+    z-index: 400;
+    text-shadow: 3px 3px 4px #222222;
+  }
+}
+.profile-container-img {
+  height: 200px;
+  width: 200px;
+  img {
+    height: 100%;
+  }
 }

@@ -1,0 +1,83 @@
+form.checkout {
+  max-width: 500px;
+  margin: 2rem auto;
+  text-align: center;
+  border: 2px solid #eee;
+  border-radius: 8px;
+  padding: 1rem 2rem;
+  background: white;
+
+  font-family: monospace;
+  color: #525252;
+  font-size: 1.1rem;
+}
+
+form.checkout button {
+  padding: 0.5rem 1rem;
+  color: white;
+  background: coral;
+  border: none;
+  border-radius: 4px;
+  margin-top: 1rem;
+}
+
+form.checkout button:active {
+  background: rgb(165, 76, 43);
+}
+
+.StripeElement {
+  background-color: white;
+  height: 40px;
+  width: 500px;
+  padding: 8px 12px;
+  border-radius: 4px;
+  border: 1px solid transparent;
+  box-shadow: 0 1px 3px 0 #e6ebf1;
+  -webkit-transition: box-shadow 150ms ease;
+  transition: box-shadow 150ms ease;
+}
+
+.StripeElement--focus {
+  box-shadow: 0 1px 3px 0 #cfd7df;
+}
+
+.StripeElement--invalid {
+  border-color: #fa755a;
+}
+
+.StripeElement--webkit-autofill {
+  background-color: #fefde5 !important;
+}
+
+.chatWindow {
+  height: 400px;
+  overflow: auto;
+  background: #f9f9f9;
+}
+
+.chatContainer {
+  max-width: 600px;
+  margin: 30px auto;
+  border: 1px solid #ddd;
+  box-shadow: 1px 3px 5px rgba(0,0,0,0.05);
+  border-radius: 2px;
+}
+
+button {
+  color: aliceblue!important;
+  background-color: #2f8dff!important;
+}
+
+:host /deep/ dt {
+  font-size: large
+}
+
+:host /deep/ dd {
+  font-size: large
+}
+.nav-button {
+  margin: 0 10px 0 0;
+}
+ul {
+  list-style-type: none;
+}

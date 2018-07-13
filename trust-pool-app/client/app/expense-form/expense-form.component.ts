@@ -9,7 +9,7 @@ import { NgbModal, NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 @Component({
   selector: 'app-expense-form',
   templateUrl: './expense-form.component.html',
-  styleUrls: ['./expense-form.component.css']
+  styleUrls: ['./expense-form.component.scss']
 })
 @Optional()
 export class ExpenseFormComponent implements OnInit {
