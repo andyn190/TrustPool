@@ -34,15 +34,22 @@
       </button>
     </span>
     <span class="d-none d-md-inline" *ngIf="loggedIn">
-      <button mat-button class="nav-button" [routerLink]="['groups']" routerLinkActive="active">
+      <button mat-button class="nav-button" [matMenuTriggerFor]="appMenu">
         Pools
       </button>
     </span>
-    <span class="d-none d-md-inline" *ngIf="loggedIn">
-      <button mat-button class="nav-button" [routerLink]="['mypools']" routerLinkActive="active">
-        My Pools
-      </button>
-    </span>
+    <mat-menu #appMenu="matMenu">
+      <div class="d-none d-md-inline" mat-menu-item>
+        <button mat-button class="nav-button" [routerLink]="['groups']" routerLinkActive="active">
+          All Pools
+        </button>
+      </div>
+      <div class="d-none d-md-inline" mat-menu-item>
+        <button mat-button class="nav-button" [routerLink]="['mypools']" routerLinkActive="active">
+          My Pools
+        </button>
+      </div>
+    </mat-menu>
     <span class="d-none d-md-inline" *ngIf="loggedIn">
       <a href="/logout" (click)="handleLogout()">
         <button mat-button class="nav-button" routerLinkActive="active">
