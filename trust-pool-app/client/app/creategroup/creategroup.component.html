@@ -11,14 +11,9 @@
       <small id="nameHelp" class="form-text text-muted">Your Group name will be what helps represent your group.</small>
     </div>
     <div class="form-group">
-      <label for="inputImageUrl">Upload Image</label>
-      <input type="file" class="form-control" required id="inputImageUrl" (change)="encodeImageFileAsURL($event)" name="group-url"
-        ngModel #nameField="ngModel" accept=".jpg, .jpeg, .png" placeholder="ImageUrl Here">
-    </div>
-    <div class="form-group">
       <label for="inputGroupDescription">Group Description</label>
-      <input type="text" class="form-control" id="inputGroupDescription" name="group-description" ngModel #nameField="ngModel"
-        aria-describedby="descriptionHelp" placeholder="Enter group Description">
+      <textarea rows="5" type="text" class="form-control" id="inputGroupDescription" name="group-description" ngModel #nameField="ngModel"
+        aria-describedby="descriptionHelp" placeholder="Enter group Description"></textarea>
       <small id="descriptionHelp" class="form-text text-muted">Your Group description will help others know what your group is all about.</small>
     </div>
     <div class="form-voteconfig">
@@ -26,11 +21,17 @@
       <input type="number" class="form-control" max="100" min="1" name="group-voterConfig" id="voteConfig" required ngModel #nameField="ngModel"
         aria-describedby="voteConfigHelp" placeholder="Enter your config">
       <small id="descriptionHelp" class="form-text text-muted">The vote config will allow you to dictate the percentage threshold required for an expense request to be approved between
-        (0-100).</small>
+        (0-100).
+      </small>
     </div>
     <div class="form-publicopt">
       <input type="checkbox" class="form-check-input" value="true" ngModel name="group-publicOpt" #nameField="ngModel" id="publicOpt">
       <label class="form-check-label" for="exampleCheck1">Public</label>
+    </div>
+    <div class="form-group">
+      <label for="inputImageUrl">Upload Image</label>
+      <input type="file" class="form-control" required id="inputImageUrl" (change)="encodeImageFileAsURL($event)" name="group-url"
+        ngModel #nameField="ngModel" accept=".jpg, .jpeg, .png" placeholder="ImageUrl Here">
     </div>
     <button type="submit" class="btn btn-primary">Submit</button>
   </form>
