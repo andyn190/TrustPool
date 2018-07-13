@@ -20,12 +20,12 @@ $background: aliceblue;
 .text-blue-light {
   color: $light-blue!important;
 }
-.text-blue-dard {
+.text-blue-dark {
   color: $dark-blue!important;
 }
 html {
   background-color: $white;
-  background-image: url(./assets//backlit-bonding-casual-708392.png);
+  // background-image: url(./assets/backlit-bonding-casual-708392.png);
   background-size: contain;
 }
 
@@ -40,6 +40,7 @@ body { margin: 0; }
   background-position: center;
   margin-bottom: 0;
   color: $white;
+  position: relative;
   .curtain {
     position: absolute;
     top: 0;

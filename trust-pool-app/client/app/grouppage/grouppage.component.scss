@@ -63,6 +63,11 @@ form.checkout button:active {
   border-radius: 2px;
 }
 
+button {
+  color: aliceblue!important;
+  background-color: #2f8dff!important;
+}
+
 :host /deep/ dt {
   font-size: large
 }
@@ -70,7 +75,9 @@ form.checkout button:active {
 :host /deep/ dd {
   font-size: large
 }
-
+.nav-button {
+  margin: 0 10px 0 0;
+}
 ul {
   list-style-type: none;
 }
