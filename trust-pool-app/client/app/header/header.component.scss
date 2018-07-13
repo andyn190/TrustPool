@@ -22,10 +22,10 @@ button {
   color: aliceblue;
   background-color: #2f8dff;
 }
+
 .toolbar {
     width: 100%;
     display: flex;
-    background-color: aliceblue;
 
     .nav-button {
       margin: 0 10px 0 0;
@@ -47,8 +47,8 @@ button {
       img {
         position: relative;
         top: -2px;
-        width: 100px;
-        height: 100px;
+        width: 150px;
+        height: 150px;
       }
     }
 
@@ -97,4 +97,9 @@ mat-sidenav {
   .mat-nav-list {
     padding-top: 0;
   }
+  background-color: black;
+}
+
+mat-toolbar {
+  background-color: black;
 }
