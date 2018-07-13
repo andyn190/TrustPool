@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { GroupCreateService } from '../service/group-create.service';
 import { ToastrService } from 'ngx-toastr';
+import { Router, ActivatedRoute, Routes } from '@angular/router';
 
 @Component({
   selector: 'app-creategroup',
@@ -15,7 +16,8 @@ export class CreategroupComponent implements OnInit {
   public publicOpt: boolean;
   constructor(
     private groupService: GroupCreateService,
-    private toastr: ToastrService
+    private toastr: ToastrService,
+    private _router: Router
   ) { }
 
   ngOnInit() {
@@ -31,10 +33,12 @@ export class CreategroupComponent implements OnInit {
     this.groupService.createGroup(pool).subscribe(
       success => {
         this.toastr.success(`${name} was Successfully created`);
-        console.log(success);
+        console.log(success, 'this is the success');
+        console.log(success['newPool'].id, 'this be that mofuggin id');
+        this._router.navigate([`group/${success['newPool'].id}`]);
       },
       err => this.toastr.error(err, 'ERROR'),
-      () => console.log(`${name} was Successfully created`)
+      () => console.log(`${name} was Successfully created`),
     );
     form.reset();
   }
