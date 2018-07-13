@@ -4,7 +4,6 @@
 @import '~bootstrap/scss/bootstrap-reboot';
 @import '~bootstrap/scss/bootstrap-grid';
 
-
 @import "~ngx-toastr/toastr.css";
 @import "~bootstrap/scss/functions";
 @import "~bootstrap/scss/variables";
@@ -20,6 +19,8 @@ $gray: #aaa;
 $background: aliceblue;
 html {
   background-color: $white;
+  background-image: url(./assets//backlit-bonding-casual-708392.png);
+  background-size: contain;
 }
 
 body {
