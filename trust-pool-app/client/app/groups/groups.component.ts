@@ -3,6 +3,7 @@ import { CookieService } from 'ngx-cookie-service';
 import { PoolsService } from '../services/pools/pools.service';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
+import { UserService } from '../services/user/user.service';
 
 @Component({
   selector: 'app-groups',
@@ -11,15 +12,26 @@ import { ToastrService } from 'ngx-toastr';
 })
 export class GroupsComponent implements OnInit {
   public pools;
+  verified: boolean;
   constructor(
     private _poolsService: PoolsService,
     private _cookieService: CookieService,
     private _router: Router,
-    private toastr: ToastrService
+    private toastr: ToastrService,
+    private _userService: UserService
   ) { }
 
   ngOnInit() {
     this.getPools();
+    this._userService.getUser().subscribe(
+      (res:any) => {
+        if(res.user.verified === 'true') {
+          this.verified = true;
+        } else {
+          this.verified = false;
+        }
+      }
+    )
   }
   joinGroup(poolid) {
     let socialUser = this._cookieService.get('socialID');
