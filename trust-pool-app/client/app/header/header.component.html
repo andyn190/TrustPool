@@ -1,22 +1,23 @@
-<mat-sidenav #sidenav mode="push">
-  <div class="branding">
-    <img src="assets/trustPoolBigCircle.png" />
-    <span>Trust Pool</span>
-  </div>
+<mat-sidenav [opened]="open" mode="push">
+  <mat-nav-list>
+
+  </mat-nav-list>
 </mat-sidenav>
 
 <div class="toolbar">
-  <mat-toolbar color="primary">
-    <button mat-icon-button class="d-md-none" (click)="sidenav.open()">
+  <mat-toolbar color="aliceblue" (click)="openMenu.emit()">
+    <button mat-icon-button class="d-md-none">
       <mat-icon fontSet="fas" fontIcon="fa-bars"></mat-icon>
     </button>
     <span routerLink="/home" class="branding spacer center d-inline d-sm-none">
       <img src="assets/TrustPoolFull.png" />
     </span>
     <span routerLink="/home" class="branding spacer center d-none d-sm-inline d-md-none">
-      <img src="assets/TrustPoolFull.png" alt="Trust Pool"/></span>
+      <img src="assets/TrustPoolFull.png" alt="Trust Pool" />
+    </span>
     <span routerLink="/home" class="branding spacer d-none d-md-inline">
-      <img src="assets/TrustPoolFull.png" alt="Trust Pool"/></span>
+      <img src="assets/TrustPoolFull.png" alt="Trust Pool" />
+    </span>
 
     <span class="d-none d-md-inline" *ngIf="loggedIn">
       <button mat-button class="nav-button" [routerLink]="['account']" routerLinkActive="active">
@@ -25,7 +26,7 @@
     </span>
     <span class="d-none d-md-inline" *ngIf="loggedIn">
       <button mat-button class="nav-button" [routerLink]="['groups']" routerLinkActive="active">
-        Groups
+        Pools
       </button>
     </span>
     <span class="d-none d-md-inline" *ngIf="loggedIn">
@@ -34,8 +35,8 @@
       </button>
     </span>
     <span class="d-none d-md-inline" *ngIf="loggedIn">
-      <a href="/logout"  (click)="handleLogout()">
-        <button mat-button class="nav-button" href="/logout" routerLinkActive="active">
+      <a href="/logout" (click)="handleLogout()">
+        <button mat-button class="nav-button" routerLinkActive="active">
           Logout
         </button>
       </a>

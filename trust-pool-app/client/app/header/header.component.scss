@@ -18,30 +18,6 @@ h1 {
   font-size: 250%;
   border-bottom: 2px solid #eee;
 }
-mat-sidenav {
-  width: 250px;
-
-  .branding {
-    height: 64px;
-    padding: 8px 10px;
-    font-size: 20px;
-    font-weight: 500;
-
-    img {
-      height: 48px;
-      margin: 2px 10px 0 0;
-    }
-
-    span {
-      position: relative;
-      top: 3px;
-    }
-  }
-
-  .mat-nav-list {
-    padding-top: 0;
-  }
-}
 button {
   color: aliceblue;
   background-color: #2f8dff;
@@ -49,6 +25,7 @@ button {
 .toolbar {
     width: 100%;
     display: flex;
+    background-color: #aaa;
 
     .nav-button {
       margin: 0 10px 0 0;
@@ -59,8 +36,9 @@ button {
     }
 
     .branding {
-      cursor: pointer;
+      cursor: pointer; 
       padding-top: 4px;
+      display: inline-block;
 
       &.center {
         text-align: center;
@@ -95,3 +73,4 @@ button {
       }
     }
   }
+  

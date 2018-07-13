@@ -48,7 +48,7 @@
                   <h3 class='row justify-content-center'>${{currentExpenseRequest.expense_amount}}</h3>
                   <p class='row justify-content-center'>{{currentExpenseRequest.description}}</p>
                   <h4 class='row justify-content-center'> Expires: {{currentExpenseRequest.expiration_date}}</h4>
-                  <div class='row justify-content-center'> Number of Votes: {{currentExpenseRequest.voter_count}} ({{currentExpenseRequest.member_vote_percent}}% of the group)</div>
+                  <div class='row justify-content-center'> Number of Votes: {{currentExpenseRequest.voter_count}} ({{currentExpenseRequest.member_vote_percent}}% of the pool)</div>
                   <div class='row justify-content-center'>Vote Power needed to pass: {{pool.voteConfig}}%</div>
                   <ngx-charts-advanced-pie-chart 
                     class='row justify-content-center'
@@ -163,10 +163,10 @@
           </div>
           <div *ngIf="isMember" class='d-inline'>
             <div *ngIf="!isMember.is_creator"> 
-              <h4 class='row justify-content-center'> You are a member of this group!</h4>
+              <h4 class='row justify-content-center'> You are a member of this pool!</h4>
             </div>
             <div *ngIf="isMember.is_creator">
-              <h4  class='row justify-content-center'> You are the creator of this group!</h4>
+              <h4  class='row justify-content-center'> You are the creator of this pool!</h4>
               <div class="col-md-6">
                 <h4 class='row justify-content-center'>Join Requests</h4>
                 <ul class='row justify-content-center'>
@@ -192,7 +192,7 @@
             <br />
           </div>
           <div *ngIf="!isMember" class='d-inline row justify-content-center'>
-            <button (click)='joinGroup(pool.id)'> Join Group </button>
+            <button (click)='joinGroup(pool.id)'> Join Pool </button>
           </div>
           <form *ngIf="isMember" #checkout="ngForm" (ngSubmit)="onSubmit(checkout, pool.id)" class="checkout">
             <div class='form-row justify-content-center'>
@@ -212,7 +212,7 @@
             </div>
             <button type="submit">Contribute ${{ amount.value }}</button>
           </form>
-          <button (click)="viewGroups()" class='d-inline'>Back to Groups</button>
+          <button (click)="viewGroups()" class='d-inline'>Back to Pools</button>
         </div>
       </div>
     </div>

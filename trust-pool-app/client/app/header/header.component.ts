@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { OwnAuthService } from '../services/auth/auth.service';
 import { ToastrService } from 'ngx-toastr';
 
@@ -12,7 +12,9 @@ export class HeaderComponent implements OnInit {
     private auth: OwnAuthService,
     private toastr: ToastrService,
   ) { }
-  @Input () loggedIn: boolean
+  @Input() loggedIn: boolean;
+  @Input() open = false;
+  @Output() openMenu = new EventEmitter();
   user: {};
   admin: boolean;
   ngOnInit() {
@@ -29,4 +31,5 @@ export class HeaderComponent implements OnInit {
   handleLogout() {
     this.loggedIn = false;
   }
+  
 }

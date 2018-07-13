@@ -1,5 +1,5 @@
 import { Component, NgModule } from '@angular/core';
-import { ReactiveFormsModule } from '@angular/forms';
+import { ReactiveFormsModule, FormControl } from '@angular/forms';
 import { OwnAuthService } from './services/auth/auth.service';
 import { Router, ActivatedRoute, Routes } from '@angular/router';
 
@@ -8,6 +8,7 @@ import { Router, ActivatedRoute, Routes } from '@angular/router';
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss']
 })
+
 export class AppComponent { 
   title = 'TrustPool App';
   clicked:boolean = true;
@@ -15,6 +16,7 @@ export class AppComponent {
   headerHide:boolean = false;
   loggedIn:boolean;
   user: any;
+  showSidenav : boolean;
   constructor(private auth: OwnAuthService, private router: Router) {
   }
   ngOnInit() {
@@ -41,5 +43,11 @@ export class AppComponent {
     } else {
       this.jumbo = false;
     }
+  }
+  closeSidenav() {
+    this.showSidenav = false;
+  }
+  openSidenav() {
+    this.showSidenav = true;
   }
 }
