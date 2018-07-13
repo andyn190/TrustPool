@@ -24,7 +24,6 @@ export class HomepageComponent implements OnInit {
       if (user) {
         this.user = user;
         this.loggedIn = true;
-        console.log(this.user)
         this._userService.verifyAdmin(user).subscribe(
           (res:any) => {
             console.log(res);
