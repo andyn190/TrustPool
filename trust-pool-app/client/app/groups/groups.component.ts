@@ -53,7 +53,7 @@ export class GroupsComponent implements OnInit {
           this.updateMemberCountView(poolid);
           this.toastr.success('You\'ve successfully joined the group');
         },
-        err => this.toastr.error(err, 'ERROR'),
+        err => this.toastr.error('You are already a member of this pool!'),
         () => console.log('done joining pool')
       );
     }
