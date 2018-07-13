@@ -5,22 +5,22 @@
 <div class="container">
   <form #groupForm="ngForm" (ngSubmit)="createGroup(groupForm.form)">
     <div class="form-group">
-      <label for="inputName">Group Name</label>
+      <label for="inputName">Pool Name</label>
       <input type="text" class="form-control" id="inputName" name="group-name" ngModel #nameField="ngModel" aria-describedby="nameHelp"
         placeholder="Enter group name">
-      <small id="nameHelp" class="form-text text-muted">Your Group name will be what helps represent your group.</small>
+      <small id="nameHelp" class="form-text text-muted">Your Pool name will be what helps represent your pool.</small>
     </div>
     <div class="form-group">
-      <label for="inputGroupDescription">Group Description</label>
+      <label for="inputGroupDescription">Pool Description</label>
       <textarea rows="5" type="text" class="form-control" id="inputGroupDescription" name="group-description" ngModel #nameField="ngModel"
         aria-describedby="descriptionHelp" placeholder="Enter group Description"></textarea>
-      <small id="descriptionHelp" class="form-text text-muted">Your Group description will help others know what your group is all about.</small>
+      <small id="descriptionHelp" class="form-text text-muted">Your Pool description will help others know what your pool is all about.</small>
     </div>
     <div class="form-voteconfig">
-      <label for="voteConfig">Vote Config</label>
+      <label for="voteConfig">Vote Quorum</label>
       <input type="number" class="form-control" max="100" min="1" name="group-voterConfig" id="voteConfig" required ngModel #nameField="ngModel"
         aria-describedby="voteConfigHelp" placeholder="Enter your config">
-      <small id="descriptionHelp" class="form-text text-muted">The vote config will allow you to dictate the percentage threshold required for an expense request to be approved between
+      <small id="descriptionHelp" class="form-text text-muted">The vote quorum will allow you to dictate the percentage threshold required for an expense request to be approved between
         (0-100).
       </small>
     </div>
