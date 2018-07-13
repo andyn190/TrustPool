@@ -1,16 +1,5 @@
 @import '../styles-variables';
 
-:host /deep/ h1 {
-  font-style: italic;
-  text-align: center;
-}
-:host /deep/ app-footer {
-  position: fixed;
-  height: 10px;
-  bottom: 0;
-  width: 100%;
-}
-
 mat-sidenav-container {
   height: 100%;
   width: 100%;

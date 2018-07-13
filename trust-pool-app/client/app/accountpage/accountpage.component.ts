@@ -1,8 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { UserService } from '../services/user/user.service';
 import { ToastrService } from 'ngx-toastr';
 import { DateFormatPipe } from 'angular2-moment';
+import { PoolsService } from '../services/pools/pools.service';
 
 @Component({
   selector: 'app-accountpage',
@@ -23,9 +24,18 @@ export class AccountpageComponent implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private _userService: UserService,
-    private toastr: ToastrService
+    private toastr: ToastrService,
+    private _router: Router,
+    private _poolsService: PoolsService
   ) {
   }
+  
+  error: string;
+  poolid: number;
+  isMember: any;
+  userPools: any;
+  pools: any = [];
+  private sub: any;
 
   ngOnInit() {
     this._userService.getUser()
@@ -45,6 +55,47 @@ export class AccountpageComponent implements OnInit {
         err => console.log(err, 'ERROR'),
         () => console.log('done creating pool')
       );
+    this._poolsService.getPoolsOfMember().subscribe((pools: Array<object>) => {
+      if (pools.length < 1) {
+        this.toastr.info('You are not a member of any groups');
+      }
+      this.userPools = pools;
+      this.userPools.forEach((pool) => {
+        const poolsJoin: {
+          contribution_amount: number;
+          id: number;
+          name: string;
+          description: string;
+          imageURL: string;
+        } = {
+          contribution_amount: pool.contrubution_amount,
+          id: null,
+          name: null,
+          description: null,
+          imageURL: null
+        };
+        this._poolsService.getPool(pool.pool_id).subscribe((
+          res: {
+            pool: {
+              id: number;
+              name: string;
+              description: string;
+              imageURL: string;
+            },
+            error: string
+          }) => {
+          const { pool, error } = res;
+          if (error) {
+            return console.log(error);
+          }
+          poolsJoin.id = pool.id;
+          poolsJoin.name = pool.name;
+          poolsJoin.description = pool.description;
+          poolsJoin.imageURL = pool.imageURL;
+          this.pools.push(poolsJoin);
+        });
+      });
+    })
   }
   userUpdateInfoButton() {
     if(!this.clicked) {
@@ -85,5 +136,8 @@ export class AccountpageComponent implements OnInit {
     } else {
       this.verified = false;
     }
+  }
+  viewGroup(poolid) {
+    this._router.navigate(['group/', poolid]);
   }
 }

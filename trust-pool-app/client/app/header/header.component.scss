@@ -102,4 +102,6 @@ mat-sidenav {
 
 mat-toolbar {
   background-color: black;
+  position: relative;
+  z-index: 500;
 }

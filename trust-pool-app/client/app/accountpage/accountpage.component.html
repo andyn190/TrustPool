@@ -1,32 +1,36 @@
 <!-- <div class="container-fluid"> -->
-  <div class="jumbotron" style="background-image: url(assets/user-profile.jpg)">
-    <!-- <img src="assets/user-profile.jpg"> -->
-    <h1>Profile</h1>
-    <div class="curtain"></div>
-  </div>
+<div class="jumbotron d-flex justify-content-center align-items-center" style="background-image: url(assets/user-profile.jpg)">
+  <!-- <img src="assets/user-profile.jpg"> -->
+  <h1>Profile</h1>
+  <div class="curtain"></div>
+</div>
+<div class="ml-5 mr-5">
   <div class="row">
     <div class="col-md-3 profile-sidebar">
-      <div class="profile-container-img">
-        <img alt="User Profile Picture" img [src]="user.image_url" />
+      <div class="d-flex flex-column">
+        <div class="profile-container-img align-self-end">
+          <img alt="User Profile Picture" img [src]="user.image_url" />
+        </div>
+        <div class="m-5"></div>
+        <h3 class="text-right">
+          {{user.first_name}} {{user.last_name}}
+        </h3>
+        <label for="">
+          User Since
+        </label>
+        <h3 class="text-right">
+          {{createdAt}}
+        </h3>
+        <label for="">
+          Email
+        </label>
+        <h3 class="text-right">
+          {{user.email}}
+        </h3>
+        <button type="button" class="btn btn-lg active btn-primary" (click)="userUpdateInfoButton()">
+          Update Your Information
+        </button>
       </div>
-          <h3>
-            {{user.first_name}} {{user.last_name}}
-          </h3>
-          <label for="">
-            User Since
-          </label>
-          <h3>
-            {{createdAt}}
-          </h3>
-          <label for="">
-            Email
-          </label>
-          <h3>
-            {{user.email}}
-          </h3>
-      <button type="button" class="btn btn-lg active btn-primary" (click)="userUpdateInfoButton()">
-        Update Your Information
-      </button>
     </div>
     <div class="col-md-9 profile-main">
       <div class='col-md-6' *ngIf='clicked'>
@@ -54,7 +58,7 @@
             <div class="form-group" *ngIf="!verified">
               <label for="inputImageUrl">Verify with PhotoID</label>
               <input type="file" class="form-control" required id="inputImageUrl" (change)="encodeImageFileAsURL($event)" name="user-photoId"
-              ngModel #nameField="ngModel" accept=".jpg, .jpeg, .png" placeholder="ImageUrl Here">
+                ngModel #nameField="ngModel" accept=".jpg, .jpeg, .png" placeholder="ImageUrl Here">
             </div>
             <button type="submit" class="btn btn-primary">
               Submit
@@ -62,10 +66,34 @@
           </form>
         </div>
       </div>
+      <div class="d-flex flex-column align-items-center pools-container">
+        <div *ngFor="let userPool of pools" class="pool-preview">
+          <div class="row">
+            <div class="col-2">
+              <div>
+                <div class="container-img" [ngStyle]="{'background-image': 'url(' + userPool.imageURL + ')'}">
+                </div>
+                <button class="btn btn-primary btn-sm" (click)='viewGroup(userPool.id)'> View Group </button>
+              </div>
+            </div>
+            <div class="col-10">
+              <h1>{{ userPool.name }}</h1>
+              <div class="row">
+                <div class="col-6">
+                  <div>{{ userPool.description }}</div>
+                </div>
+                <div class="col-6">
+                  <label for="" class="text-blue-light">Total Pool</label>
+                  <h2>${{ userPool.contribution_amount / 100 }}</h2>
+                  <label for="" class="text-blue-light">My Contribution</label>
+                  <h2>${{ userPool.contribution_amount / 100 }}</h2>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
-  <div class="row">
-    <div class="col-md-6">
-    </div>
-  </div>
+</div>
 <!-- </div> -->
