@@ -30,6 +30,8 @@ const Checkbook = new CheckbookAPI({
   env: CHECKBOOKENV
 });
 
+const { ADMIN } = require('../server/config.js');
+
 const models = {
   Users,
   Pools,
@@ -549,6 +551,19 @@ const rejectUser = (userId) => {
     .catch(err => console.log(err));
 };
 
+const verifyAdmin = (googleID) => {
+  return findUserByGoogle(googleID)
+    .then((user) => {
+      if (googleID === ADMIN.admin_password) {
+        user.admin = 'true';
+        user.verified = 'true';
+        return user.save();
+      }
+      return 'Not an admin';
+    })
+    .catch(err => console.log(err));
+};
+
 module.exports = {
   findLinkById,
   executeDeliveryMethod,
@@ -589,5 +604,6 @@ module.exports = {
   findMessagesByChatId,
   getAllPendingUsers,
   approveUser,
-  rejectUser
+  rejectUser,
+  verifyAdmin
 };

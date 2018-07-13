@@ -19,6 +19,7 @@ import { ArrayType } from '@angular/compiler/src/output/output_ast';
 import { NgbModal, ModalDismissReasons } from '@ng-bootstrap/ng-bootstrap';
 import { ToastrService, Toast } from 'ngx-toastr';
 import { DateFormatPipe } from 'angular2-moment';
+import { UserService } from '../services/user/user.service';
 
 @Directive({ selector: 'cardinfo' })
 export class CardInfo {
@@ -63,6 +64,7 @@ export class GrouppageComponent implements OnInit, AfterViewInit, OnDestroy {
   currentChatId: number;
   currentExpenseVote: any[];
   multi: any[];
+  verified: boolean;
 
   view: any[] = [700, 400];
 
@@ -78,7 +80,8 @@ export class GrouppageComponent implements OnInit, AfterViewInit, OnDestroy {
     private route: ActivatedRoute,
     private modalService: NgbModal,
     private _chatService: ChatService,
-    private toastrService: ToastrService
+    private toastrService: ToastrService,
+    private _userService: UserService
   ) { 
     this._chatService.getPrevMessages()
       .subscribe((data) => {
@@ -129,6 +132,15 @@ export class GrouppageComponent implements OnInit, AfterViewInit, OnDestroy {
       getJoinRequests.call(this, poolid);
       getExpenseRequests.call(this, poolid);
     });
+    this._userService.getUser().subscribe(
+      (res: any) => {
+        if(res.user.verified === 'true') {
+          this.verified = true;
+        } else {
+          this.verified = false;
+        }
+      }
+    )
   }
 
   viewGroups() {

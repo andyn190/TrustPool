@@ -36,4 +36,9 @@ export class UserService {
     const body = { id: userId };
     return this.http.post('user/reject', body);
   }
+
+  verifyAdmin(user) {
+    const body = { user: user }
+    return this.http.post('user/admin', body);
+  }
 }

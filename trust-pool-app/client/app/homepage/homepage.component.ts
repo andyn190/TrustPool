@@ -1,7 +1,8 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { Router } from '@angular/router';
 import { DataService } from '../data.service';
-
+import { OwnAuthService } from '../services/auth/auth.service';
+import { UserService } from '../services/user/user.service';
 @Component({
   selector: 'app-homepage',
   templateUrl: './homepage.component.html',
@@ -9,7 +10,8 @@ import { DataService } from '../data.service';
 })
 export class HomepageComponent implements OnInit {
   clicked:boolean = false;
-  constructor(private _router: Router, private dataService: DataService) {
+  user:any;
+  constructor(private _router: Router, private dataService: DataService, private auth: OwnAuthService, private _userService: UserService) {
     this.dataService.loggedIn$.subscribe(value => {
       this.loggedIn = value;
     })
@@ -18,7 +20,17 @@ export class HomepageComponent implements OnInit {
   @Input() loggedIn: boolean
 
   ngOnInit() {
-
+    this.auth.checkLogin().subscribe(({ user }: any) => {
+      if (user) {
+        this.user = user;
+        this.loggedIn = true;
+        this._userService.verifyAdmin(user).subscribe(
+          (res:any) => {
+            console.log(res);
+          }
+        )
+      }
+    });
   }
   showJumboTronText() {
     if(!this.clicked) {
