@@ -39,7 +39,7 @@
                 <span aria-hidden="true">&times;</span>
               </button>
             </div>
-            <div class="modal-body">
+            <div *ngIf="verified" class="modal-body">
               <button *ngIf="isMember" class="btn btn-primary" align='right' (click)="goToExpenseRequestForm(pool.id)"> Create Expense Request</button>
               <div *ngIf=!toggleChat>
                 <div *ngIf=currentExpenseRequest>
@@ -141,7 +141,7 @@
                   <span aria-hidden="true">&times;</span>
                 </button>
               </div>
-              <div class="modal-body">
+              <div *ngIf="verified" class="modal-body">
                 <form *ngIf="isMember" #inviteForm="ngForm" id="inviteFriend" (ngSubmit)="inviteFriend(pool.name, inviteEmail.value, inviteMessage.value, pool.id)">
                   <div class="form-group">
                     <br />
@@ -191,27 +191,29 @@
             </div>
             <br />
           </div>
-          <div *ngIf="!isMember" class='d-inline row justify-content-center'>
-            <button (click)='joinGroup(pool.id)'> Join Pool </button>
+          <div *ngIf="verified">
+            <div *ngIf="!isMember" class='d-inline row justify-content-center'>
+              <button (click)='joinGroup(pool.id)'> Join Group </button>
+            </div>
+            <form *ngIf="isMember" #checkout="ngForm" (ngSubmit)="onSubmit(checkout, pool.id)" class="checkout">
+              <div class='form-row justify-content-center'>
+                <label> Contribution Amount</label>
+              </div>
+              <div class="form-row justify-content-center">
+                <br />
+                <input type="number" name="amount" ngModel required #amount="ngModel">
+                <br />
+              </div>
+              <div class="form-row justify-content-center">
+                <label for="card-info">Credit or debit card</label>
+                <cardinfo id="card-info" #cardInfo></cardinfo>
+              </div>
+              <div class="form-row">
+                <div id="card-errors" role="alert" *ngIf="error">{{ error }}</div>
+              </div>
+              <button type="submit">Contribute ${{ amount.value }}</button>
+            </form>
           </div>
-          <form *ngIf="isMember" #checkout="ngForm" (ngSubmit)="onSubmit(checkout, pool.id)" class="checkout">
-            <div class='form-row justify-content-center'>
-              <label> Contribution Amount</label>
-            </div>
-            <div class="form-row justify-content-center">
-              <br />
-              <input type="number" name="amount" ngModel required #amount="ngModel">
-              <br />
-            </div>
-            <div class="form-row justify-content-center">
-              <label for="card-info">Credit or debit card</label>
-              <cardinfo id="card-info" #cardInfo></cardinfo>
-            </div>
-            <div class="form-row">
-              <div id="card-errors" role="alert" *ngIf="error">{{ error }}</div>
-            </div>
-            <button type="submit">Contribute ${{ amount.value }}</button>
-          </form>
           <button (click)="viewGroups()" class='d-inline'>Back to Pools</button>
         </div>
       </div>
