@@ -3,12 +3,12 @@ const cloudinary = require('cloudinary');
 const { findUserByGoogle } = require('./../../database/helpers');
 const { findUserByGoogleAndUpdate } = require('./../../database/helpers');
 const { findUserById } = require('./../../database/helpers');
+const { verifyAdmin } = require('./../../database/helpers');
 const { getAllPendingUsers } = require('./../../database/helpers');
 const { approveUser } = require('./../../database/helpers');
 const { rejectUser } = require('./../../database/helpers');
 const { CLOUDINARY } = require('../config');
 const { ADMIN } = require('../config');
-
 
 user.get('/', (req, res) => {
   const userCookie = req.user;
@@ -78,6 +78,14 @@ user.post('/reject', (req, res) => {
   rejectUser(id)
     .then(updatedUser => res.status(200).json(updatedUser))
     .catch(err => res.status(500).json({ err }));
+});
+
+user.post('/admin', (req, res) => {
+  const { body } = req;
+  const { user } = body;
+  verifyAdmin(user.googleID)
+    .then(resUser => res.status(200).json({ user: resUser }))
+    .catch(err => res.status(404).json({ err }));
 });
 
 user.get('/:id', (req, res) => {
