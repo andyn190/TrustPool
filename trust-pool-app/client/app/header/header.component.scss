@@ -18,34 +18,11 @@ h1 {
   font-size: 250%;
   border-bottom: 2px solid #eee;
 }
-mat-sidenav {
-  width: 250px;
-
-  .branding {
-    height: 64px;
-    padding: 8px 10px;
-    font-size: 20px;
-    font-weight: 500;
-
-    img {
-      height: 48px;
-      margin: 2px 10px 0 0;
-    }
-
-    span {
-      position: relative;
-      top: 3px;
-    }
-  }
-
-  .mat-nav-list {
-    padding-top: 0;
-  }
-}
 button {
   color: aliceblue;
   background-color: #2f8dff;
 }
+
 .toolbar {
     width: 100%;
     display: flex;
@@ -59,8 +36,9 @@ button {
     }
 
     .branding {
-      cursor: pointer;
+      cursor: pointer; 
       padding-top: 4px;
+      display: inline-block;
 
       &.center {
         text-align: center;
@@ -69,8 +47,8 @@ button {
       img {
         position: relative;
         top: -2px;
-        width: 100px;
-        height: 100px;
+        width: 150px;
+        height: 150px;
       }
     }
 
@@ -95,3 +73,35 @@ button {
       }
     }
   }
+  
+mat-sidenav {
+  width: 250px;
+
+  .branding {
+    height: 64px;
+    padding: 8px 10px;
+    font-size: 20px;
+    font-weight: 500;
+
+    img {
+      height: 48px;
+      margin: 2px 10px 0 0;
+    }
+
+    span {
+      position: relative;
+      top: 3px;
+    }
+  }
+
+  .mat-nav-list {
+    padding-top: 0;
+  }
+  background-color: black;
+}
+
+mat-toolbar {
+  background-color: black;
+  position: relative;
+  z-index: 500;
+}

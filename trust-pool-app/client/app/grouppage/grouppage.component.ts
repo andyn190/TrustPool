@@ -28,7 +28,7 @@ export class CardInfo {
 @Component({
   selector: 'app-grouppage',
   templateUrl: './grouppage.component.html',
-  styleUrls: ['./grouppage.component.css'],
+  styleUrls: ['./grouppage.component.scss'],
   encapsulation: ViewEncapsulation.None,
 })
 export class GrouppageComponent implements OnInit, AfterViewInit, OnDestroy {

@@ -1,30 +1,32 @@
-<h2>
-  Browse Groups
-</h2>
-<li *ngFor="let pool of pools" >
-  <div class="container-fluid">
-  	<div class="row">
-  		<div class="col-md-12">
-  			<img alt="Bootstrap Image Preview" [src]="pool.imageURL" height="250" width="250" />
-  			<h3>
-  				{{pool.name}}
-  			</h3>
-  			<dl>
-  				<dt>
-  					{{pool.description}}
-  				</dt>
-  				<dd>
-            Value: 
-            ${{pool.pool_value / 100}}
-  				</dd>
-  				<dt>
-            members:
-            {{pool.members_count}}
-  				</dt>
-          <button class="btn btn-primary btn-sm" (click)='viewGroup(pool.id)'> View Group </button>
-          <button *ngIf="verified" class="btn btn-primary btn-sm" (click)='joinGroup(pool.id)'> Join Group </button>
-  			</dl>
-  		</div>
-  	</div>
-  </div>
-</li>
+<div class="jumbotron d-flex justify-content-center align-items-center" style="background-image: url(assets/browse-pools.jpg)">
+	<h1>Browse Pools</h1>
+	<div class="curtain"></div>
+</div>
+<div class="d-flex flex-column align-items-center pools-container">
+	<div *ngFor="let pool of pools" class="pool-preview">
+		<div class="row">
+			<div class="col-2">
+				<div>
+					<div class="container-img" [ngStyle]="{'background-image': 'url(' + pool.imageURL + ')'}">
+					</div>
+					<button class="btn btn-primary btn-sm" (click)='viewGroup(pool.id)'> View Pool </button>
+					<button *ngIf="verified" class="btn btn-primary btn-sm" (click)='joinGroup(pool.id)'> Join Pool </button>
+				</div>
+			</div>
+			<div class="col-10">
+				<h1>{{pool.name}}</h1>
+				<div class="row">
+					<div class="col-6">
+						<div>{{pool.description}}</div>
+					</div>
+					<div class="col-6">
+						<label for="" class="text-blue-light">Total Pool Value</label>
+						<h2>${{pool.pool_value / 100}}</h2>
+						<label for="" class="text-blue-light">Members Count</label>
+						<h2>{{pool.members_count}}</h2>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

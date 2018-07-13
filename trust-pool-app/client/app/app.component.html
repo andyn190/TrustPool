@@ -1,5 +1,6 @@
-<mat-sidenav-container>
-  <app-header [loggedIn]="loggedIn">
-  </app-header>
-  <router-outlet></router-outlet>
+<mat-sidenav-container color="aliceblue">
+  <app-header [loggedIn]="loggedIn"></app-header>
+  <!-- <div class="content" [@routeAnimations]="o.isActivated && o.activatedRoute.routeConfig.path"> -->
+    <router-outlet #o="outlet"></router-outlet>
+  <!-- </div> -->
 </mat-sidenav-container>

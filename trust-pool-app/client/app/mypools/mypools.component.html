@@ -1,28 +1,31 @@
-<div class="table-responsive-lg">
-  <table class="table table-striped table-dark">
-    <thead>
-      <th>
-        Group Image
-      </th>
-      <th>
-        Group Name
-      </th>
-      <th>
-        Group Description
-      </th>
-      <th>
-        Your Contributions
-      </th>
-      <th>
-        View Group
-      </th>
-    </thead>
-        <tbody *ngFor="let userPool of pools">
-          <td><img alt="Bootstrap Image Preview" [src]="userPool.imageURL" height="250" width="250"></td>
-          <td>{{ userPool.name }}</td>
-          <td>{{ userPool.description }}</td>
-          <td>${{ userPool.contribution_amount / 100 }}</td>
+<div class="jumbotron d-flex justify-content-center align-items-center" style="background-image: url(assets/my-pools.jpg)">
+  <h1>My Pools</h1>
+  <div class="curtain"></div>
+</div>
+<div class="d-flex flex-column align-items-center pools-container">
+  <div *ngFor="let userPool of pools" class="pool-preview">
+    <div class="row">
+      <div class="col-2">
+        <div>
+          <div class="container-img" [ngStyle]="{'background-image': 'url(' + userPool.imageURL + ')'}">
+          </div>
           <button class="btn btn-primary btn-sm" (click)='viewGroup(userPool.id)'> View Group </button>
-        </tbody>
-  </table>
+        </div>
+      </div>
+      <div class="col-10">
+        <h1>{{ userPool.name }}</h1>
+        <div class="row">
+          <div class="col-6">
+            <div>{{ userPool.description }}</div>
+          </div>
+          <div class="col-6">
+            <label for="" class="text-blue-light">Total Pool</label>
+            <h2>${{ userPool.contribution_amount / 100 }}</h2>
+            <label for="" class="text-blue-light">My Contribution</label>
+            <h2>${{ userPool.contribution_amount / 100 }}</h2>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>

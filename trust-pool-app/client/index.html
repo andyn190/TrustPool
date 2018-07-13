@@ -1,7 +1,11 @@
 <!doctype html>
 <html lang="en">
+
 <head>
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500" rel="stylesheet">
   <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <title>Trust Pool App</title>
   <base href="/">
   <link rel="icon" type="image/png" href="favicon-32x32.png" sizes="32x32" />
@@ -18,7 +22,7 @@
     html {
       height: 100%;
     }
-  
+
     .app-loading {
       position: relative;
       display: flex;
@@ -27,7 +31,7 @@
       justify-content: center;
       height: 100%;
     }
-  
+
     .app-loading .spinner {
       height: 300px;
       width: 300px;
@@ -40,7 +44,7 @@
       right: 0;
       margin: auto;
     }
-  
+
     .app-loading .spinner .path {
       stroke-dasharray: 1, 200;
       stroke-dashoffset: 0;
@@ -48,13 +52,13 @@
       stroke-linecap: round;
       stroke: #7290ff;
     }
-  
+
     @keyframes rotate {
       100% {
         transform: rotate(360deg);
       }
     }
-  
+
     @keyframes dash {
       0% {
         stroke-dasharray: 1, 200;
@@ -71,6 +75,7 @@
     }
   </style>
 </head>
+
 <body class="container">
   <app-root>
     <div class="app-loading">
@@ -81,4 +86,5 @@
     </div>
   </app-root>
 </body>
+
 </html>

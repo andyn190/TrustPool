@@ -6,7 +6,7 @@ import { ToastrService } from 'ngx-toastr';
 @Component({
   selector: 'app-mypools',
   templateUrl: './mypools.component.html',
-  styleUrls: ['./mypools.component.css']
+  styleUrls: ['./mypools.component.scss']
 })
 export class MypoolsComponent implements OnInit{
   constructor(
