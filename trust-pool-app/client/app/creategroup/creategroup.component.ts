@@ -33,8 +33,6 @@ export class CreategroupComponent implements OnInit {
     this.groupService.createGroup(pool).subscribe(
       success => {
         this.toastr.success(`${name} was Successfully created`);
-        console.log(success, 'this is the success');
-        console.log(success['newPool'].id, 'this be that mofuggin id');
         this._router.navigate([`group/${success['newPool'].id}`]);
       },
       err => this.toastr.error(err, 'ERROR'),
