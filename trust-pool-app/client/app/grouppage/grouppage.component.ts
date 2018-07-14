@@ -65,6 +65,7 @@ export class GrouppageComponent implements OnInit, AfterViewInit, OnDestroy {
   currentExpenseVote: any[];
   multi: any[];
   verified: boolean;
+  creator: string;
 
   view: any[] = [700, 400];
 
@@ -185,7 +186,13 @@ export class GrouppageComponent implements OnInit, AfterViewInit, OnDestroy {
         this.pool = pool;
         const readable = (new DateFormatPipe()).transform(pool['createdAt'], 'LL');
         pool['createdAt'] = readable;
-        
+        this._userService.getUserById(this.pool.id).subscribe(
+          (res:any) => {
+            const firstName = res.user.first_name;
+            const lastName = res.user.last_name;
+            this.creator = `${firstName} ${lastName}`;
+          }
+        )
       },
       err => this.toastrService.error(err),
       () => console.log('done loading pool')

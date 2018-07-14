@@ -5,6 +5,8 @@ const path = require('path');
 const logger = require('morgan');
 const bodyParser = require('body-parser');
 let io = require('socket.io');
+const history = require('connect-history-api-fallback');
+
 
 const db = require(path.join('${__dirname}', './../../database'));
 
@@ -32,6 +34,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 setupPassport(app);
 setupRouters(app);
 // app.use(authenticated);
+app.use(history());
 app.use(express.static(PUBLIC_PATH));
 
 module.exports.server = server;
