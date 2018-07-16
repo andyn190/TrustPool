@@ -24,14 +24,14 @@
         (0-100).
       </small>
     </div>
-    <div class="form-publicopt">
-      <input type="checkbox" class="form-check-input" value="true" ngModel name="group-publicOpt" #nameField="ngModel" id="publicOpt">
-      <label class="form-check-label" for="exampleCheck1">Public</label>
-    </div>
     <div class="form-group">
       <label for="inputImageUrl">Upload Image</label>
       <input type="file" class="form-control" required id="inputImageUrl" (change)="encodeImageFileAsURL($event)" name="group-url"
         ngModel #nameField="ngModel" accept=".jpg, .jpeg, .png" placeholder="ImageUrl Here">
+    </div>
+    <div class="form-publicopt">
+      <input type="checkbox" class="form-check-input" value="true" ngModel name="group-publicOpt" #nameField="ngModel" id="publicOpt">
+      <label class="form-check-label" for="exampleCheck1">Public</label>
     </div>
     <button type="submit" class="btn btn-primary">Submit</button>
   </form>

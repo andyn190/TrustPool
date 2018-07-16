@@ -35,6 +35,8 @@
           <h4 class="text-right">
             {{creator}}
           </h4>
+          <button mat-button (click)="viewGroups()" class='nav-button mb-2 mr-2'>Back to Pools</button>
+          <button class="nav-button mb-2 mr-2" mat-button (click)="openInviteFriendModal(inviteFriendModal)">Invite Friends</button>
         </div>
       </div>
     </div>
@@ -49,10 +51,12 @@
             <h4 class='row justify-content-center'>Join Requests</h4>
             <ul class='row justify-content-center'>
               <li *ngFor="let request of joinRequests">
-                <h5>{{request.name}} Wants to join the pool</h5>
-                <div class='row justify-content-center'>
-                  <button (click)='acceptRequest(request)'> Accept </button>
-                  <button (click)='declineRequest(request)'> Decline </button>
+                <div class="container" [hidden]="request.status">
+                  <h5>{{request.name}} Wants to join the pool</h5>
+                  <div class='row justify-content-center'>
+                    <button (click)='acceptRequest(request)'> Accept </button>
+                    <button (click)='declineRequest(request)'> Decline </button>
+                  </div>
                 </div>
                 <br />
               </li>
@@ -70,9 +74,6 @@
         <br />
       </div>
       <div *ngIf="verified">
-        <div *ngIf="!isMember" class='d-inline row justify-content-center'>
-          <button (click)='joinGroup(pool.id)'> Join Group </button>
-        </div>
         <form *ngIf="isMember" #checkout="ngForm" (ngSubmit)="onSubmit(checkout, pool.id)" class="checkout">
           <div class='form-row justify-content-center'>
             <label> Contribution Amount</label>
@@ -91,10 +92,13 @@
           </div>
           <button type="submit">Contribute ${{ amount.value }}</button>
         </form>
-        <div class="justify-content-center">
-          <button class="nav-button" mat-button (click)="openInviteFriendModal(inviteFriendModal)">Invite Friends</button>
-          <button class="btn btn-outline-primary mb-2 mr-2" mat-button (click)="openExpenseRequestModal(expenseRequestModal)">Expense Request</button>
-          <button mat-button (click)="viewGroups()" class='nav-button'>Back to Pools</button>
+        <div class="d-flex flex-column align-items-center">
+          <div class="col-3">
+            <button class="nav-button mb-2 mr-2" *ngIf="isMember" mat-button (click)="openExpenseRequestModal(expenseRequestModal)">Expense Request</button>
+            <div *ngIf="!isMember" class='d-inline row justify-content-center'>
+              <button (click)='joinGroup(pool.id)'> Join Group </button>
+            </div>
+          </div>
         </div>
       </div>
       <div class="d-flex flex-column align-items-center pools-container">
@@ -149,7 +153,8 @@
                   <h3 class='row justify-content-center'>${{currentExpenseRequest.expense_amount}}</h3>
                   <p class='row justify-content-center'>{{currentExpenseRequest.description}}</p>
                   <h4 class='row justify-content-center'> Expires: {{currentExpenseRequest.expiration_date}}</h4>
-                  <div class='row justify-content-center'> Number of Votes: {{currentExpenseRequest.voter_count}} ({{currentExpenseRequest.member_vote_percent}}% of the pool)</div>
+                  <div class='row justify-content-center'> Number of Votes: {{currentExpenseRequest.voter_count}} ({{currentExpenseRequest.member_vote_percent}}%
+                    of the pool)</div>
                   <div class='row justify-content-center'>Vote Power needed to pass: {{pool.voteConfig}}%</div>
                   <ngx-charts-advanced-pie-chart class='row justify-content-center' [view]="view" [scheme]="colorScheme" [results]="currentExpenseVote"
                     [gradient]="gradient" (select)="onSelect($event)">
@@ -218,7 +223,7 @@
                 </div>
                 <button class="btn btn-primary" align='right' (click)="leaveChat()"> Back To Expense Requests </button>
               </div>
-          
+
             </div>
             <div class="modal-footer">
               <button type="button" class="btn btn-light" (click)="c('Close click')">Close</button>
