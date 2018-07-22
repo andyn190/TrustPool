@@ -34,6 +34,35 @@ body {
 }
 body { margin: 0; }
 
+.homepage__content {
+  margin: 0 !important;
+  background-color: #e6e6e6 !important;
+  .content__cards .card-body {
+    font-family: 'Lato', sans-serif;
+    .fas {
+      color: #3D8AE9;
+    }
+  }
+  .content__join .card {
+    max-width: 35vw;
+    font-family: 'Lato', sans-serif;
+  }
+
+  .jumbotron h1 {
+    font-weight: 300;
+    font-size: 3.2rem;
+  }
+  .outing-together h1 {
+    right: 20%;
+    top: 18%;
+  }
+  .life-together h1 {
+    top: 28%;
+    left: 28%;
+  }
+}
+
+
 .jumbotron {
   height: 400px;
   background-size: cover;
@@ -62,4 +91,8 @@ body { margin: 0; }
   img {
     height: 100%;
   }
+}
+
+.sidenav-container {
+  background-color: unset !important;
 }

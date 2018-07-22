@@ -1,53 +1,64 @@
-<!-- <div class="container-fluid">
-    <div class="row">
-      <div class="col-md-12"> -->
-        <div class="jumbotron d-flex justify-content-center align-items-center" style="background-image: url(assets/homepage.jpg)">
-          <h1>Welcome</h1>
-          <div class="curtain"></div>
+<div class="homepage__content">
+  <div class="outing-together jumbotron d-flex justify-content-center align-items-center" style="background-image: url(assets/homepage.jpg)">
+    <h1 class="text-center">Fund an outing <br/><i>together</i></h1>
+    <div class="curtain"></div>
+  </div>
+  <div class="content__cards p-3 py-5 row">
+    <div class="col-4 pr-0">
+      <div class="card shadow-sm">
+        <div class="card-body text-center">
+          <i class="fas fa-users fa-3x"></i>
+          <h2>Connect</h2>
+          <p>SOME PARAGRAPH</p>
         </div>
-        <!-- <div class="jumbotron">
-          <h2>
-            TrustPool.
-          </h2>
-          <p>
-            TrustPool is the place to be when you need to up your buying power!
-          </p>
-          <p>
-            <a class="btn btn-primary btn-large" (click)="showJumboTronText();">Learn More</a>
-          </p>
-          <ul *ngIf="clicked">
-            <li>TrustPool will give you complete transparency when it comes to the money in your group and how it's spent.</li>
-            <li>TrustPool will give you democratic approach to spending money.</li>
-            <li>TrustPool will give you the power to join with others and give a helping hand.</li>
-            <p>So, Get out there and build up some buying power!</p>
-          </ul>
-        </div> -->
-        <div class="row">
-          <div class="col-md-4 cards">
-            <h2>
-              Creation
-            </h2>
-            <p>
-              Create a pool with friends, or acquaintances and empower eachother by contributing to your pool's pool!
-            </p>
-            <div class="button">
-              <a class="btn" routerLink="/creategroup">
-                  Create A Pool
-              </a>
-            </div>
-          </div>
-          <div class="col-md-4 cards">
-            <h2>
-              Join
-            </h2>
-            <p>
-              Browse from the pools that are public and see if any pique your interest.
-            </p>
-            <p>
-              <a class="btn" routerLink="/groups">Browse Pools</a>
-            </p>
-          </div>
-        </div>
-      <!-- </div>
+      </div>
     </div>
-  </div> -->
+    <div class="col-4 pl-0 pr-0">
+      <div class="card shadow-sm">
+        <div class="card-body text-center">
+          <i class="fas fa-handshake fa-3x"></i>
+          <h2>Secure</h2>
+          <p>SOME PARAGRAPH</p>
+        </div>
+      </div>
+    </div>
+    <div class="col-4 pl-0">
+      <div class="card shadow-sm">
+        <div class="card-body text-center">
+          <i class="fas fa-gift fa-3x"></i>
+          <h2>Enjoy</h2>
+          <p>SOME PARAGRAPH</p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="life-together jumbotron d-flex justify-content-center align-items-center" style="background-image: url(assets/arms.jpg)">
+    <h1 class="text-center">Live your life
+      <br />
+      <i>together</i>
+    </h1>
+    <div class="curtain"></div>
+  </div>
+  <div class="content__join p-5">
+    <div class="row">
+      <div class="col-6">
+        <div class="card text-center">
+          <div class="card-body">
+            <h2>Create a pool</h2>
+            <p>Create a pool with friends, or acquaintances and empower eachother by contributing to your pool's pool!</p>
+            <a routerLink="/creategroup" class="btn btn-primary btn-lg btn-block">Create</a>
+          </div>
+        </div>
+      </div>
+      <div class="col-6">
+        <div class="card text-center">
+          <div class="card-body">
+            <h2>Join a pool</h2>
+            <p>Browse from the pools that are public and see if any pique your interest.</p>
+            <a routerLink="/groups" class="btn btn-primary btn-lg btn-block">Browse</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

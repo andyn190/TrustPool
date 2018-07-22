@@ -2,20 +2,20 @@
   <h1>{{pool.name}}</h1>
   <div class="curtain"></div>
 </div>
-<div class="ml-5 mr-5">
-  <div class="row">
+<div class="">
+  <div class="row m-0">
     <div class="col-md-3 profile-sidebar">
       <div class="d-flex flex-column">
         <div class="profile-container-img align-self-end">
-          <img alt="Bootstrap Image Preview" [src]="pool.imageURL" width='250' length='250' />
+          <img alt="Bootstrap Image Preview" [src]="pool.imageURL" width='100%' length='250' />
         </div>
         <div class="m-3">
           <div class="mt-3"></div>
           <label class="text-blue-dark">
-            Pool Value:
+            Your Contribution
           </label>
           <h4 class="text-right">
-            ${{pool.pool_value / 100}}
+            ${{isMember.contrubution_amount / 100}}
           </h4>
           <label class="text-blue-dark">
             Description
@@ -64,9 +64,9 @@
           </div>
           <div class="col-md-6"></div>
         </div>
-        <h5 class="row justify-content-center">Your Contribution</h5>
+        <h5 class="row justify-content-center">Pool Value:</h5>
         <div class="row justify-content-center">
-          ${{isMember.contrubution_amount / 100}}
+          ${{pool.pool_value / 100}}
         </div>
         <div class="row justify-content-center">
           Vote Power: {{isMember.vote_power}}
