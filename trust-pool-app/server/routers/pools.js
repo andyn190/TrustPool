@@ -199,8 +199,6 @@ pools.post('/:requestId/accept', (req, res) => {
     .catch(err => res.status(200).json({ err }));
 });
 
-// updateAllPoolMembers(2, 'has_voted', null);
-
 pools.post('/:requestId/decline', (req, res) => {
   const { params, body } = req;
   const { requestId } = params;
