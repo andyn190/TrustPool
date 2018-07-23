@@ -2,9 +2,8 @@
   .logo {
     width: 200px;
     height: 200px;
-    
     // this way asset gets processed by webpack 
-    background: url(./assets/trustPoolBigCircle.png) center center no-repeat; 
+    background: url(https://image.ibb.co/eCaxpT/trust_Pool_Big_Circle.png) center center no-repeat; 
     background-size: contain;
   }
 }
