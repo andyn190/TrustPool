@@ -22,7 +22,7 @@ const {
   createExpenseRequest,
   createExpenseRequestLink,
   updateCurrentRequest,
-  createCheck,
+  createCheckEntry,
   findExpenseRequests,
   executeDeliveryMethod,
   updateExpenseRequest,
@@ -325,28 +325,21 @@ pools.post('/expense', (req, res) => {
 });
 
 pools.post('/check', (req, res) => {
-  if (req.body.address) {
-    const {
-      amount,
-      name,
-      email,
-      address,
-      description,
-      methodId
-    } = req.body;
-    createCheck(amount, name, email, description, methodId, address)
-      .then(check => Promise.resolve(res.status(200).json(check)))
-      .catch(err => res.status(400).json(err));
-  }
   const {
     amount,
     name,
     email,
+    address,
     description,
     methodId
   } = req.body;
-  return createCheck(amount, name, email, description, methodId)
-    .then(check => Promise.resolve(res.status(200).send(check)))
+  if (address) {
+  return createCheckEntry(amount, name, email, description, methodId, address)
+    .then(check => res.status(200).json(check))
+    .catch(err => res.status(400).json(err));
+  }
+  return createCheckEntry(amount, name, email, description, methodId)
+    .then(check => res.status(200).send(check))
     .catch(err => res.status(400).send(err));
 });
 

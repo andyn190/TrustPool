@@ -81,16 +81,16 @@ export class ExpenseFormComponent implements OnInit {
         poolValue: this.poolValue
       };
       this.poolService.sendExpenseRequest(options).subscribe(({ expenseRequestEntry }: any) => {
-        let checkInfo;
+        let checkInfo = {
+          name: this.recipientName,
+          description: this.desc,
+          email: this.recipientEmail,
+          methodId: this.link.id,
+          amount: this.amount,
+          address: null,
+        };
         if (this.recipientStreet) {
-          checkInfo = {
-            name: this.recipientName,
-            email: this.recipientEmail,
-            address: `${this.recipientStreet} ${this.recipientCity} ${this.recipientState} ${this.recipientZip}`,
-            description: this.desc,
-            methodId: this.link.id,
-            amount: this.amount
-          }
+          checkInfo.address = `${this.recipientStreet} ${this.recipientCity} ${this.recipientState} ${this.recipientZip}`;
         }
         this.poolService.sendCheckInfo(checkInfo).subscribe((check) => {
           this.toastr.success('Successfully sent Expense Request');
