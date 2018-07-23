@@ -405,29 +405,6 @@ const createExpenseRequestLink = method => create('ExpenseRequestLink', { method
 
 const createChatRoom = type => create('ChatRoom', { type });
 
-const createCheck = (amount, name, email, description, methodId, address = null) => {
-  let check;
-  if (address) {
-    check = {
-      amount,
-      name,
-      email,
-      description,
-      physical_address: address,
-      link_id: methodId
-    };
-  } else {
-    check = {
-      amount,
-      name,
-      email,
-      description,
-      link_id: methodId
-    };
-  }
-  return Checks.create(check);
-};
-
 const createExpenseRequest = (
   pool_id,
   creator,
@@ -596,7 +573,6 @@ module.exports = {
   findUserByGoogleAndUpdate,
   createExpenseRequest,
   createExpenseRequestLink,
-  createCheck,
   findExpenseRequests,
   findExpenseRequestById,
   updateExpenseRequest,
