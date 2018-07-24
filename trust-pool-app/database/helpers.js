@@ -227,8 +227,8 @@ const createCheckEntry = (
   name,
   email,
   description,
-  physical_address,
-  link_id
+  link_id,
+  physical_address = null
 ) => create('Checks', {
   amount,
   name,
@@ -261,14 +261,17 @@ const updateCurrentRequest = pool_id => findExpenseRequests(pool_id)
     });
 
     if (!currentRequest) {
-      const compare = (a, b) => {
-        if (a.createdAt < b.createdAt) { return -1; }
-        if (a.createdAt > b.createdAt) { return 1; }
-        return 0;
-      };
-      queue.sort(compare);
-      queue[0].active_status = 'current';
-      return queue[0].save();
+      if (queue[0]){
+        const compare = (a, b) => {
+          if (a.createdAt < b.createdAt) { return -1; }
+          if (a.createdAt > b.createdAt) { return 1; }
+          return 0;
+        };
+        queue.sort(compare);
+        queue[0].active_status = 'current';
+        return queue[0].save();
+      }
+      return Promise.resolve('No request in queue');
     }
     console.log('Already current request');
     return Promise.resolve('Already current request');
@@ -401,29 +404,6 @@ const createPool = (name, imageURL, description, voteConfig, creator, publicOpt)
 const createExpenseRequestLink = method => create('ExpenseRequestLink', { method });
 
 const createChatRoom = type => create('ChatRoom', { type });
-
-const createCheck = (amount, name, email, description, methodId, address = null) => {
-  let check;
-  if (address) {
-    check = {
-      amount,
-      name,
-      email,
-      description,
-      physical_address: address,
-      link_id: methodId
-    };
-  } else {
-    check = {
-      amount,
-      name,
-      email,
-      description,
-      link_id: methodId
-    };
-  }
-  return Checks.create(check);
-};
 
 const createExpenseRequest = (
   pool_id,
@@ -593,7 +573,6 @@ module.exports = {
   findUserByGoogleAndUpdate,
   createExpenseRequest,
   createExpenseRequestLink,
-  createCheck,
   findExpenseRequests,
   findExpenseRequestById,
   updateExpenseRequest,
