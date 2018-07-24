@@ -41,6 +41,29 @@
       </div>
     </div>
     <div class="col-md-9 profile-main">
+      <div *ngIf="isMember" class='d-inline'>
+        <div *ngIf="!isMember.is_creator">
+          <h4 class='row justify-content-center'> You are a member of this pool!</h4>
+        </div>
+        <div *ngIf="isMember.is_creator">
+          <h4 class='row justify-content-center'> You are the creator of this pool!</h4>
+          <div class="col-md-6">
+            <h4 class='row justify-content-center'>Join Requests</h4>
+            <ul class='row justify-content-center'>
+              <li *ngFor="let request of joinRequests">
+                <div class="container" [hidden]="request.status">
+                  <h5>{{request.name}} Wants to join the pool</h5>
+                  <div class='row justify-content-center'>
+                    <button (click)="acceptRequest(request); d('Cross Close')"> Accept </button>
+                    <button (click)="declineRequest(request); d('Cross Close')"> Decline </button>
+                  </div>
+                </div>
+                <br />
+              </li>
+            </ul>
+          </div>
+          <div class="col-md-6"></div>
+        </div>
         <h5 class="row justify-content-center">Pool Value:</h5>
         <div class="row justify-content-center">
           ${{pool.pool_value / 100}}
@@ -72,29 +95,6 @@
         <div class="d-flex flex-column align-items-center">
           <div class="col-3">
             <button class="nav-button mb-2 mr-2" *ngIf="isMember" mat-button (click)="openExpenseRequestModal(expenseRequestModal)">Expense Request</button>
-            <div *ngIf="isMember" class='d-inline'>
-              <div *ngIf="!isMember.is_creator">
-                <h4 class='row justify-content-center'> You are a member of this pool!</h4>
-              </div>
-              <div *ngIf="isMember.is_creator">
-                <h4 class='row justify-content-center'> You are the creator of this pool!</h4>
-                <div class="col-md-6">
-                  <h4 class='row justify-content-center'>Join Requests</h4>
-                  <ul class='row justify-content-center'>
-                    <li *ngFor="let request of joinRequests">
-                      <div class="container" [hidden]="request.status">
-                        <h5>{{request.name}} Wants to join the pool</h5>
-                        <div class='row justify-content-center'>
-                          <button (click)='acceptRequest(request)'> Accept </button>
-                          <button (click)='declineRequest(request)'> Decline </button>
-                        </div>
-                      </div>
-                      <br />
-                    </li>
-                  </ul>
-                </div>
-                <div class="col-md-6"></div>
-              </div>
             <div *ngIf="!isMember" class='d-inline row justify-content-center'>
               <button (click)='joinGroup(pool.id)'> Join Group </button>
             </div>
@@ -145,7 +145,7 @@
               </button>
             </div>
             <div *ngIf="verified" class="modal-body">
-              <button *ngIf="isMember" class="nav-button" mat-button align='right' (click)="goToExpenseRequestForm(pool.id)"> Create Expense Request</button>
+              <button *ngIf="isMember" class="nav-button" mat-button align='right' (click)="goToExpenseRequestForm(pool.id); d('Cross Close')">Create Expense Request</button>
               <div *ngIf=!toggleChat>
                 <div *ngIf=currentExpenseRequest>
                   <h3 class="row justify-content-center"> Current Expense Request </h3>
