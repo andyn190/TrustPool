@@ -67,8 +67,10 @@
             </div>
           </div>
         </div>
-        <button type="button" class="btn btn-secondary" data-dismiss="modal" (click)="d('Cross Click')">Close</button>
-        <button type="submit" class="btn btn-primary" form="expenseRequest" data-dismiss="checkFormModal">Submit Request</button>
+        <div class="container">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal" (click)="d('Cross Click')">Close</button>
+          <button type="submit" class="btn btn-primary" form="expenseRequest" data-dismiss="checkFormModal" (submit)="submit; d('Cross Close')">Submit Request</button>
+        </div>
       </div>
     </ng-template>
   </form>

@@ -15,7 +15,6 @@ import { PoolsService } from '../services/pools/pools.service';
 import { ChatService } from '../services/chat/chat.service';
 import { Router, ActivatedRoute, Routes } from '@angular/router';
 import { NgForm } from '@angular/forms';
-import { ArrayType } from '@angular/compiler/src/output/output_ast';
 import { NgbModal, ModalDismissReasons } from '@ng-bootstrap/ng-bootstrap';
 import { ToastrService, Toast } from 'ngx-toastr';
 import { DateFormatPipe } from 'angular2-moment';

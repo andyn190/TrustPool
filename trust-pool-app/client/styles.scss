@@ -4,12 +4,11 @@
 @import '~bootstrap/scss/bootstrap-reboot';
 @import '~bootstrap/scss/bootstrap-grid';
 
-@import "~ngx-toastr/toastr.css";
 @import "~bootstrap/scss/functions";
 @import "~bootstrap/scss/variables";
 @import "~bootstrap/scss/mixins";
-@import "~ngx-toastr/toastr-bs4-alert";
 @import "~bootstrap/scss/bootstrap";
+@import "~ngx-toastr/toastr-bs4-alert";
 
 $light-blue: #7290ff;
 $dark-blue: #3353ff;
@@ -33,6 +32,35 @@ body {
   background-color: $background;
 }
 body { margin: 0; }
+
+.homepage__content {
+  margin: 0 !important;
+  background-color: #e6e6e6 !important;
+  .content__cards .card-body {
+    font-family: 'Lato', sans-serif;
+    .fas {
+      color: #3D8AE9;
+    }
+  }
+  .content__join .card {
+    max-width: 35vw;
+    font-family: 'Lato', sans-serif;
+  }
+
+  .jumbotron h1 {
+    font-weight: 300;
+    font-size: 3.2rem;
+  }
+  .outing-together h1 {
+    right: 20%;
+    top: 18%;
+  }
+  .life-together h1 {
+    top: 28%;
+    left: 28%;
+  }
+}
+
 
 .jumbotron {
   height: 400px;
@@ -62,4 +90,8 @@ body { margin: 0; }
   img {
     height: 100%;
   }
+}
+
+.sidenav-container {
+  background-color: unset !important;
 }

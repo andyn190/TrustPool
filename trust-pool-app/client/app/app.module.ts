@@ -127,7 +127,7 @@ export function getAuthServiceConfigs() {
     MatIconModule,
     NgxChartsModule,
     NgbModule.forRoot(),
-    ToastrModule.forRoot(),
+    ToastrModule.forRoot({ preventDuplicates: true }),
     MomentModule,
     MatButtonModule,
     MatCheckboxModule,
